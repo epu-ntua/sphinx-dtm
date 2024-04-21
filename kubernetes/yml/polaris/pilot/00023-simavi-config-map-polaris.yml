@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simavi-config-map
+data:
+  kafkastore_bootstrap_servers: 'polaris-bootstrap.172.26.7.181.nip.io:443'
+  kafka_properties_security_protocol: SASL_SSL
+  kafka_properties_sasl_mechanism: OAUTHBEARER
+  oauth_token_endpoint_uri: "http://polaris.172.26.7.181.nip.io/SMPlatform/manager/rst/getKafkaToken"
+  ssl_truststore_path: file:/jks/sphinx_polaris.jks
+  dtm_instance_key: '3234567'
+  spring_datasource_url: jdbc:postgresql://146.124.106.181:30006/sphinx
+  elasticsearch_url: "http://elastic-polaris.172.26.7.181.nip.io:80"
+  exclude_ips_suricata: ""
+  exclude_ips_tshark: ""
+  sm_ip: "http://polaris.172.26.7.181.nip.io/SMPlatform/manager/rst"
+  source: 'eth1'
+  kafka_jks: sphinx_polaris.jks
+  file_jks: /jks/sphinx_polaris.jks
+  sftp_host: 10.10.2.65
+  sftp_port: '22'
+  sftp_password: 'sphinxfdce'
+  sftp_username: 'sphinxfdce'
+  sftp_upload_directory: /home/sphinxfdce/fdce_imported_data
+  topic_dss: 'dss-dtm-record-traffic'
+

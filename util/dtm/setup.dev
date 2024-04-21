@@ -1,0 +1,118 @@
+# 1. install
+    Wireshark 3.4.6 sau 3.2.3 (https://www.wireshark.org/#download)
+    * npcap 1.31 [se instaleaza o data cu wireshark]
+
+    Suricata (Suricata-6.0.1-2-64bit / 5.0.3)
+    * c:\tools\Suricata
+
+        suprascris cu
+            \data-traffic-monitoring\src\main\resources\suricata\windows\6.0.0\suricata.yaml
+            \rules\* (de scos din 'other' si 'blacklist' si puse direct in 'rules')
+
+    Logstach (logstash 7.8.1)
+    * c:\tools\logstach
+
+        suprascris cu
+            \docker\logstash\conf\logstash.conf
+            \docker\logstash\vendor\geoip\GeoLite2-City.mmdb
+            \docker\logstash\templates\suricata_template.json
+
+        am comentat in setup.bat:
+
+            rem JAVA_OPTS is not a built-in JVM mechanism but some people think it is so we
+            rem warn them that we are not observing the value of %JAVA_OPTS%
+            rem if not "%JAVA_OPTS%" == "" (
+            rem  echo|set /p="warning: ignoring JAVA_OPTS=%JAVA_OPTS%; "
+            rem  echo pass JVM parameters via LS_JAVA_OPTS
+            rem )
+
+# 2. init database with a test instance:
+    1. insert a record to database
+    2. insert use a service via Postman (sphinx.postman_collection.json)
+        create instance
+        (but, the instance must be enabled from database)
+
+# 3. ENV:
+DTM_INSTANCE_KEY=12345678
+
+# 4. verify kafka / kafdrop
+    http://localhost:9000/
+
+# 5. verify swager:
+    http://localhost:8087/sphinx/dtm/swagger-ui.html
+
+# 6. download log:
+    http://localhost:8087/sphinx/dtm/helper/log/download
+    https://sphinx-kubernetes.intracom-telecom.com/sphinx/dtm/helper/log/download
+
+# 7. show log:
+    http://localhost:8087/sphinx/dtm/helper/log/show
+    https://sphinx-kubernetes.intracom-telecom.com/sphinx/dtm/helper/log/show
+
+# 8. show newtwork interfaces:
+    http://localhost:8087/sphinx/dtm/helper/ni/suricata
+    http://localhost:8087/sphinx/dtm/helper/ni/tshark
+
+    https://sphinx-kubernetes.intracom-telecom.com/sphinx/dtm/helper/ni/tshark
+    https://sphinx-kubernetes.intracom-telecom.com/sphinx/dtm/helper/ni/suricata
+
+# 9. show active profiles:
+
+    http://localhost:8087/sphinx/dtm/helper/util/getActiveProfiles
+
+# 10. show dtm kafka topics:
+
+    http://localhost:8087/sphinx/dtm/helper/util/getTopics
+
+
+# 11. show last dtm cmd
+
+    http://localhost:8087/sphinx/dtm/helper/util/getLastCmd
+
+# 12. send test cmd to 'dtm-cmd' topic
+
+    http://localhost:8087/sphinx/dtm/helper/util/sendKafkaCmdTest
+
+# 14. get last messages from a topic
+
+    http://localhost:8087/sphinx/dtm/helper/util/getLastMessagesForTopic/dtm-cmd
+
+# 15. display all network interface in database for a tool
+
+    http://localhost:8087/sphinx/dtm/helper/ni/display/{instanceKey}/{tool}
+    http://localhost:8087/sphinx/dtm/helper/ni/display/12345678/tshark
+    http://localhost:8087/sphinx/dtm/helper/ni/display/12345678/suricata
+
+# 16. delete a network interface from database
+    http://localhost:8087/sphinx/dtm/helper/ni/delete/{instanceKey}/{tool}/{idInterfaceName}
+    http://localhost:8087/sphinx/dtm/helper/ni/delete/12345678/suricata/31
+
+# # intracom:
+        docker login registry.sphinx-repo.intracom-telecom.com
+
+        MASTER / ICOM:
+        mvn install -P docker-image -Dspring.profiles.active=docker -DskipTests -pl data-traffic-monitoring -am
+
+        AGENT / VOLOS:
+        mvn install -P docker-image -Dspring.profiles.active=docker,agent -DskipTests -pl data-traffic-monitoring -am
+
+    [view in gitlab]
+        https://sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/container_registry
+
+
+        https://sphinx-kubernetes.intracom-telecom.com/sphinx/dtm/swagger-ui.html
+
+# testare logstash
+
+    cd c:\tools\logstash\bin
+
+    # kafka-docker
+    logstash -f C:\tools\logstash\config\logstashNf-folder.conf
+
+    # kafka-icom
+    logstash -f C:\tools\logstash\config\stix_format_dtm.conf
+
+# kill process:
+
+    netstat -ano | findstr 80
+    taskkill /pid 20580 /f

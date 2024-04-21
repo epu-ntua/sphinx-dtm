@@ -1,0 +1,14 @@
+{
+    "name": "[AD] BlackWeb JSON ",
+    "type": "simpod-json-datasource",
+    "typeLogoUrl": "public/plugins/simpod-json-datasource/img/json-logo.svg",
+    "access": "direct",
+    "url": "http://localhost:8088/sphinx/ad/api/getBlackWebAlertList",
+    "password": "",
+    "user": "",
+    "database": "",
+    "basicAuth": false,
+    "isDefault": false,
+    "jsonData": {},
+    "readOnly": false
+}

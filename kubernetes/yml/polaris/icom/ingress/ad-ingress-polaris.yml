@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ad
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ad-polaris.146.124.106.181.nip.io 
+    http:
+      paths:
+      - path: /sphinx/ad
+        backend:
+          serviceName: ad-service
+          servicePort: 8088
+

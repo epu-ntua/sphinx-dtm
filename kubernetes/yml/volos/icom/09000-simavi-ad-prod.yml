@@ -1,0 +1,92 @@
+## HBase ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: ad-deployment
+    labels:
+      app: simavi-sphinx
+      sphinx-component: ad
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: ad
+      spec:
+        containers:
+          - name: ad-deployment
+            image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/anomaly-detection/ad-deployment:latest
+            imagePullPolicy: Always
+            resources:
+            #  limits:
+            #    memory: "4Gi"
+            #  requests:
+            #    memory: "2Gi"
+            ports:
+            - containerPort: 8088
+            env:
+              - name: KAFKA_BOOTSTRAP_ADDRESS
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: kafkastore_bootstrap_servers
+              - name: KAFKA_PROPERTIES_SECURITY_PROTOCOL
+                #value: SASL_SSL
+                value: PLAINTEXT
+              - name: KAFKA_PROPERTIES_SASL_MECHANISM
+                #value: OAUTHBEARER
+                value: ANONYMOUS
+              - name: KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+                value: "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"kafkauser\" password=\"kafkauser123\";"
+              - name: KAFKA_PROPERTIES_SASL_LOGIN_CALLBACK_HANDLER_CLASS
+                value: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler
+              - name: OAUTH_CLIENT_ID
+                value: SIEM
+              - name: OAUTH_CLIENT_SECRET
+                #value: 6ursdya0pbg3mj6p2uh65jgwpmezl958cg5fdy0kpdykk6emrn7swltkhagya0s808by3vw9kvle2p8l8rkdbt2xduew8t7w7ln0zvyp7qflmit8hacqqzy13uxc0hf2
+                value: lgrubzy5m7pvphernshie9b6vem5mll838zjc40vzr7z840m1dtxen9eb5tydq7d8vx50mqn47k98s6xfuarrf8glexver60xwtr856v064h0u41m8vzmprnhwr7esn6
+              - name: OAUTH_TOKEN_ENDPOINT_URI
+                #value: "http://sphinx-kubernetes.intracom-telecom.com/SMPlatform/manager/rst/getKafkaToken"
+                value: "http://sphinx-toolkit.intracom-telecom.com/SMPlatform/manager/rst/getKafkaToken"
+              - name: SSL_TRUSTSTORE_PASSWORD
+                value: test@123
+              - name: SSL_TRUSTSTORE_PATH
+                value: file:/jks/sphinx.jks
+              # creare spark standalone (https://github.com/big-data-europe/docker-spark)
+              # kubectl apply -f https://raw.githubusercontent.com/big-data-europe/docker-spark/master/k8s-spark-cluster.yaml
+              - name: SPARK_URL
+                value: "spark://spark-master:7077"
+              - name: SPRING_DATASOURCE_URL
+                  # intracom
+                value: jdbc:postgresql://146.124.106.181:30005/sphinx
+              - name: KAFKA_USERNAME
+                value: kafkauser
+              - name: KAFKA_PASSWORD
+                value: kafkauser123
+              - name: HBASE_ZOOKEEPER
+                value: sphinx-hbase:2181
+        imagePullSecrets:
+          - name: intracom-repository
+
+## AD Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: ad-service
+  spec:
+    selector:
+    selector:
+      app: simavi-sphinx
+      sphinx-component: ad
+    type: LoadBalancer  
+    ports:
+      - protocol: TCP
+        port: 8088
+        targetPort: 8088
+        nodePort: 30101

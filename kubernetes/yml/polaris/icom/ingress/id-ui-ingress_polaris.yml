@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: id-ui
+  namespace: pilot-polaris  
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: polaris.146.124.106.181.nip.io
+    http:
+      paths:
+      - path: /id-ui
+        backend:
+          serviceName: ui-service 
+          servicePort: 80
+

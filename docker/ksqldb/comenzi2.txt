@@ -1,0 +1,26 @@
+Creare imagine ksqldb-server cu suport pt SASL_SSL cu OAUTHBEARER
+
+- se cloneaza aici github.com/strimzi/strimzi-kafka-oauth
+git clone https://github.com/strimzi/strimzi-kafka-oauth.git
+
+- se buildeaza cu jdk8 (se seteaza JAVA_HOME la folderul in care e instalat jdk)
+mvn clean install
+
+- se creeaza truststore
+#keytool -import -alias for_clients -file for_clients_prod.crt -keypass keypass -keystore sphinx.jks -storepass test@123
+
+#fara keypass
+keytool -import -alias for_clients -file for_clients_prod.crt -keystore sphinx.jks -storepass test@123
+
+#conversie la p12
+keytool -importkeystore -srckeystore sphinx.jks -srcstoretype JKS -deststoretype PKCS12 -destkeystore sphinx.p12 -srcstorepass test@123 -deststorepass test@123
+
+- se buildeaza imaginea docker
+sudo docker build -t sphinx/ksqldb-server .
+
+- se redenumeste imaginea
+sudo docker tag sphinx/ksqldb-server registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/ksqldb-server
+
+- se face push in registry intracom
+sudo docker push registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/ksqldb-server
+

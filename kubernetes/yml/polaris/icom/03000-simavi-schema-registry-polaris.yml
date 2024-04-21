@@ -1,0 +1,62 @@
+## SCHEMA REGISTRY ##
+---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        app: simavi-sphinx
+      name: schema-registry-deployment-polaris
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: simavi-sphinx
+      template:
+        metadata:
+          labels:
+            app: simavi-sphinx
+            sphinx-component: simavi-schema-registry-polaris
+        spec:
+          #hostAliases:
+          #- ip: "10.233.100.183"
+          #  hostnames:
+          #  - "sphinx"
+          containers:
+            - name: schema-registry-polaris
+              image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/simavi-schema-registry
+              imagePullPolicy: Always
+              resources:
+              #  limits:
+              #  memory: "256Mi"
+              ports:
+                - containerPort: 8081
+              env:
+                - name: SCHEMA_REGISTRY_HOST_NAME
+                  value: schema-registry-polaris
+                - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
+                  valueFrom:
+                    configMapKeyRef:
+                      name: simavi-config-map-polaris
+                      key: kafkastore_bootstrap_servers
+                - name: SCHEMA_REGISTRY_LISTENERS
+                  value: 'http://0.0.0.0:8081'
+          imagePullSecrets:
+            - name: intracom-repository
+
+## SCHEMA REGISTRY SERVICE ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: simavi-sphinx
+    name: schema-registry-service-polaris
+  spec:
+    ports:
+    - port: 8081
+      protocol: TCP
+      targetPort: 8081
+    selector:
+      app: simavi-sphinx
+      sphinx-component: simavi-schema-registry-polaris
+    type: ClusterIP

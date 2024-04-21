@@ -1,0 +1,33 @@
+Instructiuni pt realizarea unei infrastructuri de containere care sa contina toate aplicatiile relevante componentele SIMAVI:
+- PostgreSQL
+- Kafka
+- DTM (Data Traffic Monitoring)
+- AD (Anomaly Detection)
+- ID (Interactive Dashboards)
+
+- build aplicatii (a se vedea instructiuni in folderele respective)
+	- build dtm
+	- build ad
+	- build plugins
+ 	- upgrade db
+
+sudo docker-compose -f docker-compose-infrastructure.yml -f docker-compose-sphinx-components.yml build
+sudo docker-compose -f docker-compose-infrastructure.yml -f docker-compose-sphinx-components.yml up
+
+-----------------------------------
+mediu local:
+
+cd docker
+    docker-compose -f docker-compose-infrastructure.yml build
+    docker-compose -f docker-compose-infrastructure.yml up
+
+cd hbase-local
+    docker build -t sphinxproject/hbase .
+    docker push sphinxproject/hbase:1
+    docker run --name hbase-master sphinxproject/hbase
+
+
+[application.properties]
+    hbase.zookeeper.quorum = localhost:12181
+
+

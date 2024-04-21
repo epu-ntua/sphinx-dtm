@@ -1,0 +1,171 @@
+## DTM Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: dtm-deployment
+    labels:
+      app: simavi-sphinx
+      sphinx-component: dtm
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: dtm
+      spec:
+        hostNetwork: true
+        containers:
+          - name: dtm-deployment
+            image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment:latest
+            imagePullPolicy: Always
+            securityContext:
+              capabilities:
+                add:
+                  - NET_RAW
+                  - NET_ADMIN
+            #resources:
+            #  limits:
+            #    memory: "4Gi"
+            ports:
+            - containerPort: 8087
+            env:
+              - name: KAFKA_BOOTSTRAP_ADDRESS
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: kafkastore_bootstrap_servers
+              - name: KAFKA_PROPERTIES_SECURITY_PROTOCOL
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: kafka_properties_security_protocol
+              - name: KAFKA_PROPERTIES_SASL_MECHANISM
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: kafka_properties_sasl_mechanism
+              - name: KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+                value: "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"kafkauser\" password=\"kafkauser123\";"
+              - name: KAFKA_PROPERTIES_SASL_LOGIN_CALLBACK_HANDLER_CLASS
+                value: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler
+              - name: OAUTH_CLIENT_ID
+                value: SIEM
+              - name: OAUTH_CLIENT_SECRET
+                value: ""
+                #value: lgrubzy5m7pvphernshie9b6vem5mll838zjc40vzr7z840m1dtxen9eb5tydq7d8vx50mqn47k98s6xfuarrf8glexver60xwtr856v064h0u41m8vzmprnhwr7esn6
+              - name: OAUTH_TOKEN_ENDPOINT_URI
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: oauth_token_endpoint_uri
+              - name: SSL_TRUSTSTORE_PASSWORD
+                value: test@123
+              - name: SSL_TRUSTSTORE_PATH
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: ssl_truststore_path
+              - name: KAFKA_USERNAME
+                value: kafkauser
+              - name: KAFKA_PASSWORD
+                value: kafkauser123
+              - name: DTM_INSTANCE_KEY
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: dtm_instance_key
+              - name: SPRING_DATASOURCE_URL
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: spring_datasource_url
+              - name: ELASTICSEARCH_URL
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: elasticsearch_url
+              - name: ELASTICSEARCH_INDEX
+                value: "grafana"
+              - name: EXCLUDE_IPS_SURICATA
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: exclude_ips_suricata
+              - name: EXCLUDE_IPS_TSHARK
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: exclude_ips_tshark
+              - name: SM_IP
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: sm_ip
+              - name: KAFKA_JKS
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: kafka_jks
+              - name: FILE_JKS
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: file_jks
+              - name: SOURCE
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: source
+              - name: SFTP_HOST
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: sftp_host
+              - name: SFTP_PORT
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: sftp_port
+              - name: SFTP_PASSWORD
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: sftp_password
+              - name: SFTP_USERNAME
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: sftp_username
+              - name: SFTP_UPLOAD_DIRECTORY
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: sftp_upload_directory
+              - name: TOPIC_DSS
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: topic_dss
+
+        imagePullSecrets:
+          - name: intracom-repository
+
+## DTM Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: dtm-service
+  spec:
+    selector:
+      app: simavi-sphinx
+      sphinx-component: dtm
+    ports:
+      - protocol: TCP
+        port: 8087
+        targetPort: 8087

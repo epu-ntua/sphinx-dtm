@@ -1,0 +1,15 @@
+dtm:
+-Ddtm.instanceKey=1234567
+
+pentru fiecare instanta
+    logstash:
+        in fisierul de configurare (nfstream):
+            add_field => { "[sphinx][instance]" => "instanceKey" }
+        trebuie modificata cheia
+
+
+cd docker
+docker-compose -f docker-compose-infrastructure.yml up
+
+cd interactive-dashboards-ui
+yarn start

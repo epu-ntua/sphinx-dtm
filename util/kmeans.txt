@@ -1,0 +1,68 @@
+1. trebuie [java 1.8]
+
+2. pornire hbase
+    cd c:\tools\hbase-2.3.1\bin
+
+    // pornire
+    hbase master start
+
+    // conectare in consola
+    hbase shell
+
+    // conectare web:
+    http://localhost:16010/
+
+3. din cmd:
+    ipconfig
+        Ethernet adapter Local Area Connection* 13
+            IPv4 Address. . . . . . . . . . . : 172.18.252.203
+        Ethernet adapter vEthernet (nat):
+            IPv4 Address. . . . . . . . . . . : 172.31.192.1
+Verificare ca exista liniile astea in fisierul host din directorul  C:\Windows\System32\drivers\etc
+    172.31.192.1 	hbaseserver localhost.localdomain
+    172.18.252.203  hbaseserver localhost.localdomain
+
+(daca se modifica e nevoie de restart server)
+
+ATELELE
+    4. porneste fara docker
+    5. VPN pornit
+
+Erori:
+    1. org.apache.hadoop.hbase.MasterNotRunningException: java.io.IOException: org.apache.zookeeper.KeeperException$NoNodeException: KeeperErrorCode = NoNode for /hbase/master
+    => nu e pornit server-ul de hbase (zookeeper din docker e up)
+
+    Pentru alte erori, ca de exemplul de mai jos
+    3 => cu docker pornit
+        org.apache.hadoop.hbase.MasterNotRunningException: java.net.ConnectException:
+        Call to D302287.main.siveco.ro/169.254.210.119:16000 failed on connection exception: org.apache.hbase.thirdparty.io.netty.channel.AbstractChannel$AnnotatedConnectException:
+        Connection refused: no further information: D302287.main.siveco.ro/169.254.210.119:16000
+
+   4 => fara docker pornit
+    org.apache.hadoop.hbase.MasterNotRunningException: java.net.ConnectException:
+        Call to D302287.main.siveco.ro/172.18.252.167:16000 failed on connection exception: org.apache.hbase.thirdparty.io.netty.channel.AbstractChannel$AnnotatedConnectException:
+        Connection refused: no further information: D302287.main.siveco.ro/172.18.252.167:16000
+
+     !!REZOLVARE :
+     In hosts lasa un singur ip in loc de cele pe care le-ai pus anterior si pune ip de la:
+       Ethernet adapter Npcap Loopback Adapter:
+                        Autoconfiguration IPv4 Address:.....
+       ex: 169.254.101.227   hbaseserver L302800 localhost
+
+    5 => cu vpn-ul deschis
+    org.apache.hbase.thirdparty.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: no further information: D302287.main.siveco.ro/172.18.252.203:16000
+
+    6 => java.net.BindException: Cannot assign requested address: bind: Service 'sparkDriver' failed after 16 retries (on a random free port)!
+    Consider explicitly setting the appropriate binding address for the service 'sparkDriver' (for example spark.driver.bindAddress for SparkDriver) to the correct binding address.
+
+Daca tot sunt erori:
+- verifica hbase-site.xml din "util\hbase\conf" cu "hbase-site.xml" din hbase-ul instalat.
+
+Daca nu porneste pe motiv de:
+    Cannot assign requested address: bind
+atunci:
+    vezi AGAIN punctul 3.
+
+
+
+

@@ -1,0 +1,63 @@
+node --version
+==> v8.11.3
+
+npm --version
+==> 5.10.0
+
+###########################################
+### data-traffic-monitoring-ui:
+npx create-react-app data-traffic-monitoring-ui
+# npm i -g create-react-app && create-react-app data-traffic-monitoring-ui
+cd data-traffic-monitoring-ui
+# npm start
+yarn start
+
+npm add react-router-dom
+npm install bootstrap
+npm install jquery popper.js
+
+-----------------------------
+https://dev.to/mubbashir10/containerize-react-app-with-docker-for-production-572b
+
+###########################################
+### anomaly-detection:
+npx create-react-app anomaly-detection-ui
+# npm i -g create-react-app && create-react-app anomaly-detection-ui-ui
+cd anomaly-detection-ui
+# npm start
+yarn start
+
+npm add react-router-dom
+npm install bootstrap
+npm install jquery popper.js
+npm install @fortawesome/fontawesome-svg-core
+npm install @fortawesome/free-regular-svg-icons
+npm install @fortawesome/free-solid-svg-icons
+npm install @fortawesome/react-fontawesome
+
+###########################################
+### data-traffic-monitoring-ui:
+npx create-react-app interactive-dashboards-ui
+# npm i -g create-react-app && create-react-app interactive-dashboards-ui
+cd interactive-dashboards-ui
+# npm start
+yarn start
+
+npm add react-router-dom
+npm install bootstrap
+npm install jquery popper.js
+npm install @fortawesome/fontawesome-svg-core --save
+npm install @fortawesome/free-regular-svg-icons --save
+npm install @fortawesome/free-solid-svg-icons --save
+npm install @fortawesome/react-fontawesome --save
+npm i react-intl-datetime-format
+-----------------------------
+
+# i18n
+npm install react-i18next i18next --save
+npm install i18next-browser-languagedetector --save
+npm install i18next-xhr-backend --save
+
+# sse
+npm install eventsource-polyfill
+npm install --save react-toastify

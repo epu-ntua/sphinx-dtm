@@ -1,0 +1,11 @@
+Proxy
+
+	Manual proxy setup
+		use a proxy server: on
+		address: 10.233.100.55
+		port:8080
+		
+In cmd:
+
+	set SM_IP=http://sphinx-toolkit.intracom-telecom.com/SMPlatform/manager/rst
+	curl "%SM_IP%/getServices"

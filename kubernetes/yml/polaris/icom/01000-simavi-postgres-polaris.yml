@@ -1,0 +1,93 @@
+## PSQL Secret ##
+---
+  apiVersion: v1
+  kind: Secret
+  metadata:
+      name: simavi-postgres-secret
+  type: Opaque
+  data:
+      POSTGRES_USER: c3BoaW54
+      POSTGRES_PASSWORD: c3BoaW54
+
+## PSQL Persistent Volume Claim ##
+---
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: simavi-postgres-pv-claim-polaris
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+## PSQL Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: simavi-postgres-deployment-polaris
+    labels:
+      app: simavi-sphinx
+      sphinx-component: simavi-postgres
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: simavi-postgres
+      spec:
+        containers:
+          - name: postgres
+            image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/simavi-postgres
+            imagePullPolicy: Always
+            #resources:
+            #  limits:
+            #    memory: "256Mi"
+            ports:
+            - containerPort: 5432
+            env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: simavi-postgres-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: simavi-postgres-secret
+                  key: POSTGRES_PASSWORD
+            volumeMounts:
+                - mountPath: /var/lib/postgresql/data
+                  name: postgredb-polaris
+        volumes:
+          - name: postgredb-polaris
+            persistentVolumeClaim:
+              claimName: simavi-postgres-pv-claim-polaris
+        imagePullSecrets:
+          - name: intracom-repository
+
+## PSQL Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: sphinx-postgres-polaris
+    labels:
+      app: simavi-sphinx
+      sphinx-component: simavi-postgres
+  spec:
+    type: NodePort
+    selector:
+      app: simavi-sphinx
+      sphinx-component: simavi-postgres
+    ports:
+      - protocol: TCP
+        port: 5432
+        targetPort: 5432
+        nodePort: 30006
+

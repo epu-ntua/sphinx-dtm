@@ -1,0 +1,1978 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 28,
+  "iteration": 1647515563430,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 43,
+      "options": {
+        "content": "<div style=\"padding-top: 20px;\">\r\n    <p style=\"font-size: 55px; text-align: center;\"><b style=\"color: #00a79d;\">SPHINX</b> - Honeypot</p>\r\n    <hr>\r\n    <div style=\"text-align: center;\">\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/HP/HP_DASHBOARD_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Dashboard manual</a>\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/HP/HP_COMPONENT_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Component manual</a>\r\n    </div>\r\n</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "$$hashKey": "object:437",
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "$$hashKey": "object:435",
+              "field": "select field",
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 45,
+      "options": {
+        "content": "\n<h2>Short description</h2>\n<p style=\"text-align: justify\">SPHINX Honeypots aim to lure the attackers in using their provided services and learn from their \nattacks, in order to afterwards modify and deploy the necessary security controls that will address the \ndetected attacks. To achieve this, SPHINX HPs emulate commonly used services/protocols to serve an \nattractive for exploitation system to the cyber attackers.</p>\n<hr/>\n<h2>Objectives</h2>\n<ul style=\"list-style-type: none; padding: 0; margin: 0;\">\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> Emulate commonly used services/protocols</li>\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> Gather attack information from the intruders</li>\n</ul>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Functionalities",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 0,
+        "y": 6
+      },
+      "id": 14,
+      "options": {
+        "content": "<p style=\"text-align: center; background-color: #00a79d; color: white; font-size: 20px; padding: 10px;\">Status</p>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 10,
+        "x": 5,
+        "y": 6
+      },
+      "id": 6,
+      "options": {
+        "content": "<p style=\"text-align: center; background-color: #00a79d; color: white; font-size: 20px; padding: 10px;\"> Services </p>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 9,
+        "x": 15,
+        "y": 6
+      },
+      "id": 13,
+      "options": {
+        "content": "<p style=\"text-align: center; background-color: #00a79d; color: white; font-size: 20px; padding: 10px;\">Info</p>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [
+            {
+              "from": "0",
+              "id": 1,
+              "text": "The system is Active",
+              "to": "500",
+              "type": 1,
+              "value": "1"
+            },
+            {
+              "from": "500",
+              "id": 2,
+              "text": "The system is Inactive",
+              "to": "5000",
+              "type": 1,
+              "value": "0"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "Misc"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "/^active$/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  CASE WHEN \"ISACTIVE\" = 'true' THEN 1 ELSE 0 END as active\r\nFROM \"kafka_HP_STATIC_INFO_AVRO\"\r\nWHERE \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\r\nORDER BY 1\r\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "\""
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"kafka_HP_STATIC_INFO\"",
+          "timeColumn": "none",
+          "timeColumnType": "int8",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 5,
+        "y": 8
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT \"STAT\"\nFROM \"kafka_HP_SERVICE_COUNTERS_AVRO\"\nwhere \"NAME\" = 'ssh'\nAND \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY 1\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "SSH",
+      "type": "stat"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 10,
+        "y": 8
+      },
+      "id": 37,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT \"STAT\"\nFROM \"kafka_HP_SERVICE_COUNTERS_AVRO\"\nwhere \"NAME\" = 'http'\nAND \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY 1\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "HTTP",
+      "type": "stat"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "center",
+            "displayMode": "color-text",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 9,
+        "x": 15,
+        "y": 8
+      },
+      "id": 12,
+      "options": {
+        "showHeader": false
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT \"NAME\"\nFROM \"kafka_HP_STATIC_INFO_AVRO\"\nWHERE \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\norder by \"TS\" desc\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Honeypot Name",
+      "type": "table"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 5,
+        "y": 10
+      },
+      "id": 36,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT \"STAT\"\nFROM \"kafka_HP_SERVICE_COUNTERS_AVRO\"\nwhere \"NAME\" = 'smtp'\nAND \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY 1\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "SMTP",
+      "type": "stat"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 5,
+        "x": 10,
+        "y": 10
+      },
+      "id": 15,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT \"STAT\"\nFROM \"kafka_HP_SERVICE_COUNTERS_AVRO\"\nwhere \"NAME\" = 'ftp'\nAND \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY 1\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "lat"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "worldmap_latlng",
+          "timeColumn": "timestap",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "FTP",
+      "type": "stat"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "center",
+            "displayMode": "color-text",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 9,
+        "x": 15,
+        "y": 10
+      },
+      "id": 19,
+      "options": {
+        "frameIndex": 1,
+        "showHeader": false
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT \"FLAVOUR\"\nFROM \"kafka_HP_STATIC_INFO_AVRO\"\nWHERE  \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\norder by \"TS\" desc\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Honeypot",
+      "transformations": [],
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 15,
+        "x": 0,
+        "y": 12
+      },
+      "id": 24,
+      "options": {
+        "content": "<p style=\"text-align: center; background-color: #00a79d; color: white; font-size: 20px; padding: 10px;\"> Attack Source Map </p>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": "center",
+            "displayMode": "color-text",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 9,
+        "x": 15,
+        "y": 12
+      },
+      "id": 34,
+      "options": {
+        "frameIndex": 1,
+        "showHeader": false
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT \"GENERALINFO\"\nFROM \"kafka_HP_STATIC_INFO_AVRO\"\nWHERE  \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\norder by \"TS\" desc\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Info",
+      "transformations": [],
+      "type": "table"
+    },
+    {
+      "circleMaxSize": 30,
+      "circleMinSize": 2,
+      "colors": [
+        "#FFEE52",
+        "rgba(237, 129, 40, 0.89)",
+        "#C4162A"
+      ],
+      "datasource": "PostgreSQL",
+      "decimals": 0,
+      "esMetric": "Count",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 15,
+        "x": 0,
+        "y": 14
+      },
+      "hideEmpty": false,
+      "hideZero": false,
+      "id": 23,
+      "initialZoom": 1,
+      "locationData": "table",
+      "mapCenter": "Europe",
+      "mapCenterLatitude": 46,
+      "mapCenterLongitude": 14,
+      "maxDataPoints": 1,
+      "mouseWheelZoom": true,
+      "pluginVersion": "7.3.1",
+      "showLegend": true,
+      "stickyLabels": false,
+      "tableQueryOptions": {
+        "geohashField": "geohash",
+        "labelField": "country",
+        "latitudeField": "latitude",
+        "longitudeField": "longitude",
+        "metricField": "",
+        "queryType": "coordinates"
+      },
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  extract(EPOCH from timestamp::timestamp) as time_sec,\n  ip_country as country,\n  ip_address as value,\n  lat as latitude,\n  long as longitude\nFROM hp_geoip\nWHERE \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY timestamp ASC;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "lat"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "worldmap_latlng",
+          "timeColumn": "timestap",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "thresholds": "0,10",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "type": "grafana-worldmap-panel",
+      "unitPlural": "",
+      "unitSingle": "",
+      "valueName": "total"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 0,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 15,
+        "y": 14
+      },
+      "id": 17,
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^CPUACTIVITYVAL$/",
+          "values": false
+        },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "\"NAME\"",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  \"NAME\" AS metric,\n  \"CPUACTIVITYVAL\"\nFROM \"kafka_HP_INTERVAL_INFO_AVRO\"\nWHERE  \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "\"ID\""
+                ],
+                "type": "column"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "\"ID\""
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"kafka_HP_INTERVAL_INFO\"",
+          "timeColumn": "\"ID\"",
+          "timeColumnType": "int8",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "CPU Activity",
+      "type": "gauge"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 0,
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 60
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 19,
+        "y": 14
+      },
+      "id": 33,
+      "options": {
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^MEMORYUSAGEVAL$/",
+          "values": false
+        },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "\"NAME\"",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  \"NAME\" AS metric,\n  \"MEMORYUSAGEVAL\"\nFROM \"kafka_HP_INTERVAL_INFO_AVRO\"\nWHERE \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "\"ID\""
+                ],
+                "type": "column"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "\"ID\""
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"kafka_HP_INTERVAL_INFO\"",
+          "timeColumn": "\"ID\"",
+          "timeColumnType": "int8",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Memory Usage",
+      "type": "gauge"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 15,
+        "y": 19
+      },
+      "id": 18,
+      "options": {
+        "content": "<p style=\"text-align: center; background-color: #141619; color: white; font-size: 20px; padding: 30px;\">Network Activity</p>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 19
+      },
+      "id": 16,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT \"UPLOADVAL\", \"UPLOADUNIT\"\nFROM \"kafka_HP_INTERVAL_INFO_AVRO\"\nWHERE \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY 1\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "lat"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "worldmap_latlng",
+          "timeColumn": "timestap",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Upload",
+      "type": "stat"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "red",
+            "mode": "fixed"
+          },
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 21,
+        "y": 19
+      },
+      "id": 20,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT \"DOWNLOADVAL\", \"DOWNLOADUNIT\"\nFROM \"kafka_HP_INTERVAL_INFO_AVRO\"\nWHERE \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY 1\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "lat"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "worldmap_latlng",
+          "timeColumn": "timestap",
+          "timeColumnType": "timestamp",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Download",
+      "type": "stat"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "decimals": 0,
+          "displayName": "Database Usage",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 9,
+        "x": 15,
+        "y": 23
+      },
+      "id": 21,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value_and_name"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT \"DBUSAGE\"\nFROM \"kafka_HP_INTERVAL_INFO_AVRO\"\nWHERE \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY 1\nlimit 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 8,
+        "x": 0,
+        "y": 27
+      },
+      "id": 30,
+      "options": {
+        "content": "<p style=\"text-align: center; background-color: #00a79d; color: white; font-size: 20px; padding: 10px;\">Currently Connected</p>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 8,
+        "x": 8,
+        "y": 27
+      },
+      "id": 32,
+      "options": {
+        "content": "<p style=\"text-align: center; background-color: #00a79d; color: white; font-size: 20px; padding: 10px;\">Most used Usernames</p>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 8,
+        "x": 16,
+        "y": 27
+      },
+      "id": 31,
+      "options": {
+        "content": "<p style=\"text-align: center; background-color: #00a79d; color: white; font-size: 20px; padding: 10px;\">Most used Passwords</p>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IP"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SERVICE"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 0,
+        "y": 29
+      },
+      "id": 27,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT ON (\"IP\") \"IP\", \"SERVICE\"\nFROM \"kafka_HP_CURRENTLY_CONNECTED_IPS_AVRO\"\nWHERE \"NAME\" = '$honey'\nAND \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY \"IP\", \"TS\" desc\nlimit 10;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "\"ID\""
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"kafka_HP_CURRENTLY_CONNECTED_IPS\"",
+          "timeColumn": "\"ID\"",
+          "timeColumnType": "int8",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transformations": [],
+      "type": "table"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "USERNAME"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 8,
+        "x": 8,
+        "y": 29
+      },
+      "id": 26,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT ON (\"USERNAME\") \"USERNAME\", \"UTIMES\" as \"TIMES\"\nFROM \"kafka_HP_MOST_USED_AVRO\"\nWHERE \"HONEYNAME\" = '$honey'\nAND \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY \"USERNAME\", \"TS\" desc\nlimit 10;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"kafka_HP_STATIC_INFO_AVRO\"",
+          "timeColumn": "time",
+          "where": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "type": "table"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "PASSWORD"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 8,
+        "x": 16,
+        "y": 29
+      },
+      "id": 28,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT ON (\"PASSWORD\") \"PASSWORD\", \"PTIMES\" as \"TIMES\"\nFROM \"kafka_HP_MOST_USED_AVRO\"\nWHERE \"HONEYNAME\" = '$honey'\nAND \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY \"PASSWORD\", \"TS\" desc\nlimit 10;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 8,
+        "x": 0,
+        "y": 34
+      },
+      "id": 46,
+      "options": {
+        "content": "<p style=\"text-align: center; background-color: #00a79d; color: white; font-size: 20px; padding: 10px;\">Captured IPs</p>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IP"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "SERVICE"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 36
+      },
+      "id": 47,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT DISTINCT \"IP\"\nFROM \"kafka_HP_CAPTURED_IPS_AVRO\"\nWHERE \"TS\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\nORDER BY \"IP\", \"TS\" desc\nlimit 10;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "\"ID\""
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"kafka_HP_CURRENTLY_CONNECTED_IPS\"",
+          "timeColumn": "\"ID\"",
+          "timeColumnType": "int8",
+          "where": [
+            {
+              "name": "$__unixEpochFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transformations": [],
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [
+    "Honeypot",
+    "HP"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allFormat": "glob",
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "honeypot1",
+          "value": "honeypot1"
+        },
+        "datasource": "PostgreSQL",
+        "definition": "select DISTINCT \"HONEYNAME\" from \"kafka_HP_MOST_USED_AVRO\" UNION SELECT DISTINCT \"NAME\" FROM \"kafka_HP_CURRENTLY_CONNECTED_IPS_AVRO\"",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Select Honeypot",
+        "multi": false,
+        "name": "honey",
+        "options": [],
+        "query": "select DISTINCT \"HONEYNAME\" from \"kafka_HP_MOST_USED_AVRO\" UNION SELECT DISTINCT \"NAME\" FROM \"kafka_HP_CURRENTLY_CONNECTED_IPS_AVRO\"",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6M",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Honeypot",
+  "uid": "m17dbIwGk",
+  "version": 2
+}

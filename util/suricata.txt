@@ -1,0 +1,113 @@
+cd C:\tools\Suricata
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml  -i 192.168.56.1
+# daca nu merge, porneste cmd ca admin
+
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -i 192.168.56.1 -i 192.168.1.6
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -i 192.168.56.1 -i 192.168.1.6 -i 172.17.93.49 -i 172.18.32.1 -i 172.18.252.213 -i 169.254.210.119
+
+
+cd C:\tools\Suricata
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\2015-03-24_capture1-only-dns.pcap
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r c:\tools\Suricata\log\SAT-01-12-2018_0750
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r c:\tools\Suricata\log\2015-03-24_capture1-only-dns.pcap
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CICDDoS2019\PCAP-01-12_0-0249
+
+#cd C:\tools\Suricata6
+#suricata -l c:\tools\Suricata6\log -c c:\tools\Suricata6\Suricata.yaml -r F:\dbpcap\2015-03-24_capture1-only-dns.pcap
+
+Observatie:
+!!!!!!!!!!!!!!!!!!!!!!!!!!! pentru suricata6 e nevoie de  "npcap-0.9997.exe"
+!!!!!!!!!!!!!!!!!!!!!!!!!!! pentru suricata5 e nevoie de  "npcap-0.99-r7.exe"
+
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata6\Suricata.yaml -r c:\tools\Suricata6\log\SAT-01-12-2018_0750
+
+Test 0:
+    suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CTU-Normal-4-only-DNS\2015-03-24_capture1-only-dns.pcap
+
+Test 1:
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CTU-IoT-Malware-Capture-7-1\2018-07-20-17-31-20-192.168.100.108.pcap
+
+    info:
+       suricata: Pcap-file module read 1 files, 11508430 packets, 755998808 bytes
+           adml:{event-count:1379539,packets:36,DNS (bytes):93227445,flow-count:9}
+       CTU-IoT-Malware-Capture-7-1 (Linux.Mirai)
+       LABELS DISTRIBUTION
+           Label	        Flows
+           Benign	        75,955
+           C&C-HeartBeat	5,778
+           DDoS	            39,584
+           Okiru	        11,333,397
+
+       LINK TO THIS DATASET FILES:
+       https://mcfp.felk.cvut.cz/publicDatasets/IoT-23-Dataset/IndividualScenarios/CTU-IoT-Malware-Capture-7-1
+
+Test 2:
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CTU-IoT-Malware-Capture-35-1\2018-12-21-15-33-59-192.168.1.196.pcap
+    info:
+        suricata: Pcap-file module read 1 files, 46832850 packets, 3061457724 bytes
+
+Test 3:
+
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CTU-Malware-Capture-Botnet-45\botnet-capture-20110815-rbot-dos.pcap
+
+Test 4:
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\DoHBrw-2020\MaliciousDoH-dns2tcp-Pcaps\MaliciousDoH-dns2tcp-Pcap-001_600
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\DoHBrw-2020\MaliciousDoH-dns2tcp-Pcaps\MaliciousDoH-dns2tcp-Pcap-601_1201
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\DoHBrw-2020\MaliciousDoH-dns2tcp-Pcaps\MaliciousDoH-dns2tcp-Pcap-1803_2403
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\DoHBrw-2020\MaliciousDoH-dns2tcp-Pcaps\MaliciousDoH-dns2tcp-Pcap-2404-2804
+
+Test 5:
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\DoHBrw-2020\MaliciousDoH-dnscat2-Pcaps\MaliciousDoH-dnscat2-Pcap-001-600
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\DoHBrw-2020\MaliciousDoH-dnscat2-Pcaps\MaliciousDoH-dnscat2-Pcap-601_1201
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\DoHBrw-2020\MaliciousDoH-dnscat2-Pcaps\MaliciousDoH-dnscat2-Pcap-1202_1802
+
+Test 6:
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CICDDoS2019\PCAP-01-12_0-0249
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CICDDoS2019\PCAP-01-12_0250-0499
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CICDDoS2019\PCAP-01-12_0500-0749
+suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CICDDoS2019\PCAP-01-12_0750-0818
+
+    info:
+        suricata:
+            Pcap-file module read 250 files, 87534461 packets, 48599528755 bytes
+                12/01/2018-16:36:44.450615  [**] [1:2017966:3] ET DOS Likely NTP DDoS In Progress MON_LIST Response to Non-Ephemeral Port IMPL 0x03 [**] [Classification: Unknown Classtype] [Priority: 3] {UDP} 172.16.0.5:123 -> 192.168.50.1:123
+                12/01/2018-16:40:03.260334  [**] [1:2017966:3] ET DOS Likely NTP DDoS In Progress MON_LIST Response to Non-Ephemeral Port IMPL 0x03 [**] [Classification: Unknown Classtype] [Priority: 3] {UDP} 172.16.0.5:123 -> 192.168.50.1:123
+                12/01/2018-16:43:39.844881  [**] [1:2017966:3] ET DOS Likely NTP DDoS In Progress MON_LIST Response to Non-Ephemeral Port IMPL 0x03 [**] [Classification: Unknown Classtype] [Priority: 3] {UDP} 172.16.0.5:123 -> 192.168.50.1:9
+            Pcap-file module read 250 files, 50885954 packets, 49185972806 bytes
+                12/01/2018-17:21:49.300681  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:34472 -> 91.189.88.152:80
+                12/01/2018-17:21:49.749032  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:34472 -> 91.189.88.152:80
+                12/01/2018-17:21:49.310770  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.395648  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.874631  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:34472 -> 91.189.88.152:80
+                12/01/2018-17:21:49.874631  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:34472 -> 91.189.88.152:80
+                12/01/2018-17:21:49.874631  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:34472 -> 91.189.88.152:80
+                12/01/2018-17:21:49.739557  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:21:49.882078  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.9:47426 -> 91.189.88.161:80
+                12/01/2018-17:46:33.478257  [**] [1:2017919:2] ET DOS Possible NTP DDoS Inbound Frequent Un-Authed MON_LIST Requests IMPL 0x03 [**] [Classification: Unknown Classtype] [Priority: 3] {UDP} 172.16.0.5:19330 -> 192.168.50.1:123
+            Pcap-file module read 250 files, 88457343 packets, 48584775528 bytes
+                12/01/2018-18:17:53.223176  [**] [1:2001581:15] ET SCAN Behavioral Unusual Port 135 traffic Potential Scan or Infection [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 172.16.0.5:19196 -> 192.168.50.1:135
+                12/01/2018-18:23:02.598879  [**] [1:2001569:15] ET SCAN Behavioral Unusual Port 445 traffic Potential Scan or Infection [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 172.16.0.5:52545 -> 192.168.50.1:445
+                12/01/2018-19:31:32.253970  [**] [1:2001583:16] ET SCAN Behavioral Unusual Port 1433 traffic Potential Scan or Infection [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 172.16.0.5:61849 -> 192.168.50.1:1433
+            Pcap-file module read 68 files, 23905529 packets, 13221372195 bytes
+                12/01/2018-22:47:26.735429  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.1:58274 -> 91.189.88.162:80
+                12/01/2018-22:47:27.134598  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.1:58274 -> 91.189.88.162:80
+                12/01/2018-22:47:27.258510  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.1:58274 -> 91.189.88.162:80
+                12/01/2018-22:47:27.258510  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.1:58274 -> 91.189.88.162:80
+                12/01/2018-22:47:27.258510  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.1:58274 -> 91.189.88.162:80
+                12/01/2018-22:47:26.732408  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.1:35578 -> 91.189.95.83:80
+                12/01/2018-22:47:26.734775  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.1:40078 -> 91.189.88.149:80
+                12/01/2018-22:47:26.819528  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.1:40078 -> 91.189.88.149:80
+                12/01/2018-22:47:27.165937  [**] [1:2013504:5] ET POLICY GNU/Linux APT User-Agent Outbound likely related to package management [**] [Classification: Unknown Classtype] [Priority: 3] {TCP} 192.168.50.1:40078 -> 91.189.88.149:80
+
+Test 6:
+    suricata -l c:\tools\Suricata\log -c c:\tools\Suricata\Suricata.yaml -r F:\dbpcap\CTU-Malware-Capture-Botnet-45\botnet-capture-20110815-rbot-dos.pcap
+        Pcap-file module read 1 files, 256712 packets, 218271666 bytes

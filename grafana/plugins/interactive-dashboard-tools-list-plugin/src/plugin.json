@@ -1,0 +1,28 @@
+{
+  "type": "panel",
+  "name": "interactive-dashboard-tools-list-plugin",
+  "id": "simavi-interactive-dashboard-tools-list-plugin",
+  "skipDataQuery": true,
+  "info": {
+    "description": "sphinx tool panel",
+    "author": {
+      "name": "simavi"
+    },
+    "keywords": [
+      "sphinx",
+      "tools",
+      "panel",
+      "tool"
+    ],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaVersion": "7.3.x",
+    "plugins": []
+  }
+}

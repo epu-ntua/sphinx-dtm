@@ -1,0 +1,49 @@
+CREATE SOURCE CONNECTOR jdbc_source_1 WITH (
+  'connector.class'          = 'io.confluent.connect.jdbc.JdbcSourceConnector',
+  'connection.url'           = 'jdbc:postgresql://sphinx-postgres:5432/sphinx',
+  'connection.user'          = 'sphinx',
+  'connection.password'      = 'sphinx',
+  'topic.prefix'             = 'jdbc_',
+  'table.whitelist'          = 'table_source',
+  'mode'                     = 'incrementing',
+  'numeric.mapping'          = 'best_fit',
+  'incrementing.column.name' = 'id',
+  'key'                      = 'id',
+  'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter'
+  );
+
+CREATE SOURCE CONNECTOR jdbc_source WITH (
+  'connector.class'          = 'io.confluent.connect.jdbc.JdbcSourceConnector',
+  'connection.url'           = 'jdbc:postgresql://sphinx-postgres:5432/sphinx',
+  'connection.user'          = 'sphinx',
+  'connection.password'      = 'sphinx',
+  'topic.prefix'             = 'jdbc_',
+  'table.whitelist'          = 'table_source',
+  'mode'                     = 'incrementing',
+  'numeric.mapping'          = 'best_fit',
+  'incrementing.column.name' = 'id',
+  'key'                      = 'id',
+  'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter',
+  'value.converter'          = 'org.apache.kafka.connect.json.JsonConverter',
+  'key.converter.schemas.enable' = false,
+  'value.converter.schemas.enable' = true,
+  'auto.create'              = true
+  );
+
+
+CREATE SINK CONNECTOR jdbc_dest_4 WITH (
+  'connector.class'          = 'io.confluent.connect.jdbc.JdbcSinkConnector',
+  'connection.url'           = 'jdbc:postgresql://sphinx-postgres:5432/sphinx',
+  'connection.user'          = 'sphinx',
+  'connection.password'      = 'sphinx',
+  'mode'                     = 'incrementing',
+  'key'                      = 'id',
+  'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter',
+  'value.converter'          = 'org.apache.kafka.connect.json.JsonConverter',
+  'key.converter.schemas.enable' = false,
+  'value.converter.schemas.enable' = false,
+  'pk.mode'                  = 'record_key',
+  'pk.fields'                = 'id',
+  'topics'                    = 'jdbc_table_source',
+  'table.name.format'        = 'kafka_${topic}',
+  'auto.create'              = true);

@@ -1,0 +1,203 @@
+# Pentru terminarea tuturor query-urilor, stream-urilor:
+# https://rmoff.net/2019/03/25/terminate-all-ksql-queries/
+
+	DROP CONNECTOR ksql_to_postgresql;
+	DROP STREAM IF EXISTS rcra_report;
+	DROP STREAM IF EXISTS RCRA_REPORT_TOPIC_AVRO;
+	DROP STREAM IF EXISTS RCRA_REPORT_TOPIC;
+	DROP STREAM IF EXISTS FDCE_REPORT_TOPIC;
+	DROP STREAM IF EXISTS FDCE_REPORT_TOPIC_AVRO;
+	DROP STREAM IF EXISTS KB_INDICATORS;
+	DROP STREAM IF EXISTS KB_INDICATORS_AVRO;
+	DROP STREAM IF EXISTS HP_CURRENTLY_CONNECTED_IPS;
+	DROP STREAM IF EXISTS HP_CURRENTLY_CONNECTED_IPS_FILTERED;
+	DROP STREAM IF EXISTS HP_CURRENTLY_CONNECTED_IPS_AVRO;
+	DROP STREAM IF EXISTS HP_INTERVAL_INFO;
+	DROP STREAM IF EXISTS HP_INTERVAL_INFO_FILTERED;
+	DROP STREAM IF EXISTS HP_INTERVAL_INFO_AVRO;
+	DROP STREAM IF EXISTS HP_MOST_USED;
+	DROP STREAM IF EXISTS HP_MOST_USED_FILTERED;
+	DROP STREAM IF EXISTS HP_MOST_USED_AVRO;
+	DROP STREAM IF EXISTS HP_SERVICE_COUNTERS;
+	DROP STREAM IF EXISTS HP_SERVICE_COUNTERS_FILTERED;
+	DROP STREAM IF EXISTS HP_SERVICE_COUNTERS_AVRO;
+	DROP STREAM IF EXISTS HP_STATIC_INFO;
+	DROP STREAM IF EXISTS HP_STATIC_INFO_FILTERED;
+	DROP STREAM IF EXISTS HP_STATIC_INFO_AVRO;
+	DROP STREAM IF EXISTS JDBC_SOURCE_AVRO;
+	DROP STREAM IF EXISTS dtm_alert;
+	DROP STREAM IF EXISTS dss_suggestions;
+	DROP STREAM IF EXISTS dss_suggestions_filtered;
+	DROP STREAM IF EXISTS AD_ALERTS;
+	DROP STREAM IF EXISTS AD_ALERTS_AVRO;
+
+======================
+SINK CONNECTOR
+======================
+
+CREATE SINK CONNECTOR ksql_to_postgresql WITH (
+  'connector.class'          = 'io.confluent.connect.jdbc.JdbcSinkConnector',
+  'connection.url'           = 'jdbc:postgresql://sphinx-postgres:5432/sphinx',
+  'connection.user'          = 'sphinx',
+  'connection.password'      = 'sphinx',
+  'mode'                     = 'incrementing',
+  'key'                      = 'id',
+  'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter',
+  'value.converter'          = 'io.confluent.connect.avro.AvroConverter',
+  'value.converter.schema.registry.url'= 'http://172.17.0.3:8081',
+  'key.converter.schemas.enable' = false,
+  'value.converter.schemas.enable' = true,
+  'pk.mode'                  = 'none',
+  'pk.fields'                = 'ID',
+  'topics'                    = 'RCRA_REPORT_TOPIC_AVRO, KB_INDICATORS_AVRO, HP_CURRENTLY_CONNECTED_IPS_AVRO, HP_INTERVAL_INFO_AVRO, HP_MOST_USED_AVRO, HP_SERVICE_COUNTERS_AVRO, HP_STATIC_INFO_AVRO, FDCE_REPORT_TOPIC_AVRO, JDBC_SOURCE_AVRO, AD_ALERTS_AVRO',
+  'table.name.format'        = 'kafka_${topic}',
+  'auto.create'              = true
+);
+
+
+======================
+For RCRA
+======================
+LOCAL:
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic rcra-report-topic --partitions 1 --replication-factor 1
+
+	CREATE STREAM RCRA_REPORT_TOPIC (id INT KEY, "Threat Detected" VARCHAR, "Date" VARCHAR, "Asset" VARCHAR, "Risk Level" VARCHAR) WITH (KAFKA_TOPIC='rcra-report-topic', VALUE_FORMAT='JSON');
+	CREATE STREAM RCRA_REPORT_TOPIC_AVRO (id INT KEY, THREAT VARCHAR, TIMESTAMP VARCHAR, ASSET VARCHAR, RISK VARCHAR) WITH (KAFKA_TOPIC='RCRA_REPORT_TOPIC_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+	INSERT INTO RCRA_REPORT_TOPIC_AVRO SELECT id, "Threat Detected" AS THREAT, "Date" AS TIMESTAMP, "Asset" AS ASSET, "Risk Level" AS RISK FROM RCRA_REPORT_TOPIC;
+
+	{"Threat Detected" : "DDoS" , "Date" : "---" ,  "Asset" : "Server 1" , "Risk Level" : "-"}
+
+
+======================
+For FDCE
+======================
+LOCAL:
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic fdce-report-topic --partitions 1 --replication-factor 1
+
+	CREATE STREAM FDCE_REPORT_TOPIC (id INT KEY, "Report Name" VARCHAR, "Date" VARCHAR, "Status" VARCHAR, "Last Edited" VARCHAR, "Description" VARCHAR) WITH (KAFKA_TOPIC='fdce-report-topic', VALUE_FORMAT='JSON');
+	CREATE STREAM FDCE_REPORT_TOPIC_AVRO (id INT KEY, REPORT VARCHAR, TIMESTAMP VARCHAR, STATUS VARCHAR, LASTEDITED VARCHAR, DESCRIPTION VARCHAR) WITH (KAFKA_TOPIC='FDCE_REPORT_TOPIC_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+	INSERT INTO FDCE_REPORT_TOPIC_AVRO SELECT id, "Report Name" AS REPORT, "Date" AS TIMESTAMP, "Status" AS STATUS, "Last Edited" AS LASTEDITED, "Description" AS DESCRIPTION FROM FDCE_REPORT_TOPIC;
+
+	{“Report Name” : “DDoS attack on server” , “Date” : “---” ,  “Status” : “Resolved” , “Last Edited” : “-” , “Description” : “------”}
+
+
+======================
+For KB
+======================
+LOCAL
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic kb-indicators --partitions 1 --replication-factor 1
+
+	CREATE STREAM KB_INDICATORS ("id" INT KEY, "articles" VARCHAR, "users" VARCHAR, "url" VARCHAR) WITH (KAFKA_TOPIC='kb-indicators', PARTITIONS=1, VALUE_FORMAT='JSON');
+	CREATE STREAM KB_INDICATORS_AVRO (id INT KEY, ARTICLES VARCHAR, USERS VARCHAR, URL VARCHAR) WITH (KAFKA_TOPIC='KB_INDICATORS_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+	INSERT INTO KB_INDICATORS_AVRO SELECT "id" as id, "articles" AS ARTICLES, "users" AS USERS, "url" AS URL FROM KB_INDICATORS;
+
+	{"id": "123","articles": 65727,"users": 1984,"url": "http://192.168.1.10:4444"}
+
+
+
+======================
+For HP
+======================
+LOCAL:
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic hp-currently-connected-ips --partitions 12 --replication-factor 1
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic hp-interval-info --partitions 12 --replication-factor 1
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic hp-most-used --partitions 12 --replication-factor 1
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic hp-service-counters --partitions 12 --replication-factor 1
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic hp-static-info --partitions 12 --replication-factor 1
+
+	=========HP_CURRENTLY_CONNECTED_IPS=========
+	
+	CREATE STREAM HP_CURRENTLY_CONNECTED_IPS (id INT KEY, "currently_connected" ARRAY<VARCHAR>) WITH (KAFKA_TOPIC='hp-currently-connected-ips', PARTITIONS=12, VALUE_FORMAT='JSON');
+	CREATE STREAM HP_CURRENTLY_CONNECTED_IPS_FILTERED AS SELECT id, EXPLODE("currently_connected") AS currently_connected FROM HP_CURRENTLY_CONNECTED_IPS;
+	CREATE STREAM HP_CURRENTLY_CONNECTED_IPS_AVRO (id INT KEY, NAME VARCHAR, IP VARCHAR, SERVICE VARCHAR) WITH (KAFKA_TOPIC='HP_CURRENTLY_CONNECTED_IPS_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+	INSERT INTO HP_CURRENTLY_CONNECTED_IPS_AVRO SELECT id, EXTRACTJSONFIELD(currently_connected, '$.name') AS NAME, EXTRACTJSONFIELD(currently_connected, '$.ip') AS IP,  EXTRACTJSONFIELD(currently_connected, '$.service') AS SERVICE FROM HP_CURRENTLY_CONNECTED_IPS_FILTERED;
+	
+	{"currently_connected": [{"name": "honey1","ip": "182.09.43.5","service": "SSH"},{"name": "honey1","ip": "45.38.69.2","service": "HTTP"}]}
+
+
+
+	==============HP_INTERVAL_INFO==============
+
+	CREATE STREAM HP_INTERVAL_INFO (id INT KEY, "name" VARCHAR, "cpu_activity" VARCHAR, "memory_usage" VARCHAR, "upload" VARCHAR, "download" VARCHAR, "db_usage" VARCHAR) WITH (KAFKA_TOPIC='hp-interval-info', PARTITIONS=12, VALUE_FORMAT='JSON');
+	CREATE STREAM HP_INTERVAL_INFO_FILTERED AS SELECT id, "name" AS name, EXTRACTJSONFIELD("cpu_activity", '$.value') AS cpuactivityval, EXTRACTJSONFIELD("cpu_activity", '$.unit') AS cpuactivityunit, EXTRACTJSONFIELD("memory_usage", '$.value') AS memoryusageval, EXTRACTJSONFIELD("memory_usage", '$.unit') AS memoryusageunit, EXTRACTJSONFIELD("upload", '$.value') AS uploadval, EXTRACTJSONFIELD("upload", '$.unit') AS uploadunit, EXTRACTJSONFIELD("download", '$.value') AS downloadval, EXTRACTJSONFIELD("download", '$.unit') AS downloadunit, "db_usage" AS dbusage FROM HP_INTERVAL_INFO;	
+	CREATE STREAM HP_INTERVAL_INFO_AVRO (id INT KEY, NAME VARCHAR, CPUACTIVITYVAL VARCHAR, CPUACTIVITYUNIT VARCHAR, MEMORYUSAGEVAL VARCHAR, MEMORYUSAGEUNIT VARCHAR, UPLOADVAL VARCHAR, UPLOADUNIT VARCHAR, DOWNLOADVAL VARCHAR, DOWNLOADUNIT VARCHAR, DBUSAGE VARCHAR) WITH (KAFKA_TOPIC='HP_INTERVAL_INFO_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+	INSERT INTO HP_INTERVAL_INFO_AVRO SELECT id, name AS NAME, cpuactivityval AS CPUACTIVITYVAL, cpuactivityunit AS CPUACTIVITYUNIT, memoryusageval AS MEMORYUSAGEVAL, memoryusageunit AS MEMORYUSAGEUNIT, uploadval AS UPLOADVAL, uploadunit AS UPLOADUNIT, downloadval AS DOWNLOADVAL, downloadunit AS DOWNLOADUNIT, dbusage AS DBUSAGE FROM HP_INTERVAL_INFO_FILTERED;
+	
+	{"name": "honey1","id":"123456789","cpu_activity": {"value":50,"unit":"%"},"memory_usage": {"value":80,"unit":"%"},"upload": {"value":1280,"unit": "kbps"},"download":{"value":"12900","unit":"kbps"},"db_usage": 3210}
+
+
+
+	================HP_MOST_USED================
+
+	CREATE STREAM HP_MOST_USED (id INT KEY, "honey_name" VARCHAR, "honey_id" VARCHAR, "usernames" ARRAY<VARCHAR>, "passwords" ARRAY<VARCHAR>) WITH (KAFKA_TOPIC='hp-most-used', PARTITIONS=12, VALUE_FORMAT='JSON');
+	CREATE STREAM HP_MOST_USED_FILTERED AS SELECT id, "honey_name" AS honeyname, "honey_id" AS honeyid, EXPLODE("usernames") AS usernames, EXPLODE("passwords") AS passwords FROM HP_MOST_USED;
+	CREATE STREAM HP_MOST_USED_AVRO (id INT KEY, HONEYNAME VARCHAR, HONEYID VARCHAR, USERNAME VARCHAR, UTIMES VARCHAR, PASSWORD VARCHAR, PTIMES VARCHAR) WITH (KAFKA_TOPIC='HP_MOST_USED_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+	INSERT INTO HP_MOST_USED_AVRO SELECT id, honeyname AS HONEYNAME, honeyid AS HONEYID, EXTRACTJSONFIELD(usernames, '$.username') AS USERNAME, EXTRACTJSONFIELD(usernames, '$.times') AS UTIMES, EXTRACTJSONFIELD(passwords, '$.password') AS PASSWORD, EXTRACTJSONFIELD(passwords, '$.times') AS PTIMES FROM HP_MOST_USED_FILTERED;
+	
+	{"honey_name": "honey1","honey_id": 123456789,"usernames": [{"username": "root","times": 2961},{"username": "ubuntu","times": 1121}],"passwords": [{"password": "admin","times": 1024},{"password": "default","times": 85}]}
+
+
+
+	=============HP_SERVICE_COUNTERS=============
+
+	CREATE STREAM HP_SERVICE_COUNTERS (id INT KEY, "name" VARCHAR, "stat" VARCHAR) WITH (KAFKA_TOPIC='hp-service-counters', PARTITIONS=12, VALUE_FORMAT='JSON');	
+	CREATE STREAM HP_SERVICE_COUNTERS_FILTERED AS SELECT id, "name" AS name, "stat" AS stat FROM HP_SERVICE_COUNTERS;
+	CREATE STREAM HP_SERVICE_COUNTERS_AVRO (id INT KEY, NAME VARCHAR, STAT VARCHAR) WITH (KAFKA_TOPIC='HP_SERVICE_COUNTERS_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+	INSERT INTO HP_SERVICE_COUNTERS_AVRO SELECT id, name AS NAME, stat AS STAT FROM HP_SERVICE_COUNTERS_FILTERED;
+	
+	{"name": "SSH","stat": "65727"}
+
+
+
+	===============HP_STATIC_INFO===============
+
+	CREATE STREAM HP_STATIC_INFO (id INT KEY, "name" VARCHAR, "isActive" VARCHAR, "active_services" VARCHAR, "flavor" VARCHAR, "general_info" VARCHAR) WITH (KAFKA_TOPIC='hp-static-info', PARTITIONS=12, VALUE_FORMAT='JSON');	
+	CREATE STREAM HP_STATIC_INFO_FILTERED AS SELECT id, "name" AS name, "isActive" as isactive, EXTRACTJSONFIELD("active_services", '$.ssh') AS ssh, EXTRACTJSONFIELD("active_services", '$.ftp') AS ftp, EXTRACTJSONFIELD("active_services", '$.smtp') AS smtp, EXTRACTJSONFIELD("active_services", '$.http') AS http, "flavor" as flavor, "general_info" as generalinfo FROM HP_STATIC_INFO;	
+	CREATE STREAM HP_STATIC_INFO_AVRO (id INT KEY, NAME VARCHAR, ISACTIVE VARCHAR, SSH VARCHAR, FTP VARCHAR, SMTP VARCHAR, HTTP VARCHAR, FLAVOR VARCHAR, GENERALINFO VARCHAR) WITH (KAFKA_TOPIC='HP_STATIC_INFO_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+	INSERT INTO HP_STATIC_INFO_AVRO SELECT id, name AS NAME, isactive AS ISACTIVE, ssh AS SSH, ftp AS FTP, smtp AS SMTP, http AS HTTP, flavor AS FLAVOR, generalinfo AS GENERALINFO FROM HP_STATIC_INFO_FILTERED;
+	
+	{"name":"honeypot1","isActive":true,"id": "123456789","active_services": {"ssh": true,"ftp": true,"smtp": false,"http": true},"flavor": "physical","general_info": "Linux 5.4.0-7634-generic ARM64 | armv7l 8-core @ 1.8Ghz | 4GB RAM"}
+
+
+
+======================
+FOR kafka_JDBC_SOURCE_AVRO
+======================
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic dtm-alert --partitions 1 --replication-factor 1
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic dss-suggestions --partitions 1 --replication-factor 1
+
+	===============JDBC_SOURCE_AVRO===============
+	CREATE STREAM JDBC_SOURCE_AVRO (id INT KEY, DESCRIPTION VARCHAR, TIMESTAMP VARCHAR, LOCATION VARCHAR, INDICATION VARCHAR, TOOL VARCHAR, STATUS VARCHAR, ACTION VARCHAR, DETAILS VARCHAR, SENT VARCHAR) WITH (KAFKA_TOPIC='JDBC_SOURCE_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+	
+	
+	
+	==================DTM-ALERT===================
+	CREATE STREAM dtm_alert (id INT KEY, "objects" ARRAY<VARCHAR>, "flow_id" VARCHAR, "event_type" VARCHAR) WITH (KAFKA_TOPIC='dtm-alert', VALUE_FORMAT='JSON', PARTITIONS=1);
+	INSERT INTO JDBC_SOURCE_AVRO SELECT id, EXTRACTJSONFIELD("objects"[1], '$.details.alert.category') AS DESCRIPTION, EXTRACTJSONFIELD("objects"[1], '$.created') AS TIMESTAMP, EXTRACTJSONFIELD("objects"[1], '$.details.dest_geoip.country_name') AS LOCATION, '--' AS INDICATION, 'DTM' AS TOOL, 'OPEN' AS STATUS,  '--' AS ACTION, EXTRACTJSONFIELD("objects"[1], '$.details.alert') AS DETAILS, 'false' AS SENT FROM dtm_alert;
+
+	DTM: {"objects":[{"modified":"2021-03-31T13:01:31.287Z","details":{"@version":"1","flow_id":1816925152427402,"host":"L302506","in_iface":"\\Device\\NPF_{81EBF789-7A11-49FB-99C7-F5C1002824A0}","tags":["_dateparsefailure","_geoip_lookup_failure"],"src_geoip":{},"@timestamp":"2021-03-31T13:01:31.287Z","dest_port":57621,"path":"C:/Suricata/log/eve.json","dest_ip":"172.18.252.255","flow":{"pkts_toclient":0,"pkts_toserver":8,"bytes_toserver":688,"start":"2021-03-17T12:30:35.408970GTB Standard Time","bytes_toclient":0},"sphinx":{"tool":"suricata","component":"dtm"},"src_port":57621,"type":"SuricataIDPS","dest_ip_rdns":"172.18.252.255","src_ip":"172.18.252.172","alert":{"signature":"ET POLICY Spotify P2P Client","signature_id":2027397,"rev":1,"gid":1,"severity":3,"metadata":{"performance_impact":["Low"],"updated_at":["2019_05_30"],"created_at":["2019_05_30"],"attack_target":["Client_Endpoint"],"affected_product":["Windows_Client_Apps"],"signature_severity":["Minor"],"deployment":["Internal"]},"action":"allowed","category":"Not Suspicious Traffic"},"src_ip_rdns":"l303154.main.siveco.ro","event_type":"alert","proto":"UDP","dest_geoip":{},"event_kind":"alert","timestamp":"2021-03-17T12:34:05.415583GTB Standard Time","app_proto":"failed"},"id":"x-sphinx-dtm-alert--35dd5c1a-1270-4646-b08e-49891a1bc85c","spec_version":"2.1","created":"2021-03-31T13:01:31.287Z","type":"x-sphinx-dtm-alert"},{"name":"L302506","modified":"2021-03-31T13:01:31.287Z","spec_version":"2.1","id":"identity--b9c4978b-0690-4440-99a4-32e45481430c","created":"2021-03-31T13:01:31.287Z","type":"identity"},{"modified":"2021-03-31T13:01:31.287Z","target_ref":"x-sphinx-dtm-alert--35dd5c1a-1270-4646-b08e-49891a1bc85c","id":"relationship--08d56616-12a4-47af-a3bb-39ce26486158","spec_version":"2.1","created":"2021-03-31T13:01:31.287Z","relationship_type":"detected","type":"relationship","source_ref":"identity--b9c4978b-0690-4440-99a4-32e45481430c"}],"flow_id":1816925152427402,"type":"bundle","event_type":"alert","event_kind":"alert","id":"bundle--d45b4faf-2da5-471a-93a7-0e386622474a"}
+	
+	
+	===============DSS-SUGGESTIONS================
+	CREATE STREAM dss_suggestions (id INT KEY, "timestamp" VARCHAR, "event" VARCHAR, "destination_ip" VARCHAR, "suggestions" ARRAY<VARCHAR>) WITH (KAFKA_TOPIC='dss-suggestions', VALUE_FORMAT='JSON', PARTITIONS=1);
+	CREATE STREAM dss_suggestions_filtered AS SELECT id, "timestamp" AS timestamp, "event" AS event, "destination_ip" AS destinationIP, EXPLODE("suggestions") AS suggestion FROM dss_suggestions;
+	INSERT INTO JDBC_SOURCE_AVRO SELECT id, event AS DESCRIPTION, timestamp AS TIMESTAMP, '--' AS LOCATION, destinationIP AS INDICATION, 'DSS' AS TOOL, 'OPEN' AS STATUS,  EXTRACTJSONFIELD(suggestion, '$.suggestion') AS ACTION, EXTRACTJSONFIELD(suggestion, '$.risk_reduction_level') AS DETAILS, 'false' AS SENT FROM dss_suggestions_filtered;
+
+	DSS: {"timestamp":"2021-03-04 17:55:00.092000","event":"Ransomware","destination_ip":"192.168.80.129","suggestions":[{"type":"course-of-action","spec_version":"2.1","id":"suggestion-ransomware-attack-01","created":"2016-08-03T16:27:14Z","modified":"2016-08-03T16:27:14Z","suggestion":"Keep systems and software updated with relevant patches.","risk_reduction_level":0},{"type":"course-of-action","spec_version":"2.1","id":"suggestion-ransomware-attack-02","created":"2016-08-03T16:27:14Z","modified":"2016-08-03T16:27:14Z","suggestion":"Have external backup copies of the data beyond simple snapshots that are maintained on the source system .","risk_reduction_level":0},{"type":"course-of-action","spec_version":"2.1","id":"suggestion-ransomware-attack-03","created":"2016-08-03T16:27:14Z","modified":"2016-08-03T16:27:14Z","suggestion":" Multi-factor Authentication (MFA).","risk_reduction_level":0},{"type":"course-of-action","spec_version":"2.1","id":"suggestion-ransomware-attack-04","created":"2016-08-03T16:27:14Z","modified":"2016-08-03T16:27:14Z","suggestion":"Use the least privilege model for providing remote access - use low privilege accounts to authenticate, and provide an audited process to allow a user to escalate their privileges within the remote session where necessary","risk_reduction_level":0}]}
+
+
+
+======================
+FOR AD
+======================
+./kafka-topics.bat --create --bootstrap-server Sphinx:9092 --topic ad-alert --partitions 1 --replication-factor 1
+
+
+	CREATE STREAM AD_ALERTS (id INT KEY, "objects" ARRAY<VARCHAR>) WITH (KAFKA_TOPIC='ad-alerts', PARTITIONS=12, VALUE_FORMAT='JSON');
+	CREATE STREAM AD_ALERTS_AVRO (id INT KEY, TOTALFLOWS VARCHAR, PROTOCOLFLOWID VARCHAR, PROTOCOLFLOWDETECTEDPROTOCOL VARCHAR, PROTOCOLFLOWLOWERPORT VARCHAR, PROTOCOLFLOWUPPERPORT VARCHAR, PROTOCOLFLOWUPPERIP VARCHAR, PROTOCOLFLOWLOWERIP VARCHAR, PROTOCOLFLOWIPPROTOCOL VARCHAR, PROTOCOLFLOWFLOWDURATION VARCHAR, PROTOCOLFLOWBYTES VARCHAR, PROTOCOLFLOWPACKETS VARCHAR, PROTOCOLFLOWPACKETSWITHOUTPAYLOAD VARCHAR, PROTOCOLFLOWAVGPACKETSIZE VARCHAR, PROTOCOLFLOWMINPACKETSIZE VARCHAR, PROTOCOLFLOWMAXPACKETSIZE VARCHAR, PROTOCOLFLOWAVGINTERTIME VARCHAR, PROTOCOLFLOWPACKETSIZE0 VARCHAR, PROTOCOLFLOWINNERTIME0 VARCHAR, PROTOCOLFLOWPACKETSIZE1 VARCHAR, PROTOCOLFLOWINNERTIME1 VARCHAR, PROTOCOLFLOWPACKETSIZE2 VARCHAR, PROTOCOLFLOWINNERTIME2 VARCHAR, PROTOCOLFLOWPACKETSIZE3 VARCHAR, PROTOCOLFLOWINNERTIME3 VARCHAR, PROTOCOLFLOWPACKETSIZE4 VARCHAR, PROTOCOLFLOWINNERTIME4 VARCHAR, PROTOCOLFLOWHOSTNAME VARCHAR, PROTOCOLFLOWDNATYPE VARCHAR, PROTOCOLFLOWTIMESTAMP2 VARCHAR, PROTOCOLFLOWMALWARE VARCHAR, PROTOCOLFLOWFLAGS VARCHAR, TEXT VARCHAR, TITLE VARCHAR, FLOWID VARCHAR, COORDS VARCHAR, USERNAME VARCHAR, TIMESTAMP VARCHAR, ALGORITHMTYPE VARCHAR, ALGORITHMHOSTNAME VARCHAR, ALGORITHMBYTESUP VARCHAR, ALGORITHMBYTESDOWN VARCHAR, ALGORITHMNUMBERPKTS VARCHAR, ALGORITHMCONNECTIONS VARCHAR, ALGORITHMSTRINGFLOWS VARCHAR) WITH (KAFKA_TOPIC='AD_ALERTS_AVRO', PARTITIONS=1, VALUE_FORMAT='AVRO');
+  	INSERT INTO AD_ALERTS_AVRO SELECT id, EXTRACTJSONFIELD("objects"[2], '$.details.totalFlows') AS TOTALFLOWS, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.id') AS PROTOCOLFLOWID, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.detectedProtocol') AS PROTOCOLFLOWDETECTEDPROTOCOL, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.lowerPort') AS PROTOCOLFLOWLOWERPORT, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.upperPort') AS PROTOCOLFLOWUPPERPORT, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.upperIp') AS PROTOCOLFLOWUPPERIP, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.lowerIp') AS PROTOCOLFLOWLOWERIP, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.ipProtocol') AS PROTOCOLFLOWIPPROTOCOL, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.flowDuration') AS PROTOCOLFLOWFLOWDURATION, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.bytes') AS PROTOCOLFLOWBYTES, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.packets') AS PROTOCOLFLOWPACKETS, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.packetsWithoutPayload') AS PROTOCOLFLOWPACKETSWITHOUTPAYLOAD, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.avgPacketSize') AS PROTOCOLFLOWAVGPACKETSIZE, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.minPacketSize') AS PROTOCOLFLOWMINPACKETSIZE, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.maxPacketSize') AS PROTOCOLFLOWMAXPACKETSIZE, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.avgInterTime') AS PROTOCOLFLOWAVGINTERTIME, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.packetSize0') AS PROTOCOLFLOWPACKETSIZE0, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.interTime0') AS PROTOCOLFLOWINNERTIME0, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.packetSize1') AS PROTOCOLFLOWPACKETSIZE1, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.innerTime1') AS PROTOCOLFLOWINNERTIME1, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.packetSize2') AS PROTOCOLFLOWPACKETSIZE2, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.innerTime2') AS PROTOCOLFLOWINNERTIME2, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.packetSize3') AS PROTOCOLFLOWPACKETSIZE3, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.innerTime3') AS PROTOCOLFLOWINNERTIME3, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.packetSize4') AS PROTOCOLFLOWPACKETSIZE4, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.innerTime4') AS PROTOCOLFLOWINNERTIME4, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.hostname') AS PROTOCOLFLOWHOSTNAME, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.dnaType') AS PROTOCOLFLOWDNATYPE, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.timeStamp2') AS PROTOCOLFLOWTIMESTAMP2, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.malware') AS PROTOCOLFLOWMALWARE, EXTRACTJSONFIELD("objects"[2], '$.details.protocolFlow.flags') AS PROTOCOLFLOWFLAGS, EXTRACTJSONFIELD("objects"[2], '$.details.text') AS TEXT, EXTRACTJSONFIELD("objects"[2], '$.details.title') AS TITLE, EXTRACTJSONFIELD("objects"[2], '$.details.flowId') AS FLOWID, EXTRACTJSONFIELD("objects"[2], '$.details.coords') AS COORDS, EXTRACTJSONFIELD("objects"[2], '$.details.username') AS USERNAME, EXTRACTJSONFIELD("objects"[2], '$.details.timestamp') AS TIMESTAMP, EXTRACTJSONFIELD("objects"[2], '$.details.algorithm.type') AS ALGORITHMTYPE, EXTRACTJSONFIELD("objects"[2], '$.details.algorithm.hostname') AS ALGORITHMHOSTNAME, EXTRACTJSONFIELD("objects"[2], '$.details.algorithm.bytesUp') AS ALGORITHMBYTESUP, EXTRACTJSONFIELD("objects"[2], '$.details.algorithm.bytesDown') AS ALGORITHMBYTESDOWN, EXTRACTJSONFIELD("objects"[2], '$.details.algorithm.numerPkts') AS ALGORITHMNUMBERPKTS, EXTRACTJSONFIELD("objects"[2], '$.details.algorithm.connections') AS ALGORITHMCONNECTIONS, EXTRACTJSONFIELD("objects"[2], '$.details.algorithm.stringFlows') AS ALGORITHMSTRINGFLOWS FROM AD_ALERTS;
+	
+	{"currently_connected": [{"name": "honey1","ip": "182.09.43.5","service": "SSH"},{"name": "honey1","ip": "45.38.69.2","service": "HTTP"}]}
+	
+	
+	

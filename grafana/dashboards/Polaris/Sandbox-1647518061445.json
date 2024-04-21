@@ -1,0 +1,139 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 26,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "content": "<div style=\"padding-top: 20px;\">\r\n    <p style=\"font-size: 35px; text-align: center;\"><b style=\"color: #00a79d;\">SPHINX</b> - Sandbox</p>\r\n    <hr>\r\n    <div style=\"text-align: center;\">\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/SB/SB_DASHBOARD_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Dashboard manual</a>\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/SB/SB_COMPONENT_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Component manual</a>\r\n    <a href=\"https://10.10.50.38\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">SB Webpage</a>\r\n    \r\n    </div>\r\n</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "$$hashKey": "object:437",
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "$$hashKey": "object:435",
+              "field": "select field",
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 10,
+      "options": {
+        "content": "\n<h2>Short description</h2>\n<p style=\"text-align: justify\">The sandbox has 2 main functions. The first is to allow the end user to easily create different topologies in order to execute/examine VMs or other individual software components. The solution uses KVM in its core and every topology is deployed by using separate docker containers. As a result, each docker initiates the KVM and the gateway of the topology is the virtual network interface provided by docker.\nThe second function of the sandbox is to automatically isolate network devices that are tagged as malicious or defective. This information is provided by the SIEM and the sandbox jails the network device to the virtual/replicated environment.</p>\n<hr/>\n<h2>Objectives</h2>\n<ul style=\"list-style-type: none; padding: 0; margin: 0;\">\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green; font-size:20px;font-weight:bold;\">*</span> Create different topologies in order to execute/examine VMs or components</li>\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green; font-size:20px;font-weight:bold;\">*</span> Isolate malicious or defective network devices</li>\n</ul>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Functionalities",
+      "transparent": true,
+      "type": "text"
+    }
+  ],
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [
+    "SB",
+    "Sandbox"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Sandbox",
+  "uid": "2K6gdvN7z",
+  "version": 2
+}

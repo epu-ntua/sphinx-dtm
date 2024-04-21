@@ -1,0 +1,196 @@
+Flags TCP:
+----------
+FIN 1 / 0x01
+SYN 2 / 0x02
+RST 4 / 0x04
+PSH 8 / 0x08
+AKT 16 / 0x10
+URG 32 / 0x20
+ECE 64 / 0x40
+CWR 128 / 0x80
+
+SYN pkt:
+    tcpFlags = "0x02"
+SYN-ACK pkt:
+    tcpFlags = "0x12" (0x02 [SYN] + 0x10 [AKT])
+PSH-ACK pkt:
+    tcpFlags = "0x18" (0x08 [PSH] + 0x10 [AKT]) (24, decimal)
+ACK pkt originated by a MyHost (0x10 [AKT])
+    tcpFlags = "0x10"
+    isMyIP(srcIP,myNets)
+
+Flags DNS:
+----------
+X... .... .... .... => Response: Message is a responde => (QR) : A one bit field that specifies whether this message is a query (0), or a response (1)
+.000 0... .... .... => Opcode: Standary query(0) => (OPCODE)
+.... .X.. .... .... => Authoritative
+.... ..X. .... .... => Truncated => (TC)
+.... ...X .... .... => Recursion desired => (RD) : this bit directs the name server to pursue the query recursively. You should use 1, representing that you desire recursion.
+.... .... X... .... => Recursion available => (RA): this be is set or cleared in a response, and denotes whether recursive query support is available in the name server. Recursive query support is optional. You must exit and return an error if you receive a response that indicates the server does not support recursion.
+.... .... .0.. .... => Z: reserved (0) => (Z)
+.... .... ..X. .... => Answer authenticated
+.... .... ...X .... => Non-authentificad date
+.... .... .... XXXX => Reply code: No-error (0)  => (RCODE)
+
+RCODE - Response code - this 4 bit field is set as part of responses. The values have the following interpretation:
+    0 No error condition
+    1 Format error - The name server was unable to interpret the query.
+    2 Server failure - The name server was unable to process this query due to a problem with
+    the name server.
+    3 Name Error - Meaningful only for responses from an authoritative name server, this code
+    signifies that the domain name referenced in the query does not exist.
+    4 Not Implemented - The name server does not support the requested kind of query.
+    5 Refused - The name server refuses to perform the specified operation for policy reasons.
+
+Exemplu:
+=> cod: 0x8180 => Response=1, Recursion desired=1, Recursion available=1, => 32768+256+128 = 33152 => 0x8180
+
+I. filtre:
+----------
+==========
+
+1. filtrul tcp/udp
+-------------------
+filtreaza sflow-urile dupa protocol TCP ("6") or UDP ("17")
+calculeaza
+    direction:
+        - UNKNOWN
+        - LEFTRIGHT
+            - IPprotocol = "6"
+            - SYN pkt ( tcpFlags = "0x02" )
+            OR
+            - IPprotocol = "6"
+            - dstPort.toInt<1024 (Suppose that ports < 1024 would not used for clients)
+        - RIGHTLEFT
+            - IPprotocol = "6" ( tcpFlags = "0x12" )
+            - SYN-ACK pkt
+            OR
+            - IPprotocol = "6"
+            - srcPort.toInt<1024 (Suppose that ports < 1024 would not used for clients)
+    status
+        - UNKNOWN
+        - OCCURRED
+            - IPprotocol = "6"
+            - SYN-ACK pkt OR PSH-ACK pkt OR  ACK pkt originated by a MyHost
+
+    protoName
+        - UDP : IPprotocol = "17"
+        - TCP : IPprotocol = "6"
+
+Rezulta: (srcIP, srcPort, dstIP, dstPort, totalBytes, numberOfPkts)
+
+2. filtrul tcp/udp
+-------------------
+filtreaza sflow-urile dupa protocol : ICMP ("1") , ICMPv6 ("58")
+calculeaza:
+   protoName
+        - ICMP : IPprotocol = "1"
+        - ICMPv6 : IPprotocol = "58"
+
+
+Algoritm 1: SMTP Talkers
+------------------------
+========================
+conditii principale:
+    port = 25
+    numberPkts>3
+
+liste ajutatoare: FTP Talker
+----------------------
+======================
+conditii principale
+    port:21
+    protocol: TCP (6)
+
+Algoritm 2: P2P Communication (v1)
+---------------------------------
+=================================
+conditii principale:
+    myPort > 10000
+    alienPort > 10000
+    numberPkts > 1
+
+(  test_FTP_Talkers_P2P.csv:
+myIP = "195.82.130.6"
+myPort = "58989"
+alienIP = "192.168.1.5"
+alienPort = "58989"
+numberPkts = 3
+)
+
+Algoritm 2: P2P Communication (v2)
+---------------------------------
+=================================
+conditii principale:
+    proto = UDP (17)
+    myPort 1000-10000
+    alienPort 1000-10000
+    numberPkts > 1
+
+Algoritm 3: Media Streaming Client
+---------------------------------
+=================================
+    myPort > 1000
+    alienPort < 10000
+    alienPort > 1000
+    numberPkts > 1
+    myPor<>1194
+    alienPort<>1194
+
+Algoritm 3: Atypical TCP port used by Alien Network
+---------------------------------------------------
+===================================================
+conditii principale
+    myPort>1024
+    alientPort < 10000
+    protocol: TCP (6)
+
+Algoritm: DNS Tunnel
+---------------------------------------------------
+===================================================
+conditii principale
+    alienPort=53
+    proto==UDP (17)
+    (bytesUp+bytesDown)*sampleRate > dnsTunnelThreshold
+
+Algoritm: Abused SMTP Server
+---------------------------------------------------
+===================================================
+conditii principale:
+   myPort==465 || 587
+   proto=TCP (6)
+
+Algorim: UDP amplifier (DDoS)
+---------------------------------------------------
+===================================================
+conditii principale:
+    myPort = 19 | 53 | 123 | 1900
+    proto=UDP (17)
+    bytesUp/numberPkts > 250
+--------------------------------------------------
+
+C&C BotNets, alerts you if:
+ the source port is larger than 1023
+ the number of packages is higher than the Min Packets Per Flow parameter (default is 20)
+ source ip is not among the excluded IPs (Excluded IPs parameter)
+ destination ip is not among the excluded IPs (Excluded IPs parameter)
+ destination ip is found in the list of IPs that are found at a certain URL (set via the URL parameter; by default this URL is: https://rules.emergingthreats.net/blockrules/emerging-botcc.rules)
+
+--------------------------------------------------
+
+Atypical amount of data transfered
+---------------------------------------------------
+===================================================
+
+    direction > -1
+    myPort.toLong > 1024 &
+    !myPort.equals("8080") &
+    !isMyIP(alienIP,myNets) & // Exclude internal communication
+    !isMyIP(alienIP,bigProviderNets) & // Exclude bigProviders
+    !atypicalDataExcludedIPs.contains(myIP) &
+    !atypicalDataExcludedIPs.contains(alienIP)
+
+src_ip:10.1.1.10
+src_port:1158
+udps.flags:112
+

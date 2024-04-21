@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simavi-config-map
+data:
+  kafkastore_bootstrap_servers: 'sphinx-kafka-kafka-bootstrap.cip.svc:9092'
+  email_username: 'id@sphinxproject.com'
+  email_password: 'test123$'
+  smtp_host: 'sphinx-smtp-service'
+  smtp_port: '2525'
+  tls_enabled: 'false'
+  smtp_auth: 'false'
+  smtp_debug: 'true'
+  factory_class: 'javax.net.ssl.SSLSocketFactory'
+  factory_fallback: 'true'
+  trust_all_hosts: 'true'

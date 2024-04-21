@@ -1,0 +1,39 @@
+{
+  "type": "panel",
+  "name": "interactive-dashboard-login-plugin",
+  "id": "sphinx-interactive-dashboard-login-plugin",
+  "info": {
+    "description": "navbar",
+    "author": {
+      "name": "simavi",
+      "url": "localhost"
+    },
+    "keywords": [
+      "login",
+      "navbar",
+      "search",
+      "settings"
+    ],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/grafana/simple-react-panel"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaVersion": "6.3.x",
+    "plugins": []
+  }
+}

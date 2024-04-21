@@ -1,0 +1,49 @@
+sudo apt install python3
+sudo apt install python3-pip
+pip3 install nfstream
+sudo apt-get update
+sudo apt-get install autoconf automake libtool pkg-config flex bison gettext
+sudo apt-get install libusb-1.0-0-dev libdbus-glib-1-dev libbluetooth-dev libnl-genl-3-dev
+
+git clone --branch libgpg-error-1.39 https://github.com/gpg/libgpg-error
+cd libgpg-error
+sudo ./autogen.sh
+sudo ./configure -enable-maintainer-mode --enable-static --enable-shared --with-pic --disable-doc --disable-nls
+sudo make
+sudo make install
+cd ..
+sudo rm -rf libgpg-error
+
+git clone --branch libgcrypt-1.8.6 https://github.com/gpg/libgcrypt
+cd libgcrypt
+sudo ./autogen.sh
+sudo ./configure -enable-maintainer-mode --enable-static --enable-shared --with-pic --disable-doc
+sudo make
+sudo make install
+cd ..
+sudo rm -rf libgcrypt
+
+git clone --branch fanout https://github.com/tsnoam/libpcap
+sudo cd libpcap
+sudo ./configure --enable-ipv6 --disable-universal --enable-dbus=no --without-libnl
+sudo make
+sudo make install
+cd ..
+sudo rm -rf libpcap
+
+sudo git clone --branch dev https://github.com/ntop/nDPI.git
+cd nDPI
+sudo ./autogen.sh
+sudo apt-get install libjson-c-dev
+sudo ./configure
+make
+sudo cp -a src/include/. /usr/local/include/ndpi/
+sudo cp example/ndpiReader /usr/local/bin/ndpiReader
+sudo cp src/lib/libndpi.a /usr/local/lib/libndpi.a
+cd ..
+sudo rm -rf nDPI
+
+git clone https://github.com/nfstream/nfstream.git
+cd nfstream
+python3 -m pip install -r requirements.txt
+python3 setup.py bdist_wheel

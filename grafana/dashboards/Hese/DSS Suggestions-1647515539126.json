@@ -1,0 +1,606 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 18,
+  "iteration": 1647515535412,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 27,
+      "options": {
+        "content": "<div style=\"padding-top: 20px;\">\r\n    <p style=\"font-size: 35px; text-align: center;\"><b style=\"color: #00a79d;\">SPHINX</b> - Decision Support System</p>\r\n    <hr>\r\n    <div style=\"text-align: center;\">\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/DSS/DSS_DASHBOARD_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Dashboard manual</a>\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/DSS/DSS_COMPONENT_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Component manual</a>\r\n    </div>\r\n</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "$$hashKey": "object:437",
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "$$hashKey": "object:435",
+              "field": "select field",
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 29,
+      "options": {
+        "content": "\n<h2>Short description</h2>\n<p style=\"text-align: justify\">The DSS is an essential part of the SPHINX Toolkit. Its purpose is to provide the end-user with a dedicated \naction plan for each event and also allow him/her to stop an ongoing attack. This component correlates the \ninformation retrieved of SPHINX's components and provides crucial information about the event, the vulnerabilities related to this event, and the affected assets. Furthermore, for each action plan, the DSS will \nprovide a confidence level. Specifically, the user will have the ability to identify with how much confidence \ncould implement the action plan. DSS can also distribute its information to other SPHINX Components \nthrough Kafka. Finally, the DSS's information will be displayed to the ID.</p>\n<hr/>\n<h2>Objectives</h2>\n<ul style=\"list-style-type: none; padding: 0; margin: 0;\">\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> Raise the awareness level of the health care organization</li>\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> Assist in the decision-making process when dealing with cybersecurity threats</li>\n</ul>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Functionalities",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 6,
+      "options": {
+        "content": "<h1 style=\"background-color: #00a79d; color: white; padding: 20px\"> Suggestions </h1>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "displayMode": "json-view",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RISKLEVEL"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 125
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "EVENT"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 125
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CONFIDENCE"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 113
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 21,
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "TIMESTAMP"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  \"TIMESTAMP\", \"ASSET\", \"EVENT\", \"CONFIDENCE\", jsonb_array_elements(\"SUGGESTIONS\"::jsonb)->'suggestion' AS \"SUGGESTION\", jsonb_array_elements(\"SUGGESTIONS\"::jsonb)->'id' AS \"SUGGESTIONID\", \"ALERTID\", \"VULNERABILITIES\", \"RISKLEVEL\", \"EXTERNALREFERENCES\"\r\nFROM \"kafka_DSS_SUGGESTIONS_AVRO\"\r\nWHERE \"ASSET\" IN ($asset) AND \r\n\"EVENT\" IN ($event)\r\nAND \"TIMESTAMP\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\r\nORDER BY \"ASSET\" ASC",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "*"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "\"kafka_DSS_SUGGESTIONS_AVRO\"",
+          "timeColumn": "\"ID\"",
+          "timeColumnType": "int8",
+          "where": []
+        },
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n  \"TIMESTAMP\", \"ASSET\", \"EVENT\", \"CONFIDENCE\", jsonb_array_elements(\"SUGGESTIONS\"::jsonb)->'suggestion' AS \"SUGGESTION\", jsonb_array_elements(\"SUGGESTIONS\"::jsonb)->'id' AS \"SUGGESTIONID\", \"ALERTID\", \"VULNERABILITIES\", \"RISKLEVEL\", \"EXTERNALREFERENCES\"\r\nFROM \"kafka_DSS_SUGGESTIONS_AVRO\"\r\nWHERE \"ALERTID\" IN ($alertid) AND \"ASSET\" IS NULL\r\nAND \"TIMESTAMP\"::timestamp BETWEEN to_timestamp(${__from:date:seconds}) AND to_timestamp(${__to:date:seconds})\r\nORDER BY \"ASSET\" ASC",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Suggestions",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [
+    "DSS",
+    "Decision Support System"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "PostgreSQL",
+        "definition": "SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL",
+        "error": {
+          "config": {
+            "data": {
+              "from": "1647472335315",
+              "queries": [
+                {
+                  "datasourceId": 1,
+                  "format": "table",
+                  "rawSql": "SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL",
+                  "refId": "asset"
+                }
+              ],
+              "to": "1647515535315"
+            },
+            "headers": {
+              "X-Grafana-Org-Id": 1
+            },
+            "hideFromInspector": false,
+            "method": "POST",
+            "retry": 0,
+            "url": "api/tsdb/query"
+          },
+          "data": {
+            "message": "pq: relation \"kafka_DSS_SUGGESTIONS_AVRO\" does not exist",
+            "results": {
+              "asset": {
+                "dataframes": null,
+                "error": "pq: relation \"kafka_DSS_SUGGESTIONS_AVRO\" does not exist",
+                "meta": {
+                  "executedQueryString": "SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL"
+                },
+                "refId": "asset",
+                "series": null,
+                "tables": null
+              }
+            }
+          },
+          "message": "pq: relation \"kafka_DSS_SUGGESTIONS_AVRO\" does not exist",
+          "status": 400,
+          "statusText": "Bad Request"
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "Asset",
+        "multi": true,
+        "name": "asset",
+        "options": [],
+        "query": "SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "PostgreSQL",
+        "definition": "SELECT DISTINCT \"EVENT\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IN (SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL)",
+        "error": {
+          "config": {
+            "data": {
+              "from": "1647472335316",
+              "queries": [
+                {
+                  "datasourceId": 1,
+                  "format": "table",
+                  "rawSql": "SELECT DISTINCT \"EVENT\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IN (SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL)",
+                  "refId": "event"
+                }
+              ],
+              "to": "1647515535316"
+            },
+            "headers": {
+              "X-Grafana-Org-Id": 1
+            },
+            "hideFromInspector": false,
+            "method": "POST",
+            "retry": 0,
+            "url": "api/tsdb/query"
+          },
+          "data": {
+            "message": "pq: relation \"kafka_DSS_SUGGESTIONS_AVRO\" does not exist",
+            "results": {
+              "event": {
+                "dataframes": null,
+                "error": "pq: relation \"kafka_DSS_SUGGESTIONS_AVRO\" does not exist",
+                "meta": {
+                  "executedQueryString": "SELECT DISTINCT \"EVENT\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IN (SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL)"
+                },
+                "refId": "event",
+                "series": null,
+                "tables": null
+              }
+            }
+          },
+          "message": "pq: relation \"kafka_DSS_SUGGESTIONS_AVRO\" does not exist",
+          "status": 400,
+          "statusText": "Bad Request"
+        },
+        "hide": 0,
+        "includeAll": true,
+        "label": "Event",
+        "multi": true,
+        "name": "event",
+        "options": [],
+        "query": "SELECT DISTINCT \"EVENT\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IN (SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "da4a2834-37fe-11ec-81aa-8611fdfefea2",
+          "value": "da4a2834-37fe-11ec-81aa-8611fdfefea2"
+        },
+        "datasource": "PostgreSQL",
+        "definition": "SELECT DISTINCT \"ALERTID\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IN (SELECT DISTINCT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL)  AND \"EVENT\" IN (SELECT DISTINCT \"EVENT\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IN (SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL))",
+        "error": null,
+        "hide": 2,
+        "includeAll": false,
+        "label": null,
+        "multi": true,
+        "name": "alertid",
+        "options": [
+          {
+            "selected": true,
+            "text": "df33280c-8b35-11ec-a5ee-96e5d523f922",
+            "value": "df33280c-8b35-11ec-a5ee-96e5d523f922"
+          },
+          {
+            "selected": false,
+            "text": "acc62764-8b2d-11ec-aeda-e6a346842ca5",
+            "value": "acc62764-8b2d-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "39bf6e44-8b26-11ec-aeda-e6a346842ca5",
+            "value": "39bf6e44-8b26-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "eb4ca818-8b2e-11ec-aeda-e6a346842ca5",
+            "value": "eb4ca818-8b2e-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "933b9c1e-8b2a-11ec-aeda-e6a346842ca5",
+            "value": "933b9c1e-8b2a-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "28b53f7a-8b30-11ec-aeda-e6a346842ca5",
+            "value": "28b53f7a-8b30-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "5e670678-8b33-11ec-a5ee-96e5d523f922",
+            "value": "5e670678-8b33-11ec-a5ee-96e5d523f922"
+          },
+          {
+            "selected": false,
+            "text": "1890603c-8b28-11ec-aeda-e6a346842ca5",
+            "value": "1890603c-8b28-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "6637ffb2-8b31-11ec-aeda-e6a346842ca5",
+            "value": "6637ffb2-8b31-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "d0a2f5e2-8b2b-11ec-aeda-e6a346842ca5",
+            "value": "d0a2f5e2-8b2b-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "79c807a2-8b27-11ec-aeda-e6a346842ca5",
+            "value": "79c807a2-8b27-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "31ed4c36-8b2b-11ec-aeda-e6a346842ca5",
+            "value": "31ed4c36-8b2b-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "55ec01ce-8b29-11ec-aeda-e6a346842ca5",
+            "value": "55ec01ce-8b29-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "b7334826-8b28-11ec-aeda-e6a346842ca5",
+            "value": "b7334826-8b28-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "a1c2fafc-8b34-11ec-a5ee-96e5d523f922",
+            "value": "a1c2fafc-8b34-11ec-a5ee-96e5d523f922"
+          },
+          {
+            "selected": false,
+            "text": "8a049d08-8b2f-11ec-aeda-e6a346842ca5",
+            "value": "8a049d08-8b2f-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "f4929d10-8b29-11ec-aeda-e6a346842ca5",
+            "value": "f4929d10-8b29-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "4067c048-8b35-11ec-a5ee-96e5d523f922",
+            "value": "4067c048-8b35-11ec-a5ee-96e5d523f922"
+          },
+          {
+            "selected": false,
+            "text": "0e0a9286-8b2d-11ec-aeda-e6a346842ca5",
+            "value": "0e0a9286-8b2d-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "4ca371ec-8b2e-11ec-aeda-e6a346842ca5",
+            "value": "4ca371ec-8b2e-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "026f6602-8b34-11ec-a5ee-96e5d523f922",
+            "value": "026f6602-8b34-11ec-a5ee-96e5d523f922"
+          },
+          {
+            "selected": false,
+            "text": "c7613caa-8b30-11ec-aeda-e6a346842ca5",
+            "value": "c7613caa-8b30-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "6f6b0066-8b2c-11ec-aeda-e6a346842ca5",
+            "value": "6f6b0066-8b2c-11ec-aeda-e6a346842ca5"
+          },
+          {
+            "selected": false,
+            "text": "x-sphinx-dtm-alert--ddb31a70-b0b2-4c38-a263-1edfc042445f",
+            "value": "x-sphinx-dtm-alert--ddb31a70-b0b2-4c38-a263-1edfc042445f"
+          }
+        ],
+        "query": "SELECT DISTINCT \"ALERTID\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IN (SELECT DISTINCT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL)  AND \"EVENT\" IN (SELECT DISTINCT \"EVENT\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IN (SELECT \"ASSET\" FROM \"kafka_DSS_SUGGESTIONS_AVRO\" WHERE \"ASSET\" IS NOT NULL))",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-12h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "DSS Suggestions",
+  "uid": "b6UR6Imnk",
+  "version": 1
+}

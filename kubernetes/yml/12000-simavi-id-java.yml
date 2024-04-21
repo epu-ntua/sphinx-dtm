@@ -1,0 +1,151 @@
+## INTERACTIVE DASHBOARD Secret ##
+---
+  apiVersion: v1
+  kind: Secret
+  metadata:
+      name: simavi-id-secret
+  type: Opaque
+  data:
+      BBTR_USER: aG9zcGl0YWwxX3Rlc3Qx
+      BBTR_SECRET: c2RnZndlcnl0NDU=
+
+## INTERACTIVE DASHBOARD Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: id-deployment
+    labels:
+      app: simavi-sphinx
+      sphinx-component: id
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: id
+      spec:
+        containers:
+        - name: id-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/interactive-dashboards/id-deployment/endpoints-id
+          imagePullPolicy: Always
+          command: ["java"]
+          args: ["-Dspring.profiles.active=docker", "-Xmx256m", "org.springframework.boot.loader.JarLauncher"]
+          resources:
+            limits:
+              memory: "256Mi"
+          ports:
+            - containerPort: 8089
+          env:
+            - name: SM_IP
+              value: "https://sphinx-toolkit.intracom-telecom.com/SMPlatform/manager/rst"
+            - name: BBTR_IP
+              value: "https://bbtr-volos.146.124.106.181.nip.io/api"
+            - name: EMAIL_USERNAME
+              value: "sphinxidalerting@gmail.com"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map
+              #    key: email_username
+            - name: EMAIL_PASSWORD
+              value: "grafana2021"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map
+              #    key: email_password
+            - name: SMTP_HOST
+              value: "smtp.gmail.com"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map
+              #    key: smtp_host
+            - name: SMTP_PORT
+              value: "587"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map
+              #    key: smtp_port
+            - name: TLS_ENABLED
+              value: "true"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map
+              #    key: tls_enabled
+            - name: SMTP_AUTH
+              value: "true"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map
+              #    key: smtp_auth
+            - name: SMTP_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map
+                  key: smtp_debug
+            - name: FACTORY_CLASS
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map
+                  key: factory_class
+            - name: FACTORY_FALLBACK
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map
+                  key: factory_fallback
+            - name: TRUST_ALL_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map
+                  key: trust_all_hosts
+            - name: SM_IP
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map
+                  key: sm_ip
+            - name: BBTR_IP
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map
+                  key: bbtr_ip
+            - name: BBTR_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: simavi-id-secret
+                  key: BBTR_USER
+            - name: BBTR_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: simavi-id-secret
+                  key: BBTR_SECRET
+            - name: BBTR_NETWORK
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map
+                  key: bbtr_network
+            - name: BBTR_ORGANIZATION
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map
+                  key: bbtr_organization
+        imagePullSecrets:
+          - name: intracom-repository
+
+## INTERACTIVE DASHBOARD Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: id-service
+  spec:
+    selector:
+      app: simavi-sphinx
+      sphinx-component: id
+    type: ClusterIP
+    ports:
+      - protocol: TCP
+        port: 8089
+        targetPort: 8089

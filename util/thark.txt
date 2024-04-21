@@ -1,0 +1,16 @@
+tshark -r testdump -T fields -e frame -e frame.number -e eth.src -e eth.dst -e ip.src -e ip.dst -e frame.len -e frame.time -e frame.time_delta -e ip -e ip.proto -e ip.src_host -e ip.dst_host -E header=y -E separator=/t > export1.csv
+tshark -i wi-fi    -T fields -e frame.number -e frame.time_delta -e frame.time -e frame.interface_name -e frame.interface_id -e frame.interface_description -e frame.cap_len -e frame.len -e frame.protocols -e eth.src -e eth.dst -e ip.src -e ip.dst -e ip -e ip.proto -e ip.src_host -e ip.dst_host -E separator=/t -E quote=n -E occurrence=f
+
+cd "c:\Program Files\Wireshark"
+tshark -D
+
+# docker
+docker pull toendeavour/tshark
+docker run --name tshark --network host toendeavour/tshark  -D
+
+
+# statistici
+https://blog.sflow.com/2019/09/packet-analysis-using-docker.html
+tshark -i wi-fi -q -z endpoints,ip
+
+cmd /c "C:\Program Files\Wireshark\tshark" -l -i \Device\NPF_{5A8F4FB6-5E07-48A9-9C4B-E19DA3A1FF69} -T fields -e frame.number -e frame.time_delta -e frame.time -e frame.interface_name -e frame.interface_id -e frame.interface_description -e frame.cap_len -e frame.len -e frame.protocols -e eth.src -e eth.dst -e ip.src -e ip.dst -e ip -e ip.proto -e ip.src_host -e ip.dst_host -e tcp.port -e udp.port -e ipv6 -e ipv6.addr -e ipv6.src -e ipv6.dst -e http.host -e dns.qry.name -e tcp.stream -e tcp.srcport -e tcp.dstport -e udp.srcport -e udp.dstport -e _ws.col.Info -E separator=/t -E quote=n -E occurrence=f  -b files:2 -b duration:120 -w c:\tools\tshark\41.pcap

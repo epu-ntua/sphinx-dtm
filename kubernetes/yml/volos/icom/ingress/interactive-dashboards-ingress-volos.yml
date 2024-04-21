@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: interactive-dashboards
+  namespace: pilot
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: sphinx-toolkit.intracom-telecom.com
+    http:
+      paths:
+      - path: /interactive-dashboards
+        pathType: Prefix
+        backend:
+          service:
+            name: interactive-dashboards 
+            port: 
+              number: 3000
+

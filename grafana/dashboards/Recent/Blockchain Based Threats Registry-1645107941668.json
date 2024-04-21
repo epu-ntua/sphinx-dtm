@@ -1,0 +1,241 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 56,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "content": "<div style=\"padding-top: 20px;\">\r\n    <p style=\"font-size: 35px; text-align: center;\"><b style=\"color: #00a79d;\">SPHINX</b> - Blockchain Based Threats Registry</p>\r\n    <hr>\r\n    <div style=\"text-align: center;\">\r\n    <a href=\"/interactive-dashboards/public/manuals/without_dashboards/BBTR/BBTR_DASHBOARD_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Dashboard manual</a>\r\n    <a href=\"/interactive-dashboards/public/manuals/without_dashboards/BBTR/BBTR_COMPONENT_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Component manual</a>\r\n    <a href=\"https://bbtr.sphinx.bclab.dev\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">BBTR Webpage</a>\r\n    \r\n    </div>\r\n</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "$$hashKey": "object:437",
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "$$hashKey": "object:435",
+              "field": "select field",
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "content": "\n<h2>Short description</h2>\n<p style=\"text-align: justify\">SPHINX BBTR acts as a notification and interconnection tool, which allows transmitting the intelligence, gathered by the other SPHINX tools, to other components and interested actors, so it acts as a transmitter of information. In particular, this component fits the necessity of sharing information about active threats in real time between the different interested parties.</p>\n<hr/>\n<h2>Objectives</h2>\n<ul style=\"list-style-type: none; padding: 0; margin: 0;\">\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> Share active threats</li>\n</ul>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Functionalities",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": "BBTR JSON API",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 6,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "body": "{\r\n    \"source_hospital_id\": { \"$regex\": \"h2\" }\r\n}",
+          "cacheDurationSeconds": 300,
+          "fields": [
+            {
+              "jsonPath": "$.*.key",
+              "name": "KEY"
+            },
+            {
+              "jsonPath": "$.*.assetId",
+              "name": "Asset ID"
+            },
+            {
+              "jsonPath": "$.*.assetIp",
+              "name": "Asset IP"
+            },
+            {
+              "jsonPath": "$.*.assetType",
+              "name": "Asset Type"
+            },
+            {
+              "jsonPath": "$.*.assetValue",
+              "name": "Asset Value"
+            },
+            {
+              "jsonPath": "$.*.recordId",
+              "name": "ID"
+            },
+            {
+              "jsonPath": "$.*.reliability",
+              "name": "Reliability"
+            },
+            {
+              "jsonPath": "$.*.sourceHospitalId",
+              "name": "Source Hospital ID"
+            },
+            {
+              "jsonPath": "$.*.threatDescription",
+              "name": "Threat Description"
+            },
+            {
+              "jsonPath": "$.*.threatId",
+              "name": "Threat ID"
+            },
+            {
+              "jsonPath": "$.*.threatPriority",
+              "name": "Threat Priority"
+            },
+            {
+              "jsonPath": "$.*.threatTimestamp",
+              "name": "Threat Timestamp"
+            }
+          ],
+          "headers": [],
+          "method": "GET",
+          "params": [],
+          "queryParams": "",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Threats list",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Blockchain Based Threats Registry",
+  "uid": "pFKHY3cnz",
+  "version": 7
+}

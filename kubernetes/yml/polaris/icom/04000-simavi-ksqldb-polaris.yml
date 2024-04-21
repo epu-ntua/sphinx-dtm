@@ -1,0 +1,130 @@
+## KSQLDB Server Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: simavi-sphinx
+      sphinx-component: simavi-ksqldb
+    name: ksqldb-server-deployment-polaris
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          channels: ksql-server-polaris
+          sphinx-component: simavi-ksqldb-polaris
+      spec:
+        #hostAliases:
+        #- ip: "10.233.100.183"
+        #  hostnames:
+        #  - "sphinx"
+        containers:
+        - name: ksqldb-server-deployment-polaris
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/ksqldb-server
+          imagePullPolicy: Always
+          #resources:
+          #  limits:
+          #    memory: "1920Mi"
+          #          command: ["/usr/bin/docker/run","SCRIPT","/usr/share/kafka/init.ksql"]
+          ports:
+            - containerPort: 8088
+          env:
+              - name: KSQL_BOOTSTRAP_SERVERS
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map-polaris
+                    key: kafkastore_bootstrap_servers
+              - name: KSQL_CONNECT_BOOTSTRAP_SERVERS
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map-polaris
+                    key: kafkastore_bootstrap_servers
+              - name: KSQL_CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+                value: "1"
+              - name: KSQL_CONNECT_CONFIG_STORAGE_TOPIC
+                value: ksql-connect-configs
+              - name: KSQL_CONNECT_GROUP_ID
+                value: ksql-connect-cluster
+              - name: KSQL_CONNECT_KEY_CONVERTER
+                value: org.apache.kafka.connect.storage.StringConverter
+              - name: KSQL_CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+                value: "1"
+              - name: KSQL_CONNECT_OFFSET_STORAGE_TOPIC
+                value: ksql-connect-offsets
+              - name: KSQL_CONNECT_PLUGIN_PATH
+                value: /usr/share/kafka/plugins
+              - name: KSQL_CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+                value: "1"
+              - name: KSQL_CONNECT_STATUS_STORAGE_TOPIC
+                value: ksql-connect-statuses
+              - name: KSQL_CONNECT_VALUE_CONVERTER
+                value: org.apache.kafka.connect.json.JsonConverter
+              - name: KSQL_CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
+                value: "false"
+              - name: KSQL_KSQL_CONNECT_WORKER_CONFIG
+                value: /connect/connect.properties
+              - name: KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE
+                value: "true"
+              - name: KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE
+                value: "true"
+              - name: KSQL_LISTENERS
+                value: http://0.0.0.0:8088
+              - name: KSQL_SECURITY_PROTOCOL
+                #                value: SASL_SSL
+                value: PLAINTEXT
+              - name: KSQL_SASL_MECHANISM
+                #value: OAUTHBEARER
+                value: ANONYMOUS
+              - name: KSQL_SASL_JAAS_CONFIG
+                value: "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required ;"
+              - name: KSQL_SASL_LOGIN_CALLBACK_HANDLER_CLASS
+                value: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler
+              - name: OAUTH_CLIENT_ID
+                value: SIEM
+              - name: OAUTH_CLIENT_SECRET
+                value: 6ursdya0pbg3mj6p2uh65jgwpmezl958cg5fdy0kpdykk6emrn7swltkhagya0s808by3vw9kvle2p8l8rkdbt2xduew8t7w7ln0zvyp7qflmit8hacqqzy13uxc0hf2
+              - name: OAUTH_TOKEN_ENDPOINT_URI
+                value: "http://service-manager.cip.svc:8080/SMPlatform/manager/rst/getKafkaToken"
+              - name: OAUTH_SSL_TRUSTSTORE_PASSWORD
+                value: test@123
+              - name: OAUTH_SSL_TRUSTSTORE_LOCATION
+                value: "/home/appuser/sphinx.jks"
+              - name: KAFKA_USERNAME
+                value: kafkauser
+              - name: KAFKA_PASSWORD
+                value: kafkauser123
+              - name: KSQL_OPTS
+                value: -Dksql.schema.registry.url=http://schema-registry-service-polaris:8081/ -Dconfluent.support.metrics.enable=false -Djavax.net.ssl.trustStore=/home/appuser/sphinx.jks -Djavax.net.ssl.trustStorePassword=test@123 -Dclient.id=SIEM
+              - name: KSQL_CLASSPATH
+                value: /home/appuser/strimzi/*
+#          command: ["/bin/sh"]
+#          args: ["-c", "while true; do echo hello; sleep 60; done"]
+        hostname: ksqldb-server-deployment-polaris
+        imagePullSecrets:
+          - name: intracom-repository
+
+## KSQLDB Server Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: simavi-sphinx
+      channels: ksql-server-polaris
+      sphinx-component: simavi-ksqldb-polaris
+    name: ksqldb-server-polaris
+  spec:
+    ports:
+    - port: 8088
+      name: "ksqldb-server-polaris"
+      protocol: TCP
+      targetPort: 8088
+    selector:
+      app: simavi-sphinx
+      channels: ksql-server-polaris
+    type: ClusterIP

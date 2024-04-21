@@ -1,0 +1,112 @@
+## INTERACTIVE DASHBOARD Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: id-deployment-evora
+    labels:
+      app: simavi-sphinx
+      sphinx-component: id-evora
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: id-evora
+      spec:
+        containers:
+        - name: id-deployment-evora
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/interactive-dashboards/id-deployment/endpoints-id
+          imagePullPolicy: Always
+          command: ["java"]
+          args: ["-Dspring.profiles.active=docker", "-Xmx256m", "org.springframework.boot.loader.JarLauncher"]
+          #resources:
+          #  limits:
+          #    memory: "256Mi"
+          ports:
+            - containerPort: 8089
+          env:
+            - name: SM_IP
+              value: "http://service-manager.cip-evora.svc:8080/SMPlatform/manager/rst"
+            - name: BBTR_IP
+              value: "https://bbtr-volos.146.124.106.181.nip.io/api"
+            - name: EMAIL_USERNAME
+              value: "sphinxidalerting@gmail.com"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map-hesse
+              #    key: email_username
+            - name: EMAIL_PASSWORD
+              value: "grafana2021"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map-hesse
+              #    key: email_password
+            - name: SMTP_HOST
+              value: "smtp.gmail.com"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map-hesse
+              #    key: smtp_host
+            - name: SMTP_PORT
+              value: "587"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map-hesse
+              #    key: smtp_port
+            - name: TLS_ENABLED
+              value: "true"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map-hesse
+              #    key: tls_enabled
+            - name: SMTP_AUTH
+              value: "true"
+              #valueFrom:
+              #  configMapKeyRef:
+              #    name: simavi-config-map-hesse
+              #    key: smtp_auth
+            - name: SMTP_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-hesse
+                  key: smtp_debug
+            - name: FACTORY_CLASS
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-hesse
+                  key: factory_class
+            - name: FACTORY_FALLBACK
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-hesse
+                  key: factory_fallback
+            - name: TRUST_ALL_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-hesse
+                  key: trust_all_hosts
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://sphinx-postgres-hese:5432/sphinx"
+        imagePullSecrets:
+          - name: intracom-repository
+
+## INTERACTIVE DASHBOARD Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: id-service-evora
+  spec:
+    selector:
+      app: simavi-sphinx
+      sphinx-component: id-evora
+    type: ClusterIP
+    ports:
+      - protocol: TCP
+        port: 8089
+        targetPort: 8089

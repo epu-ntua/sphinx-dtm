@@ -1,0 +1,56 @@
+#postgresql
+#http://manpages.ubuntu.com/manpages/trusty/en/man8/pg_ctlcluster.8.html
+pg_ctlcluster 12 main start
+
+#pg_ctlcluster 12 main stop
+
+
+#zookeeper - pornit automat de serviciul kafka
+#comenzile configurate in zookeeper.service pt start si stop:
+#/home/kafka/kafka/bin/zookeeper-server-start.sh /home/kafka/kafka/config/zookeeper.properties
+
+#/home/kafka/kafka/bin/zookeeper-server-stop.sh
+
+
+#kafka
+sudo systemctl start kafka
+
+#comenzile configurate in kafka.service pt start si stop:
+#/bin/sh -c '/home/kafka/kafka/bin/kafka-server-start.sh /home/kafka/kafka/config/server.properties > /home/kafka/kafka/kafka.log 2>&1'
+
+#/home/kafka/kafka/bin/kafka-server-stop.sh
+
+#confluent / ksqldb
+#comanda urmatoare porneste si zookeper si kafka
+export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64
+confluent local start
+
+#confluent local stop
+#comanda urmatoare sterge datele
+#confluent local destroy
+
+
+#grafana
+sudo systemctl daemon-reload
+sudo systemctl start grafana-server
+sudo systemctl status grafana-server
+
+
+#hadoop
+$HADOOP_INSTALL/hadoop/bin/start-all.sh
+
+#$HADOOP_INSTALL/hadoop/bin/stop-all.sh
+
+
+#hbase
+bin/start-hbase.sh
+
+#bin/stop-hbase.sh
+
+
+#spark
+sbin/start-all.sh
+
+#sbin/stop-all.sh
+
+

@@ -1,0 +1,872 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 34,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 29,
+      "options": {
+        "content": "<div style=\"padding-top: 20px;\">\r\n    <p style=\"font-size: 55px; text-align: center;\"><b style=\"color: #00a79d;\">SPHINX</b> - Analytic Engine</p>\r\n    <hr>\r\n    <div style=\"text-align: center;\">\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/AE/AE_DASHBOARD_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Dashboard manual</a>\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/AE/AE_COMPONENT_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Component manual</a>\r\n    </div>\r\n</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "$$hashKey": "object:437",
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "$$hashKey": "object:435",
+              "field": "select field",
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 27,
+      "options": {
+        "content": "\n<h2>Short description</h2>\n<p style=\"text-align: justify\">The AE is an essential part of the SPHINX Toolkit. Its purpose is to aggregate the data retrieved from other \nSPHINX components to provide helpful information to the end-users. The user will have the ability to interact \nwith the ID and visualize the data through charts (e.g., pie, bar) for a predefined from him/her time interval. \nThe information will be about how many events occurred, the event type, the most frequently attacked \nassets, etc., for the requested time interval. AE can also distribute its information to other SPHINX \ncomponents through a powerful REST API.</p>\n<hr/>\n<h2>Objectives</h2>\n<ul style=\"list-style-type: none; padding: 0; margin: 0;\">\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> Support in decision-making</li>\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> Overall assessment of the organization’s cyber state</li>\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> Provides the Interacive Dashboard with aggregated data to visualize them </li>\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> User interaction through the ID </li>\n</ul>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Functionalities",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 6,
+      "options": {
+        "content": "<h1 style=\"background-color: #00a79d; color: white; padding: 10px\"> Operational environment </h1>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "AE JSON API",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 9
+      },
+      "id": 21,
+      "interval": null,
+      "legend": {
+        "header": "Attacks",
+        "percentage": true,
+        "show": true,
+        "values": true
+      },
+      "legendType": "Under graph",
+      "links": [],
+      "nullPointMode": "connected",
+      "pieType": "pie",
+      "pluginVersion": "7.3.1",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "cacheDurationSeconds": 0,
+          "experimentalGroupByField": "Type",
+          "experimentalMetricField": "Attacks",
+          "fields": [
+            {
+              "jsonPath": "$.operational_environment.attacks[*~]",
+              "name": "Time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.operational_environment.attacks[*]",
+              "name": "Attacks",
+              "type": "number"
+            },
+            {
+              "jsonPath": "$.operational_environment.attacks[*~]",
+              "name": "Type"
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "start_date",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "end_date",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "The number of attacks per attack type",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "AE JSON API",
+      "decimals": 0,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 17,
+      "interval": "",
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": false,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.3.1",
+      "pointradius": 3,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "cacheDurationSeconds": 0,
+          "fields": [
+            {
+              "jsonPath": "$.operational_environment.attacks_per_day[*~]",
+              "name": "Time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.operational_environment.attacks_per_day[*]",
+              "name": "Number",
+              "type": "number"
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "start_date",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "end_date",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "The number of attacks per day",
+      "tooltip": {
+        "shared": false,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 0,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": 0,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": "AE JSON API",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "decimals": 0,
+          "displayName": "$__cell_0",
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 9
+      },
+      "id": 22,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "cacheDurationSeconds": 0,
+          "fields": [
+            {
+              "jsonPath": "$.operational_environment.attacks_per_ip[*~]",
+              "name": "IP",
+              "type": "string"
+            },
+            {
+              "jsonPath": "$.operational_environment.attacks_per_ip[*]",
+              "name": "Number"
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "start_date",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "end_date",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "The number of attacks per destination IP",
+      "type": "bargauge"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 17
+      },
+      "id": 19,
+      "options": {
+        "content": "<h1 style=\"background-color: #00a79d; color: white; padding: 10px\"> HP </h1>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "AE JSON API",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 20
+      },
+      "id": 23,
+      "interval": null,
+      "legend": {
+        "header": "Attacks",
+        "percentage": true,
+        "show": true,
+        "values": true
+      },
+      "legendType": "Under graph",
+      "links": [],
+      "nullPointMode": "connected",
+      "pieType": "pie",
+      "pluginVersion": "7.3.1",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "cacheDurationSeconds": 0,
+          "experimentalGroupByField": "Type",
+          "experimentalMetricField": "Attacks",
+          "fields": [
+            {
+              "jsonPath": "$.hp.attacks[*~]",
+              "name": "Time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.hp.attacks[*]",
+              "name": "Attacks",
+              "type": "number"
+            },
+            {
+              "jsonPath": "$.hp.attacks[*~]",
+              "name": "Type"
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "start_date",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "end_date",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "The number of attacks per attack type",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "AE JSON API",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 20
+      },
+      "hiddenSeries": false,
+      "id": 20,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": false
+      },
+      "percentage": false,
+      "pluginVersion": "7.3.1",
+      "pointradius": 3,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "cacheDurationSeconds": 0,
+          "fields": [
+            {
+              "jsonPath": "$.hp.attacks_per_day[*~]",
+              "name": "Time",
+              "type": "time"
+            },
+            {
+              "jsonPath": "$.hp.attacks_per_day[*]",
+              "name": "Number",
+              "type": "number"
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "start_date",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "end_date",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "The number of attacks per day",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 0,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": "AE JSON API",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "decimals": 0,
+          "displayName": "$__cell_0",
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 20
+              },
+              {
+                "color": "red",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 20
+      },
+      "id": 18,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "cacheDurationSeconds": 0,
+          "fields": [
+            {
+              "jsonPath": "$.hp.attacks_per_ip[*~]",
+              "name": "IP",
+              "type": "string"
+            },
+            {
+              "jsonPath": "$.hp.attacks_per_ip[*]",
+              "name": "Number",
+              "type": "number"
+            }
+          ],
+          "method": "GET",
+          "params": [
+            [
+              "start_date",
+              "${__from:date:YYYY-MM-DD}"
+            ],
+            [
+              "end_date",
+              "${__to:date:YYYY-MM-DD}"
+            ]
+          ],
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": ""
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "The number of attacks per destination IP",
+      "type": "bargauge"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [
+    "Analytic Engine",
+    "AE"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-2y",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Analytic Engine",
+  "uid": "XBljASQGz",
+  "version": 14
+}

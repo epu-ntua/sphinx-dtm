@@ -1,0 +1,197 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  display: flex;
+ /* flex-direction: column;*/
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
+
+.header-title{
+  padding: 15px;
+  font-size: 17px;
+}
+
+.filterForm, .assetCatalogueForm,.blackWebCategoryForm, .blackWebForm, .portCatalogueForm{
+  text-align:left;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.interfaceTable{
+  font-size:17px;
+  text-align: left;
+  width: 100%;
+  background-color: #343a40;
+}
+
+.interfaceName{
+  color:white;
+  font-weight: bold;
+}
+
+.interfaceName:hover{
+  color:lightgoldenrodyellow;
+  font-weight: bold;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  color: darkorange;
+  background-color: #343a40;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.nav-tabs .nav-link {
+  border: 1px solid transparent;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+  background-color: #343a40;
+  color: white;
+}
+
+.card-ad {
+  background-color: #2092ed;
+}
+
+.card-statistics{
+  background-color: #28a745;
+}
+
+.card-alert{
+  background-color:#dd3d31;
+}
+
+a.ad-item {
+  color: #fff;
+  position: relative;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  transition: 0.15s box-shadow ease, 0.15s transform ease;
+  -moz-transition: 0.15s box-shadow ease, 0.15s transform ease;
+}
+
+a.ad-item .card-body p {
+  color: rgba(255,255,255,0.7);
+  font-weight: 600;
+}
+
+a.ad-item .card-body h4 {
+  font-weight: 700;
+}
+
+a.ad-item:hover {
+  text-decoration: none;
+}
+
+
+a.ad-item:hover  svg {
+  left: 1.5rem;
+  font-size: 4rem;
+  transition: 0.15s box-shadow ease, 0.15s transform;
+}
+
+a.ad-item  svg {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 4rem;
+  left: 1rem;
+  color: rgba(255,255,255,0.2);
+  transition: 0.15s all ease;
+}
+
+a.ad svg {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 4rem;
+  left: 1rem;
+  color: rgba(255,255,255,0.2);
+  transition: 0.15s all ease;
+}
+
+.shadow-lg {
+  box-shadow: 0 2rem 1.5rem -1.5rem rgba(33,37,41,0.15),0 0 1.5rem 0.5rem rgba(33,37,41,0.05) !important;
+}
+
+a.ad-item:hover {
+  transform: translateY(-0.25rem);
+  box-shadow: 0 2.25rem 1.5rem -1.5rem rgba(33,37,41,0.3),0 0 1.5rem 0.5rem rgba(33,37,41,0.05) !important;
+}
+
+.ad-component-active{
+  color: #28a745;
+}
+
+.link{
+  color: #007bff;
+  cursor: pointer;
+}
+
+.link:hover{
+  color: #2f69ff;
+  text-decoration: none;
+}
+
+.table-title{
+  color: whitesmoke;
+  font-size: 21px;
+  text-align: left;
+  padding: 15px;
+  width: 100%;
+  border: 1px solid #4a4d50;
+  background: #141619;
+}
+
+.num-title{
+  color: whitesmoke;
+  font-size: 15px;
+  text-align: left;
+  padding: 15px;
+  width: 100%;
+  border: 1px solid #4a4d50;
+  background: #141619;
+}
+
+.num-check{
+  color: whitesmoke;
+  font-size: 17px;
+  text-align: left;
+  padding-left: 3px;
+  width: 100%;
+}
+
+.table-title > a:hover{
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.diff{
+    color: #ddd89a;
+}
+
+.no-diff{
+    word-wrap: break-word;
+}
+
+.defaultValue{
+    word-break: break-word;
+}

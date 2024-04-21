@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: elasticsearch-polaris-ext
+  namespace: pilot-polaris
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: elastic-polaris.146.124.106.181.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: elasticsearch-simavi-polaris
+            port:
+              number: 80

@@ -1,0 +1,110 @@
+[
+  {
+    "id":1,
+    "orgId":1,
+    "name":"[AD] BlackWeb JSON",
+    "type":"simpod-json-datasource",
+    "typeLogoUrl":"public/plugins/simpod-json-datasource/img/json-logo.svg",
+    "access":"direct",
+    "url":"http://localhost:8088/sphinx/ad/api/getBlackWebAlertList",
+    "password":"",
+    "user":"",
+    "database":"",
+    "basicAuth":false,
+    "isDefault":true,
+    "jsonData":{
+
+    },
+    "readOnly":false
+  },
+  {
+    "id":2,
+    "orgId":1,
+    "name":"[AD] MassiveDataProcessing JSON",
+    "type":"simpod-json-datasource",
+    "typeLogoUrl":"public/plugins/simpod-json-datasource/img/json-logo.svg",
+    "access":"direct",
+    "url":"http://localhost:8088/sphinx/ad/api/getMassiveDataProcessingAlertList",
+    "password":"",
+    "user":"",
+    "database":"",
+    "basicAuth":false,
+    "isDefault":false,
+    "jsonData":{
+
+    },
+    "readOnly":false
+  },
+  {
+    "id":3,
+    "orgId":1,
+    "name":"[AD] Wi-fi traffic",
+    "type":"simpod-json-datasource",
+    "typeLogoUrl":"public/plugins/simpod-json-datasource/img/json-logo.svg",
+    "access":"direct",
+    "url":"http://localhost:8088/sphinx/ad/statistics/getDTMTraffic",
+    "password":"",
+    "user":"",
+    "database":"",
+    "basicAuth":false,
+    "isDefault":false,
+    "jsonData":{
+
+    },
+    "readOnly":false
+  },
+  {
+    "id":4,
+    "orgId":1,
+    "name":"Active Devices",
+    "type":"simpod-json-datasource",
+    "typeLogoUrl":"public/plugins/simpod-json-datasource/img/json-logo.svg",
+    "access":"direct",
+    "url":"http://localhost:8088/sphinx/ad/statistics/getActiveDevices",
+    "password":"",
+    "user":"",
+    "database":"",
+    "basicAuth":false,
+    "isDefault":false,
+    "jsonData":{
+
+    },
+    "readOnly":false
+  },
+  {
+    "id":6,
+    "orgId":1,
+    "name":"Alert List",
+    "type":"simpod-json-datasource",
+    "typeLogoUrl":"public/plugins/simpod-json-datasource/img/json-logo.svg",
+    "access":"direct",
+    "url":"http://localhost:8088/sphinx/ad/statistics/getAlertList",
+    "password":"",
+    "user":"",
+    "database":"",
+    "basicAuth":false,
+    "isDefault":false,
+    "jsonData":{
+
+    },
+    "readOnly":false
+  },
+  {
+    "id":5,
+    "orgId":1,
+    "name":"Alerts",
+    "type":"simpod-json-datasource",
+    "typeLogoUrl":"public/plugins/simpod-json-datasource/img/json-logo.svg",
+    "access":"direct",
+    "url":"http://localhost:8088/sphinx/ad/statistics/getAlerts",
+    "password":"",
+    "user":"",
+    "database":"",
+    "basicAuth":false,
+    "isDefault":false,
+    "jsonData":{
+
+    },
+    "readOnly":false
+  }
+]

@@ -1,0 +1,23 @@
+1. download zookeeper: 3.6.2
+    https://zookeeper.apache.org/releases.html#download
+
+2. unzip:
+    C:\tools\zookeeper-3.6.2
+
+3. mkdir data
+
+4. edit conf/zoo.cfg:
+
+    tickTime = 2000
+    dataDir = C:/tools/zookeeper-3.6.2/zookeeper/data
+    clientPort = 2181
+    initLimit = 5
+    syncLimit = 2
+
+5. start (Obs: you don't need to pass the command line arg "start"):
+    cd C:\tools\zookeeper-3.6.2
+    bin\zkServer.cmd
+
+6. stat CLI
+    cd C:\tools\zookeeper-3.6.2
+    bin\zkCli.cmd

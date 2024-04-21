@@ -1,0 +1,75 @@
+{
+	"info": {
+		"_postman_id": "3cf99901-6987-4fc7-8ac2-565b0b943eca",
+		"name": "sphinx",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "DTM",
+			"item": [
+				{
+					"name": "create instance",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"key\":\"12345678\",\r\n    \"name\":\"localhost-test\",\r\n    \"url\":\"http://localhost:8087\",\r\n    \"enabled\":\"true\",\r\n    \"isMaster\":\"true\",\r\n    \"hasTshark\":\"true\",\r\n    \"hasSuricata\":\"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8087/sphinx/dtm/instance/save?name=localhost-test&key=12345678&enabled=true&url=http://localhost:8087&isMaster=true&hasTshark=true&hasSuricata=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"sphinx",
+								"dtm",
+								"instance",
+								"save"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "localhost-test"
+								},
+								{
+									"key": "key",
+									"value": "12345678"
+								},
+								{
+									"key": "enabled",
+									"value": "true"
+								},
+								{
+									"key": "url",
+									"value": "http://localhost:8087"
+								},
+								{
+									"key": "isMaster",
+									"value": "true"
+								},
+								{
+									"key": "hasTshark",
+									"value": "true"
+								},
+								{
+									"key": "hasSuricata",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
