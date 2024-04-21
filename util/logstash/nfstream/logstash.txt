@@ -1,0 +1,5 @@
+cd c:\tools\logstash\bin
+logstash -f C:\tools\logstash\config\logstashHz.conf
+
+cd c:\tools\logstash\bin
+logstash -f C:\tools\logstash\config\logstashNf-folder.conf

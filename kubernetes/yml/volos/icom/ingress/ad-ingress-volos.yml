@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ad
+  namespace: simavi
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - host: sphinx-toolkit.intracom-telecom.com
+    http:
+      paths:
+      - path: /sphinx/ad
+        backend:
+          serviceName: ad-service
+          servicePort: 8088

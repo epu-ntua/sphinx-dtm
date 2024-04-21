@@ -1,0 +1,47 @@
+## SMTP Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: smtp-deployment
+    labels:
+      app: simavi-smtp
+      sphinx-component: smtp
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-smtp
+    template:
+      metadata:
+        labels:
+          app: simavi-smtp
+          sphinx-component: smtp
+      spec:
+        containers:
+        - name: smtp-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/interactive-dashboards/grafana/smtp_server
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "256Mi"
+          ports:
+            - containerPort: 2525
+        imagePullSecrets:
+          - name: intracom-repository
+
+## SMTP Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: sphinx-smtp-service
+  spec:
+    selector:
+      app: simavi-smtp
+      sphinx-component: smtp
+    type: ClusterIP
+    ports:
+      - protocol: TCP
+        port: 2525
+        targetPort: 25

@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: id
+  namespace: pilot
+spec:
+  ingressClassName: "nginx"
+  rules:
+  - host: sphinx-toolkit.intracom-telecom.com
+    http:
+      paths:
+      - path: /sphinx/id
+        backend:
+          serviceName: id-service
+          servicePort: 8089
+         

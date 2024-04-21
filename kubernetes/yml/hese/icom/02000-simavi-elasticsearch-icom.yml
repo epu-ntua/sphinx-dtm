@@ -1,0 +1,140 @@
+## ELASTICSEARCH Service Cluster##
+---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: elasticsearch-cluster-hesse
+    spec:
+      clusterIP: None
+      selector:
+        app: simavi-sphinx
+        sphinx-component: simavi-elasticsearch-hesse
+      ports:
+      - name: transport
+        port: 9300
+    
+## ELASTICSEARCH Service##
+---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: elasticsearch-simavi-hesse
+    spec:
+      selector:
+        app: simavi-sphinx
+        sphinx-component: simavi-elasticsearch-hesse
+      ports:
+      - name: http
+        port: 80
+        targetPort: 9200
+      type: ClusterIP
+
+## ELASTICSEARCH ConfigMap##
+---      
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: es-config-hesse
+    data:
+      elasticsearch.yml: |
+        cluster.name: my-elastic-cluster
+        network.host: "0.0.0.0"
+        bootstrap.memory_lock: false
+        discovery.type: single-node
+        discovery.zen.ping.unicast.hosts: elasticsearch-cluster-hesse
+        discovery.zen.minimum_master_nodes: 1
+        xpack.security.enabled: false
+        xpack.monitoring.enabled: false
+        http.cors.allow-credentials: true
+        http.cors.allow-headers: X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+        http.cors.enabled: true
+        http.port: 9200
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      
+## ElasticSearch Persistent Volume Claim ##
+---
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: simavi-es-pv-claim-hesse
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+## ELASTICSEARCH StatefulSet##
+---
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: esnode
+    spec:
+      selector:
+        matchLabels:
+            app: simavi-sphinx
+      serviceName: elasticsearch
+      replicas: 1
+      updateStrategy:
+        type: RollingUpdate
+      template:
+        metadata:
+          labels:
+            app: simavi-sphinx
+            sphinx-component: simavi-elasticsearch-hesse
+        spec:
+          securityContext:
+            fsGroup: 1000
+          initContainers:
+          - name: init-sysctl
+            image: busybox
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              privileged: true
+            command: ["sysctl", "-w", "vm.max_map_count=262144"]
+          containers:
+          - name: elasticsearch
+            resources:
+                limits:
+                    memory: 1920Mi
+            securityContext:
+              privileged: true
+              runAsUser: 1000
+              capabilities:
+                add:
+                - IPC_LOCK
+                - SYS_RESOURCE
+            image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+            env:
+            - name: ES_JAVA_OPTS
+              valueFrom:
+                  configMapKeyRef:
+                      name: es-config-hesse
+                      key: ES_JAVA_OPTS
+            readinessProbe:
+              httpGet:
+                scheme: HTTP
+                path: /_cluster/health?local=true
+                port: 9200
+              initialDelaySeconds: 5
+            ports:
+            - containerPort: 9200
+              name: es-http
+            - containerPort: 9300
+              name: es-transport
+            volumeMounts:
+            - name: es-data
+              mountPath: /usr/share/elasticsearch/data
+            - name: elasticsearch-config
+              mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+              subPath: elasticsearch.yml
+          volumes:
+            - name: elasticsearch-config
+              configMap:
+                name: es-config-hesse
+                items:
+                  - key: elasticsearch.yml
+                    path: elasticsearch.yml
+            - name: es-data
+              persistentVolumeClaim:
+                claimName: simavi-es-pv-claim-hesse

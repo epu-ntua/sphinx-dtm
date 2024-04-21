@@ -1,0 +1,139 @@
+# creare imagine - baza de date; creaza 2 imagini: 1 - postgres si 2 - iulianbuz/postgres care de fapt e un (tag)
+docker build -t sphinxproject/postgres .
+
+(sau
+    docker pull sphinxproject/postgres
+)
+
+# pentru verificare
+docker images
+
+# pornire servici (din directorul unde se gasete Dockerfile)
+docker-compose up -d
+
+# pentru verificare servicii
+docker ps
+
+    # daca e vreo eroare, afisare log-uri
+    docker-compose logs
+
+    # oprire servici
+    docker-compose down
+
+    # remove all images (doar din powershell)
+    docker rmi -f $(docker images -a -q)
+
+    # remove all images <none> (doar din powershell)
+    docker rmi -f $(docker images -f "dangling=true" -q)
+
+# pull
+docker pull iulianbuz/postgres
+
+---------------- DEPLOY: data-traffic-monitoring -----------------------
+# din directorul data-traffic-monitoring
+mvn clean -Dspring.profiles.active=docker package
+
+# opresc aplicatia / containerul / procesul
+docker ps
+docker kill d0996f11ce71
+
+# docker build --no-cache=true -t iulianbuz/data-traffic-monitoring .
+docker rmi -f $(docker images -f "dangling=true" -q)
+docker rmi -f sphinxproject/data-traffic-monitoring
+docker build -t sphinxproject/data-traffic-monitoring .
+
+# se creeaza 3 imagini:
+    # adoptopenjdk
+    # sphinxproject/data-traffic-monitoring
+    # none => aici se gaseste fisierul csv
+    #   docker run -it 1dfa0bf4c4e9 /bin/bash
+
+# pornire aplicatie in docker
+docker run -it --link sphinx-postgres --net docker_default -p8087:8087 sphinxproject/data-traffic-monitoring
+
+# in caz de probleme:
+docker network ls
+------------------------------------------
+
+---------------- DEPLOY: anomaly-detection -----------------------
+# din directorul anomaly-detection
+mvn clean -Dspring.profiles.active=docker package
+
+# ruleaza
+deploy.bat
+------------------------------------------
+---------------- DEPLOY: interactive-dashboard -----------------------
+# din directorul interactive-dashboard
+mvn clean -Dspring.profiles.active=docker package
+
+# ruleaza
+deploy.bat
+------------------------------------------
+
+docker push sphinxproject/postgres
+
+---------------------------------------------------------
+
+# pull rabbitmq
+# docker pull rabbitmq
+
+# pornire server
+# docker run -d --hostname sphinx-rabbitmq --name sphinx-rabbitmq --network docker_default rabbitmq:3
+
+# pornire server cu interfata de administare (username/password: guest/guest; localhost:15672)
+# docker run -d --hostname sphinx-rabbitmq --name sphinx-rabbitmq --network docker_default -p 15672:15672 rabbitmq:3-management
+
+# pornire server (dupa ce a fost creeat):
+# docker start sphinx-rabbitmq
+
+-----------------------------------------------------------
+
+tshark docker
+docker build -t sphinxproject/tshark .
+docker push sphinxproject/tshark
+
+docker run --name sphinx-tshark --network docker_default sphinxproject/tshark -D
+docker run --rm --name=sphinx-tshark_1 --network docker_default --cap-add=NET_RAW --cap-add=NET_ADMIN sphinxproject/tshark -D
+docker run -i -t sphinxproject/tshark /bin/bash
+/*
+1. dpauxmon (DisplayPort AUX channel monitor capture)
+2. randpkt (Random packet generator)
+3. udpdump (UDP Listener remote capture)
+*/
+-----------------------------------------------------------
+
+# din docker/grafana
+docker build -t sphinxproject/grafana .
+
+# push
+docker push sphinxproject/grafana
+
+# din docker
+docker-compose up -d
+
+docker volume ls
+--------------------------------------------------------
+
+Dockerfile
+FROM alpine:latest
+RUN apk --no-cache add tshark
+
+docker build -t sphinxproject/tshark2 .
+
+#docker run -i -t --net docker_default -p7777:7777 sphinxproject/tshark2
+docker run -i -t --net docker_default sphinxproject/tshark2
+
+docker run ubuntu /bin/echo 'Hello world'
+docker run -i -t --net docker_default --link sphinxproject/tshark2 ubuntu
+
+# install tshark
+groupadd tshark
+useradd sphinx
+usermod -a -G tshark sphinx
+apt-get update -y
+apt-get install -y tshark
+chgrp tshark /usr/bin/dumpcap
+chmod 750 /usr/bin/dumpcap
+setcap cap_net_raw,cap_net_admin=eip /usr/bin/dumpcap
+getcap /usr/bin/dumpcap
+# su sphinx

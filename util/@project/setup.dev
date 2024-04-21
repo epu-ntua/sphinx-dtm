@@ -1,0 +1,48 @@
+# 0. proiect
+git clone -b develop git@git.siveco.ro:SPHINX/SPHINX.git
+mvn clean install -DskipTests
+
+# 1. install docker [#versiunea 3.4 sau 2.3.0.2]
+    https://www.docker.com/products/docker-desktop
+
+    # activare features pentru docker
+        https://docs.docker.com/docker-for-windows/troubleshoot/#virtualization
+    from "windows features" check:
+        Virtual Machine Platform (default vine activat)
+        Windows Subsystem for Linux (default vine activat)
+        Hiper-V (trebuie activat)
+
+    [restart]
+
+    Virtualization enabled in the BIOS
+        bios (F1) -> Security -> Virtualization -> VT-d
+                                                -> Virtualization
+
+    Hypervisor enabled at Windows startup [rulata ca administator]
+        bcdedit /set hypervisorlaunchtype auto
+
+    [restart]
+
+    https://docs.microsoft.com/en-us/windows/wsl/install-win10#step-4---download-the-linux-kernel-update-package
+    Step 4 - Download the Linux kernel update package
+
+    from PowerShell:
+        wsl --set-default-version 2
+
+    [restart]
+
+# 2. run docker composer [instaleaza: postgresql, kafka, kafdrop, zookeeper, ksqldb-server]
+
+    1. create network: sphinx-network
+    docker network ls
+    docker network inspect sphinx-network
+    docker network rm docker_default
+    docker network create --driver=bridge --subnet=172.18.0.0/16 sphinx-network
+    docker network inspect sphinx-network
+
+    2. run docker-compose
+    cd docker
+    docker-compose -f docker-compose-infrastructure_v2.yml up -d
+
+# 3. plugin intellij:
+    https://projectlombok.org/setup/

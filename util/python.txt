@@ -1,0 +1,10 @@
+# download:
+    https://www.jython.org/download
+    => Jython Installer
+
+#install:
+    java -jar jython-installer-2.7.2.jar
+
+#classpath
+    JYTHON_HOME C:\tools\jython2.7.2
+    Path: %JYTHON_HOME%\bin

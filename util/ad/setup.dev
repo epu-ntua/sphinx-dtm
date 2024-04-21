@@ -1,0 +1,90 @@
+# 1. install / download / unzip
+
+    Scala 2.12.14 [!!!! - to do]
+    * install
+    * setting in intellij
+
+    HBase 2.1.3 (https://archive.apache.org/dist/hbase/2.1.3/)
+    * c:\tools\hbase-2.1.3
+
+    * create 2 empty folders in C:\tools\hbase-2.1.3:
+        zookeeper
+        hbase
+
+    * override (from \SPHINX\util\ad\hbase-2.1.3):
+        \hbase-2.1.3\bin
+            hbase.cmd
+            hbase-config.cmd
+
+        \hbase-2.1.3\conf
+            hbase-env.cmd
+            hbase-site.xml
+
+    * download:
+        https://github.com/cdarlint/winutils/tree/master/hadoop-3.2.1/bin
+         => C:\tools\winutils\bin\winutils.exe
+        ENV:
+            HADOOP_HOME:C:\tools\winutils
+        [restart intelij]
+
+    * cmd:
+        ipconfig
+          => Wireless LAN adapter WiFi:
+              IPv4 Address. . . . . . . . . . . : 192.168.1.114
+          Ethernet adapter Ethernet 2
+              IPv4 Address. . . . . . . . . . . : 172.18.252.232
+          Ethernet adapter vEthernet (WSL):
+              IPv4 Address. . . . . . . . . . . : 172.22.48.1
+
+        edit and add in C:\Windows\System32\drivers\etc
+            192.168.1.114  hbaseserver localhost.localdomain
+
+# 2. start hbase:
+    cd c:\tools\hbase-2.1.3\bin
+    start-hbase.cmd
+
+    *[OBS 1] delete all content of the:
+          zookeeper
+          hbase
+     folders if change settings in hbase-site.xml
+
+    *[OBS 2] if change zookeeper port in hbase-site.xml:
+            <property>
+                <name>hbase.zookeeper.property.clientPort</name>
+                <value>2828</value>
+            </property>
+    must change the port also in application-[user].properties:
+        hbase.zookeeper.property.clientPort=2828
+
+# 3. verify hbase:
+    http://localhost:16010/
+
+    sau
+
+    hbase shell
+    scan 'adml_flows'
+    count 'adml_sflows'
+
+
+# 4. start app:
+    mvn clean install -DskipTests=true
+    java -jar  -Dspring.profiles.active=[user]  anomaly-detection-0.0.1-SNAPSHOT.jar
+
+# 4. verify swager:
+    http://localhost:18088/sphinx/ad/swagger-ui.html
+    https://sphinx-kubernetes.intracom-telecom.com/sphinx/ad/swagger-ui.html
+
+# intracom/volos:
+    docker login registry.sphinx-repo.intracom-telecom.com
+    [obs: wrong way: docker login https://sphinx-repo.intracom-telecom.com/]
+
+    mvn install -P docker-image -Dspring.profiles.active=docker -DskipTests -pl anomaly-detection -am
+
+    [manual, after the image is created in docker]
+    docker push registry.sphinx-repo.intracom-telecom.com/sphinx-project/anomaly-detection/ad-deployment
+
+    [view in gitlab]
+    https://sphinx-repo.intracom-telecom.com/sphinx-project/anomaly-detection/ad-deployment/container_registry
+
+# din pod
+    wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AbusedSMTPServer

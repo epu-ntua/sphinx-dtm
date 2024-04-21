@@ -1,0 +1,90 @@
+/* Header title */
+
+/* .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-5.MuiToolbar-gutters {
+    background-color: white;
+    color: black;
+} */
+
+
+/* Table headers */
+
+th.MuiTableCell-root.MuiTableCell-head.MTableHeader-header-13.MuiTableCell-alignLeft {
+    z-index: 1;
+}
+
+
+/* Pagination dropdown */
+
+.MuiSelect-root.MuiSelect-select.MuiTablePagination-select.MuiSelect-selectMenu.MuiInputBase-input {
+    display: none;
+}
+
+
+/* Pagination icon */
+
+.MuiSvgIcon-root.MuiSelect-icon.MuiTablePagination-selectIcon {
+    display: none;
+}
+
+
+/* Links cells */
+
+.MuiTableCell-root.MuiTableCell-body.MuiTableCell-paddingNone {
+    background-color: rgb(211, 231, 193);
+    /* border: 1px solid black; */
+}
+
+
+/* Links header */
+
+.MuiTableCell-root.MuiTableCell-head {
+    color: white;
+    background-color: rgb(76, 175, 80);
+    /* border: 1px solid black; */
+}
+
+[id^="multiselect"] {
+    z-index: -1;
+    width: 164px;
+    background-color: white;
+    color: black;
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+[id^="selectBox"] {
+    position: relative;
+}
+
+[id^="selectBox"] select {
+    width: 100%;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+}
+
+[id^="overSelect"] {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+[id^="checkboxes"] {
+    display: none;
+    border: 1px #dadada solid;
+}
+
+[id^="checkboxes"] label {
+    display: block;
+}
+
+[id^="checkboxes"] label:hover {
+    background-color: black;
+    color: white;
+}
+
+[id^="status"] {
+    width: 60px;
+}

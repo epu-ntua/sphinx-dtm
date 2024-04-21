@@ -1,0 +1,138 @@
+apiVersion: 1
+
+datasources:
+  - name: "[AD] BlackWeb JSON"
+    type: simpod-json-datasource
+    access: direct
+    url: http://localhost:8088/sphinx/ad/api/getBlackWebAlertList
+    password:
+    user:
+    database:
+    basicAuth: false
+    isDefault: false
+    readOnly: false
+    editable: false
+    version: 1
+    jsonData:
+        typeLogoUrl": 'public/plugins/simpod-json-datasource/img/json-logo.svg'
+  - name: "[AD] MassiveDataProcessing JSON"
+    type: simpod-json-datasource
+    access: direct
+    url: http://localhost:8088/sphinx/ad/api/getMassiveDataProcessingAlertList
+    password:
+    user:
+    database:
+    basicAuth: false
+    isDefault: false
+    readOnly: false
+    editable: false
+    version: 1
+    jsonData:
+        typeLogoUrl": 'public/plugins/simpod-json-datasource/img/json-logo.svg'
+  - name: "[AD] Wi-fi traffic"
+    type: simpod-json-datasource
+    access: direct
+    url: http://localhost:8088/sphinx/ad/statistics/getDTMTraffic
+    password:
+    user:
+    database:
+    basicAuth: false
+    isDefault: false
+    readOnly: false
+    editable: false
+    version: 1
+    jsonData:
+        typeLogoUrl": 'public/plugins/simpod-json-datasource/img/json-logo.svg'
+  - name: Active Devices
+    type: simpod-json-datasource
+    access: direct
+    url: http://localhost:8088/sphinx/ad/statistics/getAlertList
+    password:
+    user:
+    database:
+    basicAuth: false
+    isDefault: false
+    readOnly: false
+    editable: false
+    version: 1
+    jsonData:
+        typeLogoUrl": 'public/plugins/simpod-json-datasource/img/json-logo.svg'
+  - name: Alert List
+    type: simpod-json-datasource
+    access: direct
+    url: http://localhost:8088/sphinx/ad/statistics/getAlertList
+    password:
+    user:
+    database:
+    basicAuth: false
+    isDefault: false
+    readOnly: false
+    editable: false
+    version: 1
+    jsonData:
+        typeLogoUrl": 'public/plugins/simpod-json-datasource/img/json-logo.svg'
+  - name: Alerts
+    type: simpod-json-datasource
+    access: direct
+    url: http://localhost:8088/sphinx/ad/statistics/getAlerts
+    password:
+    user:
+    database:
+    basicAuth: false
+    isDefault: false
+    readOnly: false
+    editable: false
+    version: 1
+    jsonData:
+        typeLogoUrl": 'public/plugins/simpod-json-datasource/img/json-logo.svg'
+  - name: Asset Catalogue
+    type: simpod-json-datasource
+    access: direct
+    url: http://localhost:8088/sphinx/ad/assetcatalogue/getAssetCatalogue
+    password:
+    user:
+    database:
+    basicAuth: false
+    isDefault: false
+    readOnly: false
+    editable: false
+    version: 1
+    jsonData:
+        typeLogoUrl": 'public/plugins/simpod-json-datasource/img/json-logo.svg'
+  - name: JSON-Username-Statistics
+    type: simpod-json-datasource
+    access: direct
+    url: http://localhost:8088/sphinx/ad/grafana/getUserStatistics
+    password:
+    user:
+    database:
+    basicAuth: false
+    isDefault: false
+    readOnly: false
+    editable: false
+    version: 1
+    jsonData:
+        typeLogoUrl": 'public/plugins/simpod-json-datasource/img/json-logo.svg'
+  - name: PostgreSQL
+    type: postgres
+    url: 172.18.0.2:5432
+    database: sphinx
+    user: sphinx
+    secureJsonData:
+      password: "sphinx"
+    jsonData:
+      sslmode: "disable" # disable/require/verify-ca/verify-full
+      maxOpenConns: 0         # Grafana v5.4+
+      maxIdleConns: 2         # Grafana v5.4+
+      connMaxLifetime: 14400  # Grafana v5.4+
+      #postgresVersion: 903 # 903=9.3, 904=9.4, 905=9.5, 906=9.6, 1000=10
+      timescaledb: false
+
+#  - name: suricata-1.1.0
+#    type: elasticsearch
+#    access: Server(default)
+#    url: http://localhost:9200
+#    jsonData:
+#      interval: No Pattern
+#      timeField: "@timestamp"
+#      esVersion: 7

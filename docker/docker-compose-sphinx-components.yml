@@ -1,0 +1,43 @@
+version: "3"
+services:
+    sphinx-dtm:
+        build: ../data-traffic-monitoring
+        environment:
+            dtm.instanceKey: 1234567
+        cap_add:
+            - NET_RAW
+            - NET_ADMIN
+        networks:
+            default:
+                ipv4_address: 172.18.0.4
+    sphinx-ad:
+        build: ../anomaly-detection
+        networks:
+            default:
+                ipv4_address: 172.18.0.5
+    sphinx-id:
+        build: ../interactive-dashboards-ui
+        stdin_open: true
+        tty: true
+        ports:
+            - 3001:3001
+        networks:
+            default:
+                ipv4_address: 172.18.0.6
+    sphinx-grafana:
+        build: ../grafana
+        environment:
+            - "GF_PATHS_PLUGINS=/data/grafana/plugins"
+            - "GF_AUTH_ANONYMOUS_ENABLED=true"
+        volumes:
+            - grafana-storage:/var/lib/grafana
+            - grafana-plugins:/var/lib/grafana/plugins
+        ports:
+            - 3000:3000
+        networks:
+            default:
+                ipv4_address: 172.18.0.7
+volumes:
+    grafana-storage:
+    grafana-plugins:
+    

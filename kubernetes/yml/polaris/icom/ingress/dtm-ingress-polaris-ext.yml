@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dtm-ext 
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: dtm-polaris.146.124.106.181.nip.io
+    http:
+      paths:
+      - path: /sphinx/dtm
+        pathType: Prefix
+        backend:
+          service:
+            name: dtm-service
+            port:
+              number: 8087
+

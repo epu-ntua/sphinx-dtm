@@ -1,0 +1,561 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 29,
+  "links": [],
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "content": "<div style=\"padding-top: 20px;\">\r\n    <p style=\"font-size: 35px; text-align: center;\"><b style=\"color: #00a79d;\">SPHINX</b> - Real Time Risk Assessment</p>\r\n    <hr>\r\n    <div style=\"text-align: center;\">\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/RCRA/RCRA_DASHBOARD_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Dashboard manual</a>\r\n    <a href=\"/interactive-dashboards/public/manuals/with_dashboards/RCRA/RCRA_COMPONENT_MANUAL.pdf\" target=\"_blank\" style=\"background-color: teal; border: none; color white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; margin: 4px 2px; color: white;\">\r\n    <img class=\"valign\" src=\"/interactive-dashboards/public/img/pdf.png\" width=\"24px\" height=\"19px\"> Component manual</a>\r\n    </div>\r\n</div>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "$$hashKey": "object:437",
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "$$hashKey": "object:435",
+              "field": "select field",
+              "id": "1",
+              "type": "count"
+            }
+          ],
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "content": "\n<h2>Short description</h2>\n<p style=\"text-align: justify\">The Real-time Cyber Risk Assessment (RCRA) component of the SPHINX ecosystem periodically assesses the risk of cyber security incidents, determining their probable consequences and presenting warning levels and alerts for users.</p>\n<hr/>\n<h2>Objective</h2>\n<ul style=\"list-style-type: none; padding: 0; margin: 0;\">\n  <li style=\"margin-top: -1px; padding: 12px;\"><span style=\"color: green;font-size:20px;font-weight:bold;\">*</span> Assess the risks of cyber security incidents</li>\n</ul>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Functionalities",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 16,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\r\n\t\t\t\t\"REPORT_DATE_TIME\" AS report_date_time,\r\n\t\t\t\t\"REPORT_TYPE\" AS report_type,\r\n\t\t\t\t\"ASSET_ID\" AS asset_id,\r\n\t\t\t\t\"ASSET_NAME\" AS asset_name,\r\n\t\t\t\t\"ASSET_IP\" AS asset_ip,\r\n\t\t\t\t\"ASSET_MAC\" AS asset_mac,\r\n\t\t\t\t\"ASSET_LAST_TOUCHED\" AS asset_last_touched,\r\n\t\t\t\tjsonb_array_elements(\"ASSET_VULNERABILITIES\"::jsonb)->'cve_id' AS asset_vulnerabilities_cve_id,\r\n\t\t\t\tjsonb_path_query_first(jsonb_array_elements(\"ASSET_VULNERABILITIES\"::jsonb)->'controls', '$[0 to $.size()]')->'description' AS asset_vulnerabilities_control_description,\r\n\t\t\t\tjsonb_path_query_first(jsonb_array_elements(\"ASSET_VULNERABILITIES\"::jsonb)->'controls', '$[0 to $.size()]')->'effectiveness' AS asset_vulnerabilities_control_effectiveness,\r\n\t\t\t\t\"THREAT_NAME\" AS threat_name,\r\n\t\t\t\t\"THREAT_CAPEC_ID\" AS threat_capec_id,\r\n\t\t\t\t\"THREAT_CAPEC_NAME\" AS threat_capec_name,\r\n\t\t\t\t\"THREAT_CAPEC_ABSTRACTION\" AS threat_capec_abstraction,\r\n\t\t\t\t\"THREAT_CAPEC_LIKELIHOOD\" AS threat_capec_likelihood,\r\n\t\t\t\t\"THREAT_CAPEC_SEVERITY\" AS threat_capec_severity,\r\n\t\t\t\t\"THREAT_ASSET_SKILL\" AS threat_asset_skill,\r\n\t\t\t\t\"THREAT_ASSET_MOTIVE\" AS threat_asset_motive,\r\n\t\t\t\t\"THREAT_ASSET_SOURCE\" AS threat_asset_source,\r\n\t\t\t\t\"THREAT_ASSET_ACTOR\" AS threat_asset_actor,\r\n\t\t\t\t\"THREAT_ASSET_OPPORTUNITY\" AS threat_asset_opportunity,\r\n\t\t\t\t\"RISK_SERVICE_INSURANCE_CHECK\" AS risk_service_insurance_check,\r\n\t\t\t\t\"RISK_THREAT_OCCURANCE\" AS risk_threat_occurance,\r\n\t\t\t\t\"RISK_MATERIALISATION\" AS risk_materialisation,\r\n\t\t\t\t\"RISK_UNAUTH_MODIFICATIONS\" AS risk_unauth_modifications,\r\n\t\t\t\t\"RISK_UNDER_MAINTENANCE\" AS risk_under_maintenance,\r\n\t\t\t\t\"RISK_EXPOSURE_THREAT_OCCURENCE\" AS risk_exposure_threat_occurence,\r\n\t\t\t\t\"RISK_OBJECTIVE_CONFIDENTIALITY_LOW\" AS risk_objective_confidentiality_low,\r\n\t\t\t\t\"RISK_OBJECTIVE_CONFIDENTIALITY_MEDIUM\" AS risk_objective_confidentiality_medium,\r\n\t\t\t\t\"RISK_OBJECTIVE_CONFIDENTIALITY_HIGH\" AS risk_objective_confidentiality_high,\r\n\t\t\t\t\"RISK_OBJECTIVE_INTEGRITY_LOW\" AS risk_objective_integrity_low,\r\n\t\t\t\t\"RISK_OBJECTIVE_INTEGRITY_MEDIUM\" AS risk_objective_integrity_medium,\r\n\t\t\t\t\"RISK_OBJECTIVE_INTEGRITY_HIGH\" AS risk_objective_integrity_high,\r\n\t\t\t\t\"RISK_OBJECTIVE_AVAILABILITY_LOW\" AS risk_objective_availability_low,\r\n\t\t\t\t\"RISK_OBJECTIVE_AVAILABILITY_MEDIUM\" AS risk_objective_availability_medium,\r\n\t\t\t\t\"RISK_OBJECTIVE_AVAILABILITY_HIGH\" AS risk_objective_availability_high,\r\n\t\t\t\t\"RISK_OBJECTIVE_MONETARY_LOW\" AS risk_objective_monetary_low,\r\n\t\t\t\t\"RISK_OBJECTIVE_MONETARY_MEDIUM\" AS risk_objective_monetary_medium,\r\n\t\t\t\t\"RISK_OBJECTIVE_MONETARY_HIGH\" AS risk_objective_monetary_high,\r\n\t\t\t\t\"RISK_OBJECTIVE_SAFETY_LOW\" AS risk_objective_safety_low,\r\n\t\t\t\t\"RISK_OBJECTIVE_SAFETY_MEDIUM\" AS risk_objective_safety_medium,\r\n\t\t\t\t\"RISK_OBJECTIVE_SAFETY_HIGH\" AS risk_objective_safety_high,\r\n\t\t\t\tjsonb_array_elements(\"RISK_OBJECTIVE_CIA_MOST_PROBABLE_SCENARIOS\"::jsonb)->'confidentiality' AS risk_objective_cia_confidentiality,\r\n\t\t\t\tjsonb_array_elements(\"RISK_OBJECTIVE_CIA_MOST_PROBABLE_SCENARIOS\"::jsonb)->'integrity' AS risk_objective_cia_integrity,\r\n\t\t\t\tjsonb_array_elements(\"RISK_OBJECTIVE_CIA_MOST_PROBABLE_SCENARIOS\"::jsonb)->'availability' AS risk_objective_cia_availability,\r\n\t\t\t\tjsonb_array_elements(\"RISK_OBJECTIVE_CIA_MOST_PROBABLE_SCENARIOS\"::jsonb)->'probability' AS risk_objective_cia_probability,\r\n\t\t\t\tjsonb_array_elements(\"RISK_OBJECTIVE_EVALUATION_MOST_PROBABLE_SCENARIOS\"::jsonb)->'monetary' AS risk_objective_evaluation_monetary,\r\n\t\t\t\tjsonb_array_elements(\"RISK_OBJECTIVE_EVALUATION_MOST_PROBABLE_SCENARIOS\"::jsonb)->'safety' AS risk_objective_evaluation_safety,\r\n\t\t\t\tjsonb_array_elements(\"RISK_OBJECTIVE_EVALUATION_MOST_PROBABLE_SCENARIOS\"::jsonb)->'probability' AS risk_objective_evaluation_probability,\r\n\t\t\t\t\"RISK_ALERT_CONFIDENTIALITY_LEVEL\" AS risk_alert_confidentiality_level,\r\n\t\t\t\t\"RISK_ALERT_CONFIDENTIALITY_THRESHOLD\" AS risk_alert_confidentiality_threshold\r\n\t\t\tFROM \"kafka_RCRA_REPORT_TOPIC_AVRO\";",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "RCRA REPORTS",
+      "type": "table"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 18,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM \"kafka_RCRA_ASSET_REPUTATION_AVRO\";",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "RCRA ASSET REPUTATION",
+      "type": "table"
+    },
+    {
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 17,
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT * FROM \"kafka_RCRA_ALERTS_AVRO\";",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "RCRA ALERTS",
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 4,
+      "options": {
+        "content": "<h1 style=\"background-color: #00a79d; color: white; padding: 20px\"> Pro-active mode </h1>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "hiddenSeries": false,
+      "id": 6,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.3.1",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Historic number of threats per severity of risk",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:744",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:745",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 43
+      },
+      "id": 8,
+      "options": {
+        "content": "<h1 style=\"background-color: #00a79d; color: white; padding: 20px\"> Active mode </h1>",
+        "mode": "html"
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 46
+      },
+      "id": 10,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "vertical",
+        "reduceOptions": {
+          "calcs": [
+            "count"
+          ],
+          "fields": "/.*/",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.3.1",
+      "targets": [
+        {
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Current predicted threats by severity of risk",
+      "type": "bargauge"
+    }
+  ],
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [
+    "Real Time Risk Assessment",
+    "RCRA"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Real Time Risk Assessment",
+  "uid": "yaQqJIQMz",
+  "version": 2
+}

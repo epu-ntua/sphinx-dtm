@@ -1,0 +1,122 @@
+## DTM Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: dtm-deployment-polaris
+    labels:
+      app: simavi-sphinx
+      sphinx-component: dtm
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: dtm
+      spec:
+        hostNetwork: false
+        containers:
+          - name: dtm-deployment
+            # command: ["/bin/sh"]
+            # args: ["-c", "while true; do echo hello; sleep 10;done"]
+            image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment:latest
+            imagePullPolicy: Always
+            securityContext:
+              capabilities:
+                add:
+                  - NET_RAW
+                  - NET_ADMIN
+            #resources:
+            #  limits:
+            #    memory: "4Gi"
+            ports:
+            - containerPort: 8087
+            env:
+              - name: KAFKA_BOOTSTRAP_ADDRESS
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map-polaris
+                    key: kafkastore_bootstrap_servers
+              - name: KAFKA_PROPERTIES_SECURITY_PROTOCOL
+                #value: SASL_SSL
+                value: PLAINTEXT
+              - name: KAFKA_PROPERTIES_SASL_MECHANISM
+                #value: OAUTHBEARER
+                value: ANONYMOUS
+              - name: KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+                value: "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"kafkauser\" password=\"kafkauser123\";"
+              - name: KAFKA_PROPERTIES_SASL_LOGIN_CALLBACK_HANDLER_CLASS
+                value: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler
+              - name: OAUTH_CLIENT_ID
+                value: SIEM
+              - name: OAUTH_CLIENT_SECRET
+                value: ""
+                #value: 6wesvjhabl3hvgfdkopaxwei5czcj670raea273t7zshkqtpg8qfrtxdoz8az7l2nd8w7ya2xjeu5kyzk7peo0ll3e9rt0vuk9bxvh3pnmjk5gyto51vjl4c4lja4nqy
+                #value: lgrubzy5m7pvphernshie9b6vem5mll838zjc40vzr7z840m1dtxen9eb5tydq7d8vx50mqn47k98s6xfuarrf8glexver60xwtr856v064h0u41m8vzmprnhwr7esn6
+              - name: OAUTH_TOKEN_ENDPOINT_URI
+                value: "http://polaris.172.26.7.181.nip.io/SMPlatform/manager/rst/KafkaAuthentication"
+                #value: "http://sphinx-toolkit.intracom-telecom.com/SMPlatform/manager/rst/getKafkaToken"
+              - name: SSL_TRUSTSTORE_PASSWORD
+                value: test@123
+              - name: SSL_TRUSTSTORE_PATH
+                value: file:/jks/sphinx.jks
+                #value: "/home/for_clients.crt"
+              - name: KAFKA_USERNAME
+                value: kafkauser
+              - name: KAFKA_PASSWORD
+                value: kafkauser123
+              - name: DTM_INSTANCE_KEY
+                value: "3234567"
+              - name: SPRING_DATASOURCE_URL
+                # productie
+                value: jdbc:postgresql://146.124.106.181:30006/sphinx
+                # intracom
+                #value: "jdbc:postgresql://10.240.223.101:5432/sphinx"
+                # volos
+                #value: jdbc:postgresql://146.124.106.170:30005/sphinx
+              - name: ELASTICSEARCH_URL
+                value: "http://elasticsearch-simavi-polaris:80"
+              - name: ELASTICSEARCH_INDEX
+                value: "grafana"
+              - name: EXCLUDE_IPS_SURICATA
+                value:
+              - name: EXCLUDE_IPS_TSHARK
+                value:
+              - name: SFTP_HOST
+                value: 10.10.2.65
+              - name: SFTP_PORT
+                value: "22"
+              - name: SFTP_PASSWORD
+                value: sphinxfdce
+              - name: SFTP_USERNAME
+                value: sphinxfdce
+              - name: SFTP_UPLOAD_DIRECTORY
+                value: /home/sphinxfdce/fdce_imported_data
+              - name: TOPIC_DSS
+                value: dss
+              - name: TOPIC_ASSET
+                value: dtm-asset
+              - name: DELETE_NUMBER_OF_DAYS
+                value: "1"
+
+        imagePullSecrets:
+          - name: intracom-repository
+
+## DTM Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: dtm-service
+  spec:
+    selector:
+      app: simavi-sphinx
+      sphinx-component: dtm
+    ports:
+      - protocol: TCP
+        port: 8087
+        targetPort: 8087

@@ -1,0 +1,94 @@
+## DTM Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: dtm-deployment
+    labels:
+      app: simavi-sphinx
+      sphinx-component: dtm
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: dtm
+      spec:
+        hostAliases:
+        - ip: "10.233.100.183"
+          hostnames:
+          - "sphinx"
+        containers:
+          - name: dtm-deployment
+            image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment:latest
+            imagePullPolicy: Always
+            securityContext:
+              capabilities:
+                add:
+                  - NET_RAW
+                  - NET_ADMIN
+            #resources:
+            #  limits:
+            #    memory: "4Gi"
+            ports:
+            - containerPort: 8087
+            env:
+              - name: KAFKA_BOOTSTRAP_ADDRESS
+                valueFrom:
+                  configMapKeyRef:
+                    name: simavi-config-map
+                    key: kafkastore_bootstrap_servers
+              - name: KAFKA_PROPERTIES_SECURITY_PROTOCOL
+                #                value: SASL_SSL
+                value: PLAINTEXT
+              - name: KAFKA_PROPERTIES_SASL_MECHANISM
+                #value: OAUTHBEARER
+                value: ANONYMOUS
+              - name: KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+                value: "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required ;"
+              - name: KAFKA_PROPERTIES_SASL_LOGIN_CALLBACK_HANDLER_CLASS
+                value: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler
+              - name: OAUTH_CLIENT_ID
+                value: SIEM
+              - name: OAUTH_CLIENT_SECRET
+                value: 6ursdya0pbg3mj6p2uh65jgwpmezl958cg5fdy0kpdykk6emrn7swltkhagya0s808by3vw9kvle2p8l8rkdbt2xduew8t7w7ln0zvyp7qflmit8hacqqzy13uxc0hf2
+              - name: OAUTH_TOKEN_URL
+                value: "http://sphinx-kubernetes.intracom-telecom.com/SMPlatform/manager/rst/getKafkaToken"
+              - name: SSL_TRUSTSTORE_PASSWORD
+                value: test@123
+              - name: SSL_TRUSTSTORE_PATH
+                value: "/home/appuser/sphinx.jks"
+              - name: KAFKA_USERNAME
+                value: kafkauser
+              - name: KAFKA_PASSWORD
+                value: kafkauser123
+              - name: DTM_INSTANCE_KEY
+                value: "1234567"
+              - name: SPRING_DATASOURCE_URL
+                # intracom
+                value: jdbc:postgresql://sphinx-postgres:5432/sphinx
+                # volos
+                #value: jdbc:postgresql://146.124.106.170:30005/sphinx
+              - name: EXCLUDE_IPS
+                value: not host (10.10.2.60 or 10.10.2.61 or 146.124.106.170 or 10.10.2.62)
+        imagePullSecrets:
+          - name: intracom-repository
+
+## DTM Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: dtm-service
+  spec:
+    selector:
+      app: simavi-sphinx
+      sphinx-component: dtm
+    ports:
+      - protocol: TCP
+        port: 8087
+        targetPort: 8087

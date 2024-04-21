@@ -1,0 +1,212 @@
+#OBS:
+    a. nu e nevoie de zookeeper
+    b. nu e nevoie de hadoop
+
+1. download
+    [https://www.apache.org/dyn/closer.lua/hbase/2.2.6/hbase-2.2.6-bin.tar.gz]
+    http://archive.apache.org/dist/hbase/2.3.1/
+
+2. unzip
+    [C:\tools\hbase-2.2.6]
+    C:\tools\hbase-2.3.1
+    C:\tools\hbase-2.1.3
+
+3. (env) HBASE_HOME: C:\tools\hbase-2.1.3 [C:\tools\hbase-2.3.1] [C:\tools\hbase-2.2.6]
+
+4. edit
+    hbase-config.cmd, located in the bin
+         set JAVA_HOME=C:\Progra~1\Java\jdk1.8.0_171
+
+5. edit
+    hbase.cmd located in the bin (remove %HEAP_SETTINGS%)
+        set java_arguments=%HEAP_SETTINGS% %HBASE_OPTS% -classpath "%CLASSPATH%" %CLASS% %hbase-command-arguments%
+
+6. create 2 folder in C:\tools\hbase-2.2.6:
+    zookeeper
+    hbase
+
+7.edit conf\hbase-env:
+    set JAVA_HOME=C:\Progra~1\Java\jdk1.8.0_171
+    set HBASE_CLASSPATH=%HBASE_HOME%\lib\client-facing-thirdparty\*
+    set HBASE_HEAPSIZE=8000
+    set HBASE_OPTS="-XX:+UseConcMarkSweepGC" "-Djava.net.preferIPv4Stack=true"
+    set SERVER_GC_OPTS="-verbose:gc" "-XX:+PrintGCDetails" "-XX:+PrintGCDateStamps" %HBASE_GC_OPTS%
+    set HBASE_USE_GC_LOGFILE=true
+
+    set HBASE_JMX_BASE="-Dcom.sun.management.jmxremote.ssl=false" "-Dcom.sun.management.jmxremote.authenticate=false"
+
+    set HBASE_MASTER_OPTS=%HBASE_JMX_BASE% "-Dcom.sun.management.jmxremote.port=10101"
+    set HBASE_REGIONSERVER_OPTS=%HBASE_JMX_BASE% "-Dcom.sun.management.jmxremote.port=10102"
+    set HBASE_THRIFT_OPTS=%HBASE_JMX_BASE% "-Dcom.sun.management.jmxremote.port=10103"
+    set HBASE_ZOOKEEPER_OPTS=%HBASE_JMX_BASE% -Dcom.sun.management.jmxremote.port=10104"
+    set HBASE_REGIONSERVERS=%HBASE_HOME%\conf\regionservers
+    set HBASE_LOG_DIR=%HBASE_HOME%\logs
+    set HBASE_IDENT_STRING=%USERNAME%
+    set HBASE_MANAGES_ZK=true
+
+8. edit hosts din C:\Windows\System32\drivers\etc (https://www.programmersought.com/article/56311065432/)
+    172.19.112.1 	hbaseserver localhost.localdomain
+    172.18.252.167 	hbaseserver localhost.localdomain
+
+9. edit
+    hbase-site.xml, located in the conf
+
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>false</value>
+    </property>
+
+    <property>
+        <name>hbase.rootdir</name>
+        <value>file:///C:/tools/hbase-2.3.1/hbase</value>
+     </property>
+
+     <property>
+        <name>hbase.zookeeper.property.dataDir</name>
+        <value>/C:/tools/hbase-2.3.1/zookeeper</value>
+     </property>
+
+     <property>
+         <name>hbase.zookeeper.quorum</name>
+         <value>hbaseserver</value>
+     </property>
+
+    <property>
+        <name>hbase.zookeeper.property.clientPort</name>
+        <value>2181</value>
+    </property>
+
+    <property>
+         <name>hbase.master</name>
+         <value>172.19.112.1</value>
+     </property>
+
+    <property>
+         <name>hbase.master.port</name>
+         <value>16000</value>
+     </property>
+
+    <property>
+         <name>hbase.master.info.port</name>
+         <value>16010</value>
+     </property>
+
+    <property>
+        <name>hbase.regionserver.port</name>
+        <value>16020</value>
+    </property>
+
+    <property>
+        <name>hbase.regionserver.info.port</name>
+        <value>16030</value>
+    </property>
+
+(ipconfig: Ethernet adapter Npcap Loopback Adapter:)
+   <property>
+        <name>hbase.master</name>
+        <value>169.254.11.164</value>
+        <!-- <value>169.254.146.214</value> -->
+    </property>
+
+
+10. start (c:\tools\hbase-2.1.3\bin>start-hbase.cmd):
+    [start (c:\tools\hbase-2.3.1\bin>start-hbase.cmd):]
+    start-hbase.cmd
+        sau
+    hbase master start
+    hbase regionserver start
+
+11. check (c:\tools\hbase-2.3.1\bin>hbase shell)
+    Connect to HBase:
+        hbase shell
+
+    create table (create ‘<table name>’,’<column family>’):
+        create 'emp','personal data','professional data'
+
+    list table:
+        list
+
+    put:
+        put 'emp','1','personal data:name','raju'
+        put 'emp','1','personal data:city','iasi'
+    scan content:
+        scan 'emp'
+
+        ROW                   COLUMN+CELL
+         1                    column=personal data:city, timestamp=1601923835136, value=
+                              iasi
+         1                    column=personal data:name, timestamp=1601923812236, value=
+                              raju
+
+12. web:
+    http://localhost:16010/
+
+
+TESTE:
+    scan 'adml_sensor'
+    scan 'adml_signatures'
+    put 'adml_flows','1602087609.692Z','flow:lower_port','80'
+    put 'adml_flows','1602087609.692Z','flow:packets','5'
+    put 'adml_flows','1602087609.692Z','flow:lower_ip','127.0.0.1'
+    put 'adml_flows','1602087609.692Z','flow:upper_ip','127.0.0.5'
+
+    put 'adml_flows','1602087619.692Z','flow:lower_port','80'
+    put 'adml_flows','1602087619.692Z','flow:packets','2'
+    put 'adml_flows','1602087619.692Z','flow:lower_ip','127.0.0.1'
+    put 'adml_flows','1602087619.692Z','flow:upper_ip','127.0.0.5'
+
+3. In caz de erori
+Variana 1 :
+din cmd:
+    ipconfig
+        Ethernet adapter Local Area Connection* 13
+            IPv4 Address. . . . . . . . . . . : 172.18.252.203
+        Ethernet adapter vEthernet (nat):
+            IPv4 Address. . . . . . . . . . . : 172.31.192.1
+Verificare ca exista liniile astea in fisierul host din directorul  C:\Windows\System32\drivers\etc
+    172.31.192.1 	hbaseserver localhost.localdomain
+    172.18.252.203  hbaseserver localhost.localdomain
+
+(daca se modifica e nevoie de restart server)
+
+ATELELE
+    4. porneste fara docker
+    5. VPN pornit
+
+Erori:
+    1. org.apache.hadoop.hbase.MasterNotRunningException: java.io.IOException: org.apache.zookeeper.KeeperException$NoNodeException: KeeperErrorCode = NoNode for /hbase/master
+    => nu e pornit server-ul de hbase (zookeeper din docker e up)
+
+    Pentru alte erori, ca de exemplul de mai jos
+    3 => cu docker pornit
+        org.apache.hadoop.hbase.MasterNotRunningException: java.net.ConnectException:
+        Call to D302287.main.siveco.ro/169.254.210.119:16000 failed on connection exception: org.apache.hbase.thirdparty.io.netty.channel.AbstractChannel$AnnotatedConnectException:
+        Connection refused: no further information: D302287.main.siveco.ro/169.254.210.119:16000
+
+   4 => fara docker pornit
+    org.apache.hadoop.hbase.MasterNotRunningException: java.net.ConnectException:
+        Call to D302287.main.siveco.ro/172.18.252.167:16000 failed on connection exception: org.apache.hbase.thirdparty.io.netty.channel.AbstractChannel$AnnotatedConnectException:
+        Connection refused: no further information: D302287.main.siveco.ro/172.18.252.167:16000
+Varianta 2:
+     !!REZOLVARE :
+     In hosts lasa un singur ip in loc de cele pe care le-ai pus anterior si pune ip de la:
+       Ethernet adapter Npcap Loopback Adapter:
+                        Autoconfiguration IPv4 Address:.....
+       ex: 169.254.101.227   hbaseserver localhost.localdomain
+
+    5 => cu vpn-ul deschis
+    org.apache.hbase.thirdparty.io.netty.channel.AbstractChannel$AnnotatedConnectException: Connection refused: no further information: D302287.main.siveco.ro/172.18.252.203:16000
+
+    6 => java.net.BindException: Cannot assign requested address: bind: Service 'sparkDriver' failed after 16 retries (on a random free port)!
+    Consider explicitly setting the appropriate binding address for the service 'sparkDriver' (for example spark.driver.bindAddress for SparkDriver) to the correct binding address.
+
+Daca tot sunt erori:
+- verifica hbase-site.xml din "util\hbase\conf" cu "hbase-site.xml" din hbase-ul instalat.
+
+Daca nu porneste pe motiv de:
+    Cannot assign requested address: bind
+atunci:
+    vezi AGAIN punctul 3.
+
+
+!!!!Daca tot ai erori de genul celor de la punctul 3 : ---> da un restart laptopului

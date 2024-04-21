@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simavi-config-map
+data:
+  kafkastore_bootstrap_servers: 'evora-bootstrap.172.26.7.181.nip.io:443'
+  kafka_properties_security_protocol: SASL_SSL
+  kafka_properties_sasl_mechanism: OAUTHBEARER
+  oauth_token_endpoint_uri: "http://evora.172.26.7.181.nip.io/SMPlatform/manager/rst/getKafkaToken"
+  ssl_truststore_path: file:/jks/sphinx_hesse.jks
+  dtm_instance_key: '4234567'
+  spring_datasource_url: jdbc:postgresql://172.26.7.181:30007/sphinx
+  elasticsearch_url: "http://elasticsearch-simavi-evora:80"
+  exclude_ips_suricata: not host (10.10.2.60 or 10.10.2.61 or 146.124.106.170 or 10.10.2.62 or 146.124.106.181)
+  exclude_ips_tshark: "not host (10.10.2.60 or 10.10.2.61 or 10.10.2.62)"
+  sm_ip: "http://evora.172.26.7.181.nip.io/SMPlatform/manager/rst/"
+  source: 'ens192'
+  kafka_jks: sphinx_hesse.jks
+  file_jks: /jks/sphinx_hesse.jks
+  sftp_host: 10.10.2.65
+  sftp_port: '22'
+  sftp_password: 'sphinxfdce'
+  sftp_username: 'sphinxfdce'
+  sftp_upload_directory: /home/sphinxfdce/fdce_imported_data
+  topic_dss: 'dss-dtm-record-traffic'
+

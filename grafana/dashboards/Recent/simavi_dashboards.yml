@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: 'SIMAVI'
+    folder: ''
+    type: file
+    disableDeletion: false
+    editable: true
+    updateIntervalSeconds: 60
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+      foldersFromFilesStructure: true

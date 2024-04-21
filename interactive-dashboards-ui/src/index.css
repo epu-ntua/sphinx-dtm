@@ -1,0 +1,118 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #0b0c0e;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+header{
+  background-color:#141619 !important;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+ /* line-height: 60px; /* Vertically center the text there */
+  background-color:#141619 !important;
+  text-align: left;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+body > .container {
+  padding: 60px 15px 0;
+}
+
+.footer > .container {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.logo{
+  height: 30px;
+}
+
+.footer-logo{
+  height: 60px;
+}
+
+.footer-text{
+  margin: 10px;
+  font-size: 12px;
+}
+
+.breadcrumb-dark{
+  margin-top: 5px;
+  background-color:#141619 !important;
+  color:white;
+}
+
+.breadcrumb-dark a{
+  color:#00a79d;
+}
+
+.hidden { display:none; }
+
+.language-link{
+  padding: 5px;
+  color:#00a79d;
+}
+
+select.dropdown-lng:focus::-ms-value {
+  color:#00a79d;
+  background-color: #15191d;
+}
+
+.dropdown-lng::-ms-expand {
+  display: none;
+}
+
+.dropdown-lng.language {
+  display: block;
+  -ms-flex-wrap: wrap;
+  break-word: wrap;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 15px;
+  line-height: 1.5;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  color: #00a79d;
+  align-content: center;
+  background-color: #15191d;
+  background-image: none;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
+  -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+

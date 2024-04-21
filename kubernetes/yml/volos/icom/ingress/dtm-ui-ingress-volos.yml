@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: dtm-ui
+  namespace: simavi  
+spec:
+  rules:
+  - host: sphinx-toolkit.intracom-telecom.com
+    http:
+      paths:
+      - path: /dtm
+        backend:
+          serviceName: ui-service 
+          servicePort: 3001
+

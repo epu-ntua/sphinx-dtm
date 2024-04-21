@@ -1,0 +1,721 @@
+## PSQL Secret ##
+---
+  apiVersion: v1
+  kind: Secret
+  metadata:
+      name: simavi-postgres-secret
+  type: Opaque
+  data:
+      POSTGRES_USER: c3BoaW54
+      POSTGRES_PASSWORD: c3BoaW54
+
+## PSQL Config maps ##
+---
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: simavi-postgres-configmap
+  data:
+    database_url: sphinx-postgres
+
+## PSQL Persistent Volume  ##
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: postgres-pv-volume
+    labels:
+      type: local
+      app: simavi-sphinx
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 5Gi
+    accessModes:
+      - ReadWriteMany
+    hostPath:
+      path: "/home/sphinxkm/simavi/volumes/simavi-postgres-volume/"
+
+## PSQL Persistent Volume Claim ##
+---
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: postgres-pv-claim
+    labels:
+      app: simavi-sphinx
+  spec:
+    storageClassName: manual
+    accessModes:
+      - ReadWriteMany
+    resources:
+      requests:
+        storage: 5Gi
+
+## PSQL Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: simavi-postgres-deployment
+    labels:
+      app: simavi-sphinx
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+      spec:
+        containers:
+          - name: postgres
+            image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/simavi-postgres
+            imagePullPolicy: IfNotPresent
+            ports:
+            - containerPort: 5432
+            env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: simavi-postgres-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: simavi-postgres-secret
+                  key: POSTGRES_PASSWORD
+            volumeMounts:
+                - mountPath: /var/lib/postgresql/data
+                  name: postgredb
+        volumes:
+          - name: postgredb
+            persistentVolumeClaim:
+              claimName: postgres-pv-claim
+        imagePullSecrets:
+          - name: intracom-repository
+
+## PSQL Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: sphinx-postgres
+  spec:
+    selector:
+      app: simavi-sphinx
+    ports:
+      - protocol: TCP
+        port: 5432
+        targetPort: 5432
+
+
+
+## ELASTICSEARCH Service Cluster##
+---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: elasticsearch-cluster
+    spec:
+      clusterIP: None
+      selector:
+        app: simavi-sphinx
+      ports:
+      - name: transport
+        port: 9300
+    
+## ELASTICSEARCH LoadBalancer##
+---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: elasticsearch-loadbalancer
+    spec:
+      selector:
+        app: simavi-sphinx
+      ports:
+      - name: http
+        port: 80
+        targetPort: 9200
+      type: LoadBalancer
+
+## ELASTICSEARCH ConfigMap##
+---      
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: es-config
+    data:
+      elasticsearch.yml: |
+        cluster.name: my-elastic-cluster
+        network.host: "0.0.0.0"
+        bootstrap.memory_lock: false
+        discovery.type: single-node
+        discovery.zen.ping.unicast.hosts: elasticsearch-cluster
+        discovery.zen.minimum_master_nodes: 1
+        xpack.security.enabled: false
+        xpack.monitoring.enabled: false
+        http.cors.allow-credentials: true
+        http.cors.allow-headers: X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+        http.cors.enabled: true
+        http.port: 9200
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      
+## ELASTICSEARCH StatefulSet##
+---
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: esnode
+    spec:
+      selector:
+        matchLabels:
+            app: simavi-sphinx
+      serviceName: elasticsearch
+      replicas: 1
+      updateStrategy:
+        type: RollingUpdate
+      template:
+        metadata:
+          labels:
+            app: simavi-sphinx
+        spec:
+          securityContext:
+            fsGroup: 1000
+          initContainers:
+          - name: init-sysctl
+            image: busybox
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              privileged: true
+            command: ["sysctl", "-w", "vm.max_map_count=262144"]
+          containers:
+          - name: elasticsearch
+            resources:
+                requests:
+                    memory: 1Gi
+            securityContext:
+              privileged: true
+              runAsUser: 1000
+              capabilities:
+                add:
+                - IPC_LOCK
+                - SYS_RESOURCE
+            image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+            env:
+            - name: ES_JAVA_OPTS
+              valueFrom:
+                  configMapKeyRef:
+                      name: es-config
+                      key: ES_JAVA_OPTS
+            readinessProbe:
+              httpGet:
+                scheme: HTTP
+                path: /_cluster/health?local=true
+                port: 9200
+              initialDelaySeconds: 5
+            ports:
+            - containerPort: 9200
+              name: es-http
+            - containerPort: 9300
+              name: es-transport
+            volumeMounts:
+            - name: es-data
+              mountPath: /usr/share/elasticsearch/data
+            - name: elasticsearch-config
+              mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+              subPath: elasticsearch.yml
+          volumes:
+            - name: elasticsearch-config
+              configMap:
+                name: es-config
+                items:
+                  - key: elasticsearch.yml
+                    path: elasticsearch.yml
+      volumeClaimTemplates:
+        - metadata:
+            name: es-data
+          spec:
+            accessModes: [ "ReadWriteOnce" ]
+            resources:
+              requests:
+                storage: 5Gi
+                
+
+
+## DTM Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: dtm-deployment
+    labels:
+      app: simavi-sphinx
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+      spec:
+        containers:
+          - name: dtm-deployment
+            image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment:latest
+            imagePullPolicy: IfNotPresent
+            ports:
+            - containerPort: 8087
+            env:
+              - name: dtm.instanceKey
+                value: "1234567"
+        imagePullSecrets:
+          - name: intracom-repository
+
+## DTM Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: dtm-service
+  spec:
+    selector:
+      app: simavi-sphinx
+    type: LoadBalancer  
+    ports:
+      - protocol: TCP
+        port: 8087
+        targetPort: 8087
+        nodePort: 30000
+
+
+
+## SCHEMA REGISTRY ##
+---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        app: simavi-sphinx
+      name: sr-deployment
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: simavi-sphinx
+      template:
+        metadata:
+          labels:
+            app: simavi-sphinx
+        spec:
+          containers:
+            - name: schema-registry
+              image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/simavi-schema-registry
+              imagePullPolicy: IfNotPresent
+              ports:
+                - containerPort: 8081
+              env:
+                - name: SCHEMA_REGISTRY_HOST_NAME
+                  value: schema-registry
+                - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
+                  value: 'PLAINTEXT://Sphinx:9092'
+                - name: SCHEMA_REGISTRY_LISTENERS
+                  value: 'http://0.0.0.0:8081'
+          imagePullSecrets:
+            - name: intracom-repository
+
+## SCHEMA REGISTRY SERVICE ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: simavi-sphinx
+    name: schema-registry-service
+  spec:
+    ports:
+    - port: 8081
+      protocol: TCP
+      targetPort: 8081
+    selector:
+      app: simavi-sphinx
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+
+## KSQLDB Server Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: simavi-sphinx
+    name: ksqldb-server-deployment
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          channels: ksql-server
+      spec:
+        containers:
+        - name: ksqldb-server-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/ksqldb-server
+          imagePullPolicy: IfNotPresent
+          #          command: ["/usr/bin/docker/run","SCRIPT","/usr/share/kafka/init.ksql"]
+          ports:
+            - containerPort: 8088
+          env:
+              - name: KSQL_BOOTSTRAP_SERVERS
+                value: test-cluster-kafka-bootstrap.kafka.svc:9092
+              - name: KSQL_CONNECT_BOOTSTRAP_SERVERS
+                value: test-cluster-kafka-bootstrap.kafka.svc:9092
+              - name: KSQL_CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR
+                value: "1"
+              - name: KSQL_CONNECT_CONFIG_STORAGE_TOPIC
+                value: ksql-connect-configs
+              - name: KSQL_CONNECT_GROUP_ID
+                value: ksql-connect-cluster
+              - name: KSQL_CONNECT_KEY_CONVERTER
+                value: org.apache.kafka.connect.storage.StringConverter
+              - name: KSQL_CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR
+                value: "1"
+              - name: KSQL_CONNECT_OFFSET_STORAGE_TOPIC
+                value: ksql-connect-offsets
+              - name: KSQL_CONNECT_PLUGIN_PATH
+                value: /usr/share/kafka/plugins
+              - name: KSQL_CONNECT_STATUS_STORAGE_REPLICATION_FACTOR
+                value: "1"
+              - name: KSQL_CONNECT_STATUS_STORAGE_TOPIC
+                value: ksql-connect-statuses
+              - name: KSQL_CONNECT_VALUE_CONVERTER
+                value: org.apache.kafka.connect.json.JsonConverter
+              - name: KSQL_CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE
+                value: "false"
+              - name: KSQL_KSQL_CONNECT_WORKER_CONFIG
+                value: /connect/connect.properties
+              - name: KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE
+                value: "true"
+              - name: KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE
+                value: "true"
+              - name: KSQL_LISTENERS
+                value: http://0.0.0.0:8088
+              - name: KSQL_SECURITY_PROTOCOL
+                #                value: SASL_SSL
+                value: PLAINTEXT
+              - name: KSQL_SASL_MECHANISM
+                #value: OAUTHBEARER
+                value: ANONYMOUS
+              - name: KSQL_SASL_JAAS_CONFIG
+                value: "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required ;"
+              - name: KSQL_SASL_LOGIN_CALLBACK_HANDLER_CLASS
+                value: io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler
+              - name: OAUTH_CLIENT_ID
+                value: SIEM
+              - name: OAUTH_CLIENT_SECRET
+                value: 6ursdya0pbg3mj6p2uh65jgwpmezl958cg5fdy0kpdykk6emrn7swltkhagya0s808by3vw9kvle2p8l8rkdbt2xduew8t7w7ln0zvyp7qflmit8hacqqzy13uxc0hf2
+              - name: OAUTH_TOKEN_ENDPOINT_URI
+                value: "http://sphinx-kubernetes.intracom-telecom.com/SMPlatform/manager/rst/getKafkaToken"
+              - name: OAUTH_SSL_TRUSTSTORE_PASSWORD
+                value: test@123
+              - name: OAUTH_SSL_TRUSTSTORE_LOCATION
+                value: "/home/appuser/sphinx.jks"
+              - name: KAFKA_USERNAME
+                value: kafkauser
+              - name: KAFKA_PASSWORD
+                value: kafkauser123
+              - name: KSQL_OPTS
+                value: -Dksql.schema.registry.url=http://schema-registry-service:8081/ -Dconfluent.support.metrics.enable=false -Djavax.net.ssl.trustStore=/home/appuser/sphinx.jks -Djavax.net.ssl.trustStorePassword=test@123 -Dclient.id=SIEM
+              - name: KSQL_CLASSPATH
+                value: /home/appuser/strimzi/*
+#          command: ["/bin/sh"]
+#          args: ["-c", "while true; do echo hello; sleep 60; done"]
+        hostname: ksqldb-server-deployment
+        imagePullSecrets:
+          - name: intracom-repository
+
+## KSQLDB Server Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: simavi-sphinx
+      channels: ksql-server
+    name: ksqldb-server
+  spec:
+    ports:
+    - port: 8088
+      name: "ksqldb-server"
+      protocol: TCP
+      targetPort: 8088
+    selector:
+      app: simavi-sphinx
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+
+## KSQLDB CLI Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: simavi-sphinx
+      channels: ksql-cli
+    name: ksqldb-cli-deployment
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          channels: ksql
+      spec:
+        containers:
+        - name: ksqldb-cli-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/ksqldb-cli
+          command:
+            - /bin/sh
+          imagePullPolicy: IfNotPresent
+          tty: true
+        imagePullSecrets:
+          - name: intracom-repository
+
+
+
+
+
+## AD Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: ad-deployment
+    labels:
+      app: simavi-sphinx
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+      spec:
+        containers:
+          - name: ad-deployment
+            image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/anomaly-detection/ad-deployment:latest
+            imagePullPolicy: IfNotPresent
+            ports:
+            - containerPort: 8088
+        imagePullSecrets:
+          - name: intracom-repository
+
+## AD Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: ad-service
+  spec:
+    selector:
+      app: simavi-sphinx
+    type: LoadBalancer  
+    ports:
+      - protocol: TCP
+        port: 8088
+        targetPort: 8088
+        nodePort: 30001
+
+
+
+## INTERACTIVE DASHBOARD Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: id-deployment
+    labels:
+      app: simavi-sphinx
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+      spec:
+        containers:
+        - name: id-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/interactive-dashboards/id-deployment
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8089
+        imagePullSecrets:
+          - name: intracom-repository
+          
+## INTERACTIVE DASHBOARD Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+        app: simavi-sphinx
+    name: id-service
+  spec:
+    selector:
+      app: simavi-sphinx
+    type: LoadBalancer
+    ports:
+      - protocol: TCP
+        port: 8089
+        targetPort: 8089
+        nodePort: 30002  
+
+
+
+## UI Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: simavi-sphinx
+    name: ui-deployment
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+      spec:
+        containers:
+        - name: ui-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/interactive-dashboards/id-deployment/interactive-dashboards-ui
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: CHOKIDAR_USEPOLLING
+            value: "true"
+          ports:
+            - containerPort: 3000
+        imagePullSecrets:
+          - name: intracom-repository
+
+## UI Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: simavi-sphinx
+    name: ui-service
+  spec:
+    ports:
+    - port: 3001
+      protocol: TCP
+      targetPort: 3000
+    selector:
+      app: simavi-sphinx
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+
+
+
+## GRAFANA INTERACTIVE DASHBOARDS PersistentVolume ##
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: interactive-dashboards-volume
+    labels:
+      pv: interactive-dashboards-volume
+      type: local
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    capacity:
+      storage: 500Mi
+    hostPath:
+      path: /data/volumes/interactive-dashboards-volume/
+
+## GRAFANA INTERACTIVE DASHBOARDS PersistentVolume Claim ##
+---
+  apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: interactive-dashboards-pv-claim
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Mi
+    selector:
+      matchLabels:
+        pv: interactive-dashboards-volume
+
+## GRAFANA INTERACTIVE DASHBOARDS Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: interactive-dashboards
+  spec:
+    selector:
+      app: interactive-dashboards
+    ports:
+      - protocol: TCP
+        port: 3000
+
+## GRAFANA INTERACTIVE DASHBOARDS Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: interactive-dashboards-deployment
+    labels:
+      app: interactive-dashboards
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: interactive-dashboards
+    template:
+      metadata:
+        labels:
+          app: interactive-dashboards
+      spec:
+        containers:
+          - name: grafana-dashboards
+            image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/interactive-dashboards/grafana:dashboards
+            imagePullPolicy: IfNotPresent
+            ports:
+              - containerPort: 3000
+            volumeMounts:
+              - mountPath: /var/lib/grafana
+                name: interactive-dashboards-data
+        volumes:
+          - name: interactive-dashboards-data
+            persistentVolumeClaim:
+              claimName: interactive-dashboards-pv-claim
+        imagePullSecrets:
+          - name: intracom-repository

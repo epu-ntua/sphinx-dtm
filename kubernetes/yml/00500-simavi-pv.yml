@@ -1,0 +1,53 @@
+## PSQL Persistent Volume  ##
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: postgres-pv-volume
+    labels:
+      type: local
+      app: simavi-sphinx
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 5Gi
+    accessModes:
+      - ReadWriteMany
+    hostPath:
+      path: "/home/sphinxkn/simavi/volumes/simavi-postgres-volume/"
+
+## ELASTICSEARCH Persistent Volume  ##
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: elasticsearch-pv-volume
+    labels:
+      type: local
+      app: simavi-sphinx
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 5Gi
+    accessModes:
+      - ReadWriteMany
+    hostPath:
+      path: "/home/sphinxkn/simavi/volumes/simavi-elasticsearch-volume/"
+
+## GRAFANA INTERACTIVE DASHBOARDS PersistentVolume ##
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: interactive-dashboards-volume
+    labels:
+      pv: interactive-dashboards-volume
+      type: local
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    capacity:
+      storage: 500Mi
+    hostPath:
+      path: "/home/sphinxkn/simavi/volumes/interactive-dashboards-volume/"
+

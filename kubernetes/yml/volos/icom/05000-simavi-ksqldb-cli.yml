@@ -1,0 +1,32 @@
+## KSQLDB CLI Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: simavi-sphinx
+      channels: ksql-cli
+    name: ksqldb-cli-deployment
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          channels: ksql
+      spec:
+        containers:
+        - name: ksqldb-cli-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/ksqldb-cli
+          #resources:
+          #  limits:
+          #    memory: "128Mi"
+          command:
+            - /bin/sh
+          imagePullPolicy: Always
+          tty: true
+        imagePullSecrets:
+          - name: intracom-repository

@@ -1,0 +1,102 @@
+## INTERACTIVE DASHBOARD Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: id-deployment-polaris
+    labels:
+      app: simavi-sphinx
+      sphinx-component: id-polaris
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: id-polaris
+      spec:
+        containers:
+        - name: id-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/interactive-dashboards/id-deployment/endpoints-id
+          imagePullPolicy: IfNotPresent
+          command: ["java"]
+          args: ["-Dspring.profiles.active=docker", "-Xmx256m", "org.springframework.boot.loader.JarLauncher"]
+          #resources:
+          #  limits:
+          #    memory: "256Mi"
+          ports:
+            - containerPort: 8089
+          env:
+            - name: EMAIL_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: email_username
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: email_password
+            - name: SMTP_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: smtp_host
+            - name: SMTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: smtp_port
+            - name: TLS_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: tls_enabled
+            - name: SMTP_AUTH
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: smtp_auth
+            - name: SMTP_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: smtp_debug
+            - name: FACTORY_CLASS
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: factory_class
+            - name: FACTORY_FALLBACK
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: factory_fallback
+            - name: TRUST_ALL_HOSTS
+              valueFrom:
+                configMapKeyRef:
+                  name: simavi-config-map-polaris
+                  key: trust_all_hosts
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://146.124.106.181:30006/sphinx
+        imagePullSecrets:
+          - name: intracom-repository
+
+## INTERACTIVE DASHBOARD Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: id-service-polaris
+  spec:
+    selector:
+      app: simavi-sphinx
+      sphinx-component: id-polaris
+    type: ClusterIP
+    ports:
+      - protocol: TCP
+        port: 8089
+        targetPort: 8089

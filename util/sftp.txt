@@ -1,0 +1,122 @@
+https://ducfilan.wordpress.com/2017/07/20/how-to-setup-an-sftp-with-rsa-public-key-authentication-mechanism/
+
+1. Make sure ssh and ssh-server are installed
+
+WinSCP
+- file protocol:sftp
+- hostname:10.233.100.183
+- username:sphinx
+- password:sphinx123$
+
+Putty din WinSCP - > (Commands - Open in PuTTy)
+- password:sphinx123$
+
+which ssh
+/usr/bin/ssh
+
+2. Create a new user and a new group in server
+
+sudo groupadd sftp_sphinx_group
+sudo useradd sftp_sphinx
+sudo passwd sftp_sphinx
+    password: sftp_sphinx
+sudo usermod -G sftp_sphinx_group sftp_sphinx
+
+3. Generate RSA public and private key
+ssh-keygen -t rsa -f sftp_sphinx_rsa
+    password: sftp_sphinx
+
+se creeaza 2 fisiere:
+    - sftp_sphinx_rsa.pub
+    - sftp_sphinx_rsa
+
+5. creez pentru utilizatorul "sftp_sphinx" creez directorul ".ssh" si copiez fisierul "sftp_sphinx_rsa.pub" care contine cheia publica:
+    su - sftp_sphinx
+    mkdir .ssh
+    ls -a
+    cd .ssh
+    su - sphinx
+    sudo cp /home/sphinx/sftp_sphinx_rsa.pub /home/sftp_sphinx/.ssh/sftp_sphinx_rsa.pub
+
+    su - sftp_sphinx
+
+    cd /home/sftp_sphinx/
+    chmod 700 .ssh
+    chown sftp_sphinx:sftp_sphinx .ssh
+    cd .ssh
+    mv sftp_sphinx_rsa.pub authorized_keys
+
+    su -
+    [sphinx123$]
+
+    chmod 600 authorized_keys
+    chown sftp_sphinx:sftp_sphinx authorized_keys
+
+6. Change SSH configurations
+
+    vi /etc/ssh/sshd_config
+
+    RSAAuthentication yes
+    PubkeyAuthentication yes
+    AuthorizedKeysFile .ssh/authorized_keys
+    PasswordAuthentication no
+
+Save:
+    Press Esc
+    Type :wq
+    Press Enter
+
+7. Restart the service
+
+    service sshd restart
+
+8. test:
+    ssh sftp_sphinx@10.233.100.183
+
+
+    chmod 744 upload
+
+Trasfer sftp FDCE - accesat prin VmVare (volos):
+# 1. install:
+    FortiClient VPN 6.2.6.0951
+
+# 2. connect:
+    select: IPSec VPN
+
+    connection name: sphinx vpn - volos
+    description: sphinx vpn - volos
+    remote gateway: 84.205.238.173
+
+    Authentification Method: Pre-shared key
+        Sph!nx2020
+
+    Authentification (XAuth) method: save login
+        username: siveco
+
+    Password: Sph!nx2020
+
+
+Accesare in google: 172.16.10.80
+username siveco
+password Sph!nx2020
+
+----------------------------
+3. In vm Client1 , accesare FileZilla:
+-in partea de sus , in cele 3 campuri aliniate verfical se va completa:
+IP: sftp//10.10.2.50     User: sphinxfdce      Password: sphinxfdce
+
+In YMl-ul dtm :
+    - name: SFTP_HOST
+        value: 10.10.2.65
+    - name: SFTP_PORT
+        value: "22"
+    - name: SFTP_PASSWORD
+        value: sphinxfdce
+    - name: SFTP_USERNAME
+        value: sphinxfdce
+    - name: SFTP_UPLOAD_DIRECTORY
+        value: /home/sphinxfdce/fdce_imported_data
+
+
+
+/home/sphinxfdce/fdce_imported_data

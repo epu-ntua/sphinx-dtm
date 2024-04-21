@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: simavi-test-ad
+spec:
+  rules:
+  - host: sphinx-kubernetes.intracom-telecom.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ad-service
+          servicePort: 8088
+

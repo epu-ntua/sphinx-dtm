@@ -1,0 +1,28 @@
+version: "3"
+services:
+    sphinx-postgres:
+        image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/data-traffic-monitoring/dtm-deployment/simavi-postgres
+        container_name: sphinx-postgres
+        ports:
+            - 8432:5432
+        networks:
+            simavi:
+    sphinx-grafana:
+        build: .
+        container_name: sphinx-grafana
+        ports:
+           - 3000:3000
+        env_file: .env
+        networks:
+            simavi:
+    sphinx-endpoints-id:
+        build: ../interactive-dashboards/
+        container_name: sphinx-endpoints-id
+        ports:
+           - 8089:8089
+        env_file: .env
+        networks:
+            simavi:   
+networks:
+   simavi:
+    external: true

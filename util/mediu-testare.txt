@@ -1,0 +1,14 @@
+Serverul de test se acceseaza din vpn, cu ssh:
+10.233.100.183
+Username/parola: sphinx / sphinx123$
+
+Pt comenzi care necesita drepturi de root se poate folosi sudo.
+----------------------
+WinSCP
+- file protocol:sftp
+- hostname:10.233.100.183
+- username:sphinx
+- password:sphinx123$
+
+Putty din WinSCP - > (Commands - Open in PuTTy)
+- password:sphinx123$

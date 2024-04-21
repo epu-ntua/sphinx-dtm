@@ -1,0 +1,102 @@
+-------------------------------------------
+------------ PORNIRE HADOOP ---------------
+-------------------------------------------
+
+[Hadoop]: https://towardsdatascience.com/installing-hadoop-3-2-1-single-node-cluster-on-windows-10-ac258dd48aef
+1. download
+2. unzip to c:\tools\hadoop-3.2.1
+3. https://github.com/cdarlint/winutils/tree/master/hadoop-3.2.1/bin and copy them into the “c:\tools\hadoop-3.2.1\bin” directory.
+4. (env) HADOOP_HOME: C:\tools\hadoop-3.2.1
+4. (env) Path: %HADOOP_HOME%\bin
+5. verificare:
+    hadoop version
+    The system cannot find the path specified.
+    Error: JAVA_HOME is incorrectly set.
+           Please update C:\tools\hadoop-3.2.1\etc\hadoop\hadoop-env.cmd
+    '-Xmx512m' is not recognized as an internal or external command,
+    operable program or batch file.
+
+Obs: trebuie java 8!
+6. modificat fisier etc\hadoop\hadoop-env.cmd
+    set JAVA_HOME=C:\Progra~1\Java\jdk1.8.0_171
+
+7. creare structura de fisiere:
+    data\dfs\namenode
+    data\dfs\datanode
+
+8. modificare fisier etc\hadoop\hdfs-site.xml
+
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///c:/tools/hadoop-3.2.1/data/dfs/namenode</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///c:/tools/hadoop-3.2.1/data/dfs/datanode</value>
+    </property>
+
+9.  modificare fisier etc\hadoop\core-site.xml
+
+    <property>
+        <name>fs.default.name</name>
+        <value>hdfs://localhost:9820</value>
+    </property>
+
+10. modificare fisier  etc\hadoop\mapred-site.xml
+
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+        <description>MapReduce framework name</description>
+    </property>
+
+
+11. modificare fisier etc\hadoop\yarn-site.xml
+
+    <property>
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+        <description>Yarn Node Manager Aux Service</description>
+    </property>
+
+    <property>
+		<name>yarn.resourcemanager.webapp.address</name>
+		<value>${yarn.resourcemanager.hostname}:8388</value>
+	</property>
+
+12. formatare name node:
+    hdfs namenode -format
+
+    fix problem:
+        download: https://github.com/FahaoTang/big-data/blob/master/hadoop-hdfs-3.2.1.jar
+        rename the file name hadoop-hdfs-3.2.1.jar to hadoop-hdfs-3.2.1.bak in folder %HADOOP_HOME%\share\hadoop\hdfs
+        copy the downloaded hadoop-hdfs-3.2.1.jar to folder %HADOOP_HOME%\share\hadoop\hdfs
+
+13. starting Hadoop services (%HADOOP_HOME%\sbin):
+    .\start-dfs.cmd
+
+    Two command prompt windows will open (one for the name node and one for the data node)
+
+14. start the Hadoop Yarn service (%HADOOP_HOME%\sbin):
+    ./start-yarn.cmd
+
+    Two command prompt windows will open (one for the resource manager and one for the node manager)
+
+    if error, modify sbin\start-yarn.cmd:
+
+        @rem start resourceManager
+        start "Apache Hadoop Distribution" %HADOOP_HOME%\bin\yarn resourcemanager
+        @rem start nodeManager
+        start "Apache Hadoop Distribution" %HADOOP_HOME%\bin\yarn nodemanager
+
+15. check if  all services started successfully:
+    jps
+
+16. Hadoop Web UI:
+        http://localhost:9870/dfshealth.html
+        http://localhost:9864/datanode.html
+        http://localhost:8388/cluster

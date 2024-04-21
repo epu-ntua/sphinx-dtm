@@ -1,0 +1,60 @@
+## HBase Deployment ##
+---
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    labels:
+      app: simavi-sphinx
+      sphinx-component: sphinx-hbase
+    name: sphinx-hbase
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+        sphinx-component: sphinx-hbase
+    serviceName: sphinx-hbase
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: sphinx-hbase
+      spec:
+        containers:
+        - name: sphinx-hbase-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/anomaly-detection/ad-deployment/sphinx-hbase
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "1536Mi"
+        imagePullSecrets:
+          - name: intracom-repository
+
+## HBase Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: sphinx-hbase
+  spec:
+    selector:
+      app: simavi-sphinx
+      sphinx-component: sphinx-hbase
+    ports:
+      - protocol: TCP
+        port: 2181
+        name: tcp-2181
+      - protocol: TCP
+        port: 16000
+        name: tcp-16000
+      - protocol: TCP
+        port: 16010
+        name: tcp-16010
+      - protocol: TCP
+        port: 16020
+        name: tcp-16020
+      - protocol: TCP
+        port: 16030
+        name: tcp-16030
+    clusterIP: None
+    type: ClusterIP

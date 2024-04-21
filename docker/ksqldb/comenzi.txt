@@ -1,0 +1,60 @@
+# se downloadeaza driverul https://d1i4a15mxbxib1.cloudfront.net/api/plugins/confluentinc/kafka-connect-jdbc/versions/5.5.1/confluentinc-kafka-connect-jdbc-5.5.1.zip
+# se dezarhiveaza in folderul docker/ksqldb
+
+-- DROP TABLE public.table_source;
+
+CREATE TABLE public.table_source (
+	column1 varchar NULL,
+	column2 date NULL,
+	id int4 NOT NULL
+);
+
+
+CREATE SOURCE CONNECTOR jdbc_source_2 WITH (
+  'connector.class'          = 'io.confluent.connect.jdbc.JdbcSourceConnector',
+  'connection.url'           = 'jdbc:postgresql://sphinx-postgres:5432/sphinx',
+  'connection.user'          = 'sphinx',
+  'connection.password'      = 'sphinx',
+  'topic.prefix'             = 'jdbc_',
+  'table.whitelist'          = 'table_source',
+  'mode'                     = 'incrementing',
+  'numeric.mapping'          = 'best_fit',
+  'incrementing.column.name' = 'id',
+  'key'                      = 'id',
+  'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter'
+  );
+
+SET 'auto.offset.reset'='earliest';
+#https://www.confluent.io/blog/troubleshooting-ksql-part-1/
+
+#https://rmoff.net/2020/01/22/kafka-connect-and-schemas/
+CREATE STREAM JDBC_SOURCE_JSON (id INT, column1 VARCHAR, column2 VARCHAR) \
+        WITH (KAFKA_TOPIC='jdbc_table_source', VALUE_FORMAT='JSON', KEY='id');
+
+#reserialize
+
+CREATE STREAM JDBC_SOURCE_AVRO 
+        WITH (VALUE_FORMAT='AVRO') 
+        AS SELECT * FROM JDBC_SOURCE_JSON;
+
+
+
+
+CREATE SINK CONNECTOR jdbc_dest_4 WITH (
+
+'connector.class'          = 'io.confluent.connect.jdbc.JdbcSinkConnector',
+  'connection.url'           = 'jdbc:postgresql://sphinx-postgres:5432/sphinx',
+  'connection.user'          = 'sphinx',
+  'connection.password'      = 'sphinx',
+  'mode'                     = 'incrementing',
+  'key'                      = 'id',
+  'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter',
+  'value.converter'          = 'io.confluent.connect.avro.AvroConverter',
+  'value.converter.schema.registry.url'= 'http://cp-schema-registry:8081',
+  'key.converter.schemas.enable' = false,
+  'value.converter.schemas.enable' = true,
+  'pk.mode'                  = 'record_value',
+  'pk.fields'                = 'ID',
+  'topics'                    = 'JDBC_SOURCE_AVRO',
+  'table.name.format'        = 'kafka_${topic}',
+  'auto.create'              = true);

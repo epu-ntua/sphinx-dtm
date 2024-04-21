@@ -1,0 +1,67 @@
+## UI Deployment ##
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: simavi-sphinx
+      sphinx-component: id-ui
+    name: ui-deployment
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: simavi-sphinx
+    template:
+      metadata:
+        labels:
+          app: simavi-sphinx
+          sphinx-component: id-ui
+      spec:
+        containers:
+        - name: ui-deployment
+          image: registry.sphinx-repo.intracom-telecom.com/sphinx-project/interactive-dashboards/id-deployment/interactive-dashboards-ui
+          imagePullPolicy: Always
+          resources:
+            limits:
+              memory: "256Mi"
+          env:
+          - name: CHOKIDAR_USEPOLLING
+            value: "true"
+          - name: REACT_APP_SPHINX_DTM_API_URL
+            value: "http://dtm-polaris.146.124.106.181.nip.io"
+          - name: REACT_APP_SPHINX_AD_API_URL
+            value: "http://ad-polaris.146.124.106.181.nip.io"
+          - name: REACT_APP_SPHINX_ID_API_URL
+            value: "http://polaris.146.124.106.181.nip.io"
+          - name: REACT_APP_SPHINX_SSO_API_URL
+            value: "//polaris.146.124.106.181.nip.io/SMPlatform/manager/rst"
+          - name: REACT_APP_SPHINX_GRAFANA_API_URL
+            value: "https://polaris.146.124.106.181.nip.io/interactive-dashboards/"
+          stdin: true
+          tty: true
+          ports:
+            - containerPort: 80
+        imagePullSecrets:
+          - name: intracom-repository
+
+## UI Service ##
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: simavi-sphinx
+      sphinx-component: id-ui
+    name: ui-service
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: simavi-sphinx
+      sphinx-component: id-ui
+    type: ClusterIP
+  status:
+    loadBalancer: {}

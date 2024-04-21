@@ -1,0 +1,56 @@
+## PV definitions for internal environment
+## The volumes are defined in the data folder becuase minikube persists the data from this folder between restarts.
+
+## PSQL Persistent Volume  ##
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: postgres-pv-volume
+    labels:
+      type: local
+      app: simavi-sphinx
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 5Gi
+    accessModes:
+      - ReadWriteMany
+    hostPath:
+      path: "/data/volumes/simavi-postgres-volume/"
+
+## ELASTICSEARCH Persistent Volume  ##
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: elasticsearch-pv-volume
+    labels:
+      type: local
+      app: simavi-sphinx
+  spec:
+    storageClassName: manual
+    capacity:
+      storage: 5Gi
+    accessModes:
+      - ReadWriteMany
+    hostPath:
+      path: "/data/volumes/simavi-elasticsearch-volume/"
+
+## GRAFANA INTERACTIVE DASHBOARDS PersistentVolume ##
+---
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: interactive-dashboards-volume
+    labels:
+      pv: interactive-dashboards-volume
+      type: local
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    capacity:
+      storage: 500Mi
+    hostPath:
+      path: "/data/volumes/interactive-dashboards-volume/"
+

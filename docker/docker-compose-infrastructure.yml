@@ -1,0 +1,109 @@
+version: "3"
+services:
+    sphinx-postgres:
+        build: ./postgres
+        environment:
+            POSTGRES_DB: sphinx
+            POSTGRES_USER: sphinx
+            POSTGRES_PASSWORD: sphinx
+        networks:
+            default:
+                ipv4_address: 172.18.0.2
+    kafdrop:
+        image: obsidiandynamics/kafdrop
+        restart: "no"
+        ports:
+         - "9000:9000"
+        environment:
+            KAFKA_BROKERCONNECT: "kafka:29092"
+            JVM_OPTS: "-Xms32M -Xmx64M"
+            SERVER_SERVLET_CONTEXTPATH: "/"
+        depends_on:
+         - "kafka"
+        networks:
+            default:
+                ipv4_address: 172.18.0.3
+    zookeeper:
+        image: wurstmeister/zookeeper
+        container_name: zookeeper
+        ports:
+         - "2181:2181"
+        networks:
+            default:
+                ipv4_address: 172.18.0.9
+    kafka:
+        image: wurstmeister/kafka
+        ports:
+         - "9092:9092"
+        environment:
+            KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://localhost:9092
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+            KAFKA_LISTENERS: INSIDE://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+            KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_LOG_RETENTION_HOURS: 1
+            KAFKA_LOG_RETENTION_MS: 3600000
+            KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 5000
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        networks:
+            default:
+                ipv4_address: 172.18.0.8
+    ksqldb-server:
+        image: confluentinc/ksqldb-server:0.11.0
+        hostname: ksqldb-server
+        container_name: ksqldb-server
+        depends_on:
+            - kafka
+        ports:
+            - "8088:8088"
+        environment:
+            KSQL_LISTENERS: http://0.0.0.0:8088
+            KSQL_BOOTSTRAP_SERVERS: kafka:29092
+            KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
+            KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
+            KSQL_KSQL_CONNECT_WORKER_CONFIG: "/connect/connect.properties"
+            KSQL_CONNECT_GROUP_ID: "ksql-connect-cluster"
+            KSQL_CONNECT_BOOTSTRAP_SERVERS: kafka:29092
+            KSQL_CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+            KSQL_CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+            KSQL_CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+            KSQL_CONNECT_CONFIG_STORAGE_TOPIC: "ksql-connect-configs"
+            KSQL_CONNECT_OFFSET_STORAGE_TOPIC: "ksql-connect-offsets"
+            KSQL_CONNECT_STATUS_STORAGE_TOPIC: "ksql-connect-statuses"
+            KSQL_CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+            KSQL_CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+            KSQL_CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+            KSQL_CONNECT_PLUGIN_PATH: "/usr/share/kafka/plugins"
+            KSQL_OPTS: "-Dksql.schema.registry.url=http://cp-schema-registry:8081/ -Dconfluent.support.metrics.enable=false"
+        volumes:
+            - ./ksqldb/confluentinc-kafka-connect-jdbc:/usr/share/kafka/plugins/jdbc
+        networks:
+            default:
+                ipv4_address: 172.18.0.12
+    ksqldb-cli:
+        image: confluentinc/ksqldb-cli:0.11.0
+        container_name: ksqldb-cli
+        depends_on:
+            - kafka
+            - ksqldb-server
+        entrypoint: /bin/sh
+        tty: true
+        networks:
+            default:
+                ipv4_address: 172.18.0.10
+    cp-schema-registry:
+        image: confluentinc/cp-schema-registry:5.5.1
+        container_name: cp-schema-registry
+        ports:
+            - "8081:8081"
+        environment:
+#            SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: kafka:2181
+            SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:29092"
+            SCHEMA_REGISTRY_HOST_NAME: cp-schema-registry
+            SCHEMA_REGISTRY_LISTENERS: http://cp-schema-registry:8081
+#        entrypoint: /bin/sh
+#        tty: true
+        networks:
+            default:
+                ipv4_address: 172.18.0.11
+
