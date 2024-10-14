@@ -1,0 +1,272 @@
+# Pentru autentificarea la Hese:
+---------------------------------
+1.  simaviprod@10.233.100.55
+    port: 4422
+
+2.  ssh -X intracom@172.26.10.1
+
+
+---------------------------------
+1. urcat pe mediu icom tot ce este la calea : SPHINX\kubernetes\yml\hesse\
+2. urcat pe mediul polaris tot ce este la calea: SPHINX\util\hesse\
+
+Mutare fisiere din icom la Hese:
+   scp  08000-simavi-dtm.yml intracom@172.26.10.1:/home/intracom/simavi/yml/08000-simavi-dtm.yml
+---------------------------------
+
+https://evora.146.124.106.181.nip.io/sphinx/dtm/helper/log/show
+https://evora.146.124.106.181.nip.io/sphinx/dtm/swagger-ui.html
+https://ad-evora.146.124.106.181.nip.io/sphinx/ad/swagger-ui.html
+
+-->de verificat topicuri kafka:
+http://evora.146.124.106.181.nip.io/sphinx/dtm/helper/util/getLastMessagesForTopic/dtm-alert
+
+PosgreSQL [din din mediul Hese]: postgresql://172.26.7.181:30007/sphinx
+PosgreSQL [din din mediul ICOM]: postgresql://146.124.106.182:30007/sphinx
+
+
+Kafka [din din mediul ICOM]: sphinx-kafka-evora-kafka-bootstrap.cip-evora.svc:9092
+Kafka [din din mediul Hese]: evora-bootstrap.172.26.7.181.nip.io:443
+
+
+kafka-polaris:
+    # topic list:
+    kafka-topics.bat --bootstrap-server=evora-bootstrap.172.26.7.181.nip.io:443 --command-config volos.properties --list
+
+    # creare topic:
+    kafka-topics.bat --create --topic dtm-alert-2 --evora-bootstrap.172.26.7.181.nip.io:443 --command-config volos.properties
+
+    # topic consumer:
+    kafka-console-consumer.bat --bootstrap-server evora-bootstrap.172.26.7.181.nip.io:443 --consumer.config volos.properties --topic dtm-alert --from-beginning --partition 0
+
+    # topic consumer / afisare primele 10 mesaje:
+    kafka-console-consumer.bat --bootstrap-server evora-bootstrap.172.26.7.181.nip.io:443  --consumer.config volos.properties --topic dtm-alert --from-beginning  --max-messages 10
+
+    # topic consumer / afisare primele 10 mesaje [dtm-cmd / local]
+    kafka-console-consumer.bat --bootstrap-server --bootstrap-server=localhost:9092 --topic dtm-cmd --from-beginning  --max-messages 10
+
+    kafka-console-consumer.bat --bootstrap-server --bootstrap-server=localhost:9092 --topic dtm-cmd 0 --offset 5
+
+    # topic producer:
+    kafka-console-producer.bat --bootstrap-server evora-bootstrap.172.26.7.181.nip.io:443 --producer.config volos.properties --topic dtm-alert-2
+
+----------------------------------------------------------------------------------------------------------------------------------
+Grafana/ID-ui conectare SM_IP:
+REACT_APP_SPHINX_SSO_API_URL: http://service-manager.cip-polaris.svc:8080/SMPlatform/manager/rst
+--------------------------------------------------------------------------------------------------------------------------------------
+Ingress DTM Polaris: 172.26.8.22.nip.io
+Ingress DTM ICOM: evora.146.124.106.181.nip.io
+Ingress AD ICOM: ad-evora.146.124.106.181.nip.io
+Ingress grafana ICOM: evora.146.124.106.181.nip.io
+--------------------------------------------------------------------------------------------------------------------------------------
+
+<!-- https://mvnrepository.com/artifact/io.strimzi/kafka-oauth-client -->
+<dependency>
+    <groupId>io.strimzi</groupId>
+    <artifactId>kafka-oauth-client</artifactId>
+    <version>0.8.1</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/io.strimzi/kafka-oauth-common -->
+<dependency>
+    <groupId>io.strimzi</groupId>
+    <artifactId>kafka-oauth-common</artifactId>
+    <version>0.8.1</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
+<dependency>
+    <groupId>com.nimbusds</groupId>
+    <artifactId>nimbus-jose-jwt</artifactId>
+    <version>9.10.1</version>
+</dependency>
+
+
+Env:
+    OAUTH_ACCESS_TOKEN / OAUTH_TOKEN_SECRET  [java]
+    # obs: {{sm_ip}}/KafkaAuthentication?username=kafkauser&password=*** <- luat de aici token
+        error: com/nimbusds/jose/PayloadTransformer
+    6ursdya0pbg3mj6p2uh65jgwpmezl958cg5fdy0kpdykk6emrn7swltkhagya0s808by3vw9kvle2p8l8rkdbt2xduew8t7w7ln0zvyp7qflmit8hacqqzy13uxc0hf2
+
+    OAUTH_TOKEN_ENDPOINT_URI / OAUTH_TOKEN_URL  [java]
+    http://polaris.172.26.7.181.nip.io/SMPlatform/manager/rst/getKafkaToken
+
+    OAUTH_CLIENT_ID / OAUTH_CLIENT_ID [java]
+    SIEM
+
+-------------------------------------------------------
+====================== DTM ======================
+# location mediu polaris
+    cd /home/administrator/simavi/yml/dtm
+
+De pe mediu ICOM:
+# status
+    kubectl get pods -n pilot-evora
+  (pentru hese sunt aceleasi comenzi ca in fisierul mediu-volos)
+
+# delete
+    kubectl delete deployment dtm-deployment -n pilot-evora - daca se modifica fisierul yml
+    kubectl delete -f 08000-simavi-dtm.yml -n pilot-evora- daca nu se modifica fiseirul yml
+
+# apply:
+    kubectl apply -f 08000-simavi-dtm.yml -n pilot-evora
+
+# log-uri:
+    kubectl logs --follow dtm-deployment-85c7d48464-hhbf2 -n pilot-evora
+
+# conectare pod:
+    kubectl exec -it dtm-deployment-polaris-698946f987-7t9qk -n pilot-evora  -- /bin/bash
+    exit;
+
+# accesar postgresql:
+kubectl exec --stdin --tty simavi-postgres-deployment-polaris-59f86f859b-bxpbk  -n pilot-evora -- psql
+
+#accesare ksql:
+kubectl exec -it ksqldb-server-deployment-polaris-5fff74599b-l47bs  -n pilot-evora -- ksql http://ksqldb-server:8088
+print 'nume_topic' from beginning;
+
+# test logstash
+    # obs: logstash version: [7.13.2] / local [7.8.1]
+    /usr/share/logstash/bin/logstash -f /usr/share/logstash/config/stix_format_dtm.conf
+    /usr/share/logstash/bin/logstash -f /usr/share/logstash/config/stix_format_dtm.conf --path.data /usr/share/logstash/data-suricata
+
+====================== AD ======================
+
+[hbase]
+    # delete [hbase]
+        kubectl delete -f 06000-simavi-hbase.yml -n pilot-evora
+
+    # apply [hbase]:
+        kubectl apply -f 06000-simavi-hbase.yml -n pilot-evora
+
+    # verficare tabele [hbase]:
+     kubectl exec -it sphinx-hbase-polaris-0  -n pilot-evora -- /bin/bash
+     hbase shell
+     scan 'nume_tabel'
+
+    # log-uri [hbase]:
+        kubectl logs --follow sphinx-hbase-0 -n pilot-evora
+
+[spark]
+    # delete [spark]
+        kubectl delete -f 07000-simavi-spark.yml -n pilot-evora
+
+    # apply [spark]:
+        kubectl apply -f 07000-simavi-spark.yml -n pilot-evora
+
+[ad]
+    # delete:
+        kubectl delete -f 09000-simavi-ad.yml -n pilot-evora
+        kubectl delete deployment ad-deployment -n pilot-evora
+
+    # apply:
+        kubectl apply -f 09000-simavi-ad.yml -n pilot-evora
+
+    # log-uri:
+        kubectl logs --follow ad-deployment-5b8944bb7b-vkzz2 -n pilot-evora
+
+    # conectare pod:
+        kubectl exec -it ad-deployment-5b8944bb7b-vkzz2  -n pilot-evora  -- /bin/bash
+        exit;
+
+----------------------------------------------------
+
+# generat name: OAUTH_ACCESS_TOKEN [pt yml]
+    wget -O dtm-token.txt "http://polaris.172.26.7.181.nip.io/SMPlatform/manager/rst/KafkaAuthentication?username=kafkauser&password=***"
+-----------------------------------------------
+
+1. docker-compose -f docker-compose-infrastructure_v2.yml up -d
+
+ENV:
+    // nu mai e nevoie
+    OAUTH_CLIENT_SECRET
+        lgrubzy5m7pvphernshie9b6vem5mll838zjc40vzr7z840m1dtxen9eb5tydq7d8vx50mqn47k98s6xfuarrf8glexver60xwtr856v064h0u41m8vzmprnhwr7esn6
+        7wy46t4wb6mk3s0x0i2e8ge35tn7vzobx360xg6es6z7n8drqrrui6ml8qjigvhyjel5zfx0qi3czp0ztpflwac16indfia950geztz4h7t69bnq5w7y600pug48y0ez
+    // nu mai e nevoie
+    OAUTH_CLIENT_ID
+        SIEM
+    // nu mai e nevoie
+    OAUTH_TOKEN_ENDPOINT_URI
+        http://polaris.172.26.7.181.nip.io/SMPlatform/manager/rst/getKafkaToken
+
+    echo %OAUTH_CLIENT_SECRET%
+    echo %OAUTH_CLIENT_ID%
+    echo %OAUTH_TOKEN_ENDPOINT_URI%
+
+
+# testare tshark / suricata
+  intrat in pod:
+    kubectl exec -it  dtm-deployment-85c7d48464-74l2x -n pilot-evora -- /bin/bash
+    tshark -D
+
+        Running as user "root" and group "root". This could be dangerous.
+        1. eth0
+        2. lo (Loopback)
+        3. any
+        4. bluetooth-monitor
+        5. nflog
+        6. nfqueue
+        7. tunl0
+        8. ciscodump (Cisco remote capture)
+        9. dpauxmon (DisplayPort AUX channel monitor capture)
+        10. randpkt (Random packet generator)
+        11. sdjournal (systemd Journal Export)
+        12. sshdump (SSH remote capture)
+        13. udpdump (UDP Listener remote capture)
+
+    tshark -i <interface>
+        ipconfig
+        ifconfig
+    tshark -i ciscodump
+
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i <interface>
+    Exclude ip-uri:
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i <interface> -v not host (10.10.2.60 or 10.10.2.61 or 146.124.106.170 or 10.10.2.62)
+
+    # from application pod:
+    wget -O suricata.txt http://localhost:8087/sphinx/dtm/helper/ni/suricata
+    wget -O suricata.txt http://localhost:8087/sphinx/dtm/helper/ni/tshark
+    wget -O suricata.txt http://localhost:8087/sphinx/dtm/helper/ni/java
+
+    wget -O swagger.txt http://localhost:8087/sphinx/dtm/swagger-ui.html
+
+# testare AD:
+    intrat in pod:
+        kubectl exec -it ad-deployment-5b8944bb7b-zrxtq -n pilot-evora -- /bin/bash
+        wget -O swagger.txt http://localhost:8088/sphinx/ad/swagger-ui.html
+        wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AbusedSMTPServer
+        wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_CC_BotNets
+
+        kubectl logs --follow ad-deployment-5b8944bb7b-zrxtq -n pilot-polaris
+        (kubectl exec ad-deployment-5b8944bb7b-zrxtq    -- cat /var/log/ad.log) > /home/sphinx/ad/ad.log
+
+# Algoritmi testati:
+1. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AbusedSMTPServer [ok] [server] [32815ms]
+2. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AlienAccessingManyHosts [ok] [server] [28080ms]
+3. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AtypicalAlienTCPPortUsed [0 alert] [server] [6974ms]
+4. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AtypicalAmountOfDataTransfered [ok] [server] [32357ms]
+5. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AtypicalNumberOfPairsInThePeriod [ok] [server] [34738ms]
+6. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AtypicalTCPPortUsed [ok] [server] [20948ms]
+7. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_CC_BotNets [ok] [server] [61447ms]
+8. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_DnsTunnel [ok] [server] [25198ms]
+9. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_HorizontalPortScan [ok] [server] [32167ms]
+10. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_ICMPTunnel [ok] [server] [23001ms]
+11. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_MediaStreamingClient [ok] [server] [61088ms]
+12. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_P2PComunication [ok] [server] [23707ms]
+13. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_P2PComunication_v2 [ok] [server] [20625ms]
+14. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_SMTP_Talkers [ok] [server] [25778ms]
+15. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_UDPAmplifier [ok] [server] [22902ms]
+16. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_VerticalPortScan [ok] [server] [31649ms]
+
+
+------------------------------------------------------------------------------------------------------------
+
+Creare fisier jks:
+
+1.Este nevoie de fisierul for_clients_prod.crt
+
+2. keytool -import -alias for_clients_prod -file for_clients_prod.crt -keypass *** -keystore sphinx-prod.jks -storepass test@123
+
+3. listare fisier jks : keytool -list -v keystore sphinx.jks -storepass ***
+
+URL instanta dtm: http://172.26.10.1.nip.io

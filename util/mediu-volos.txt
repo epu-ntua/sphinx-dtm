@@ -1,0 +1,325 @@
+# Pentru autentificarea la VOLOS:
+---------------------------------
+# 1. install:
+    FortiClient VPN 6.2.6.0951
+
+# 2. connect:
+    select: IPSec VPN
+
+    connection name: sphinx vpn - volos
+    description: sphinx vpn - volos
+    remote gateway: 84.205.238.173
+
+    Authentification Method: Pre-shared key
+        Sph!nx2020
+
+    Authentification (XAuth) method: save login
+        username: siveco
+
+
+---------------------------------
+----------------------------------------------------
+172.16.10.80
+username siveco
+----------------------------------------------------
+pg_isready -d postgress -h 146.124.106.170 -p 30005 -U sphinx
+---------------------------------
+1. urcat
+    00022-simavi-config-map-volos.yml
+    dtm-ingress-volos.yml
+    08000-simavi-dtm.yml
+in
+    master VM / nu: worker VM1
+
+2. kubectl get pods
+3. docker ps
+4.
+---------------------------------
+
+https://10.10.2.60.nip.io/sphinx/dtm/helper/log/show
+doar de pe windows7
+
+PosgreSQL [din din mediul Volos]:
+    url: 146.124.106.170
+    port: 30005
+
+Kafka
+
+    https://www.cloudkarafka.com/docs/spring.html
+    bootstrap.146.124.106.170.nip.io:443
+
+cd C:\tools\kafka_2.12-2.5.0\bin\windows
+
+kafka-docker:
+    kafka-topics.bat --bootstrap-server=localhost:9092 --list
+
+kafka-volos:
+    # topic list:
+    kafka-topics.bat --bootstrap-server=bootstrap.146.124.106.170.nip.io:443 --command-config volos.properties --list
+
+    # creare topic:
+    kafka-topics.bat --create --topic dtm-alert-2 --bootstrap-server=bootstrap.146.124.106.170.nip.io:443 --command-config volos.properties
+
+    # topic consumer:
+    kafka-console-consumer.bat --bootstrap-server bootstrap.146.124.106.170.nip.io:443 --consumer.config volos.properties --topic dtm-alert --from-beginning --partition 0
+
+    # topic consumer / afisare primele 10 mesaje:
+    kafka-console-consumer.bat --bootstrap-server bootstrap.146.124.106.170.nip.io:443 --consumer.config volos.properties --topic dtm-alert --from-beginning  --max-messages 10
+
+    # topic consumer / afisare primele 10 mesaje [dtm-cmd / local]
+    kafka-console-consumer.bat --bootstrap-server --bootstrap-server=localhost:9092 --topic dtm-cmd --from-beginning  --max-messages 10
+
+    kafka-console-consumer.bat --bootstrap-server --bootstrap-server=localhost:9092 --topic dtm-cmd 0 --offset 5
+
+    # topic producer:
+    kafka-console-producer.bat --bootstrap-server bootstrap.146.124.106.170.nip.io:443 --producer.config volos.properties --topic dtm-alert-2
+
+
+
+
+<!-- https://mvnrepository.com/artifact/io.strimzi/kafka-oauth-client -->
+<dependency>
+    <groupId>io.strimzi</groupId>
+    <artifactId>kafka-oauth-client</artifactId>
+    <version>0.8.1</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/io.strimzi/kafka-oauth-common -->
+<dependency>
+    <groupId>io.strimzi</groupId>
+    <artifactId>kafka-oauth-common</artifactId>
+    <version>0.8.1</version>
+</dependency>
+
+<!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
+<dependency>
+    <groupId>com.nimbusds</groupId>
+    <artifactId>nimbus-jose-jwt</artifactId>
+    <version>9.10.1</version>
+</dependency>
+
+
+Env:
+    OAUTH_ACCESS_TOKEN / OAUTH_TOKEN_SECRET  [java]
+    # obs: {{sm_ip}}/KafkaAuthentication?username=kafkauser&password=*** <- luat de aici token
+        error: com/nimbusds/jose/PayloadTransformer
+    6ursdya0pbg3mj6p2uh65jgwpmezl958cg5fdy0kpdykk6emrn7swltkhagya0s808by3vw9kvle2p8l8rkdbt2xduew8t7w7ln0zvyp7qflmit8hacqqzy13uxc0hf2
+
+    OAUTH_TOKEN_ENDPOINT_URI / OAUTH_TOKEN_URL  [java]
+    http://sphinx-kubernetes.intracom-telecom.com/SMPlatform/manager/rst/getKafkaToken
+
+    OAUTH_CLIENT_ID / OAUTH_CLIENT_ID [java]
+    SIEM
+
+----------------------------------------------
+Kostas Gounaris15:25
+84.205.238.173
+username siveco
+
+Kostas Gounaris15:45
+172.16.10.80
+Athanasios Tzikas15:48
+brb
+Kostas Gounaris15:48
+10.20.30.10-10.20.30.254
+Tu15:59
+connect fortigate vpn search cmd and run this command route PRINT
+
+https://172.16.10.80
+
+------------------------------------------------------
+
+putty:
+    94.70.166.143
+    user : sphinx
+    parola: Sph!nx2020
+    port 22
+
+-------------------------------------------------------
+====================== DTM ======================
+# location
+    cd /home/sphinx/dtm/yml
+
+# status
+    kubectl get pods
+
+# delete:
+    kubectl delete deployment dtm-deployment - daca se modifica fisierul yml
+    kubectl delete -f 08000-simavi-dtm.yml - daca nu se modifica fiseirul yml
+
+# apply:
+    kubectl apply -f 08000-simavi-dtm.yml
+
+# log-uri:
+    kubectl logs --follow dtm-deployment-85c7d48464-hhbf2
+
+# conectare pod:
+    kubectl exec -it dtm-deployment-85c7d48464-w822s   -- /bin/bash
+    exit;
+
+# test logstash
+    # obs: logstash version: [7.13.2] / local [7.8.1]
+    /usr/share/logstash/bin/logstash -f /usr/share/logstash/config/stix_format_dtm.conf
+    /usr/share/logstash/bin/logstash -f /usr/share/logstash/config/stix_format_dtm.conf --path.data /usr/share/logstash/data-suricata
+
+----------------------------------------------------
+====================== AD ======================
+# location
+    cd /home/sphinx/ad/yml
+
+# status
+    kubectl get pods
+
+[hbase]
+    # delete [hbase]
+        kubectl delete -f 06000-simavi-hbase.yml
+
+    # apply [hbase]:
+        kubectl apply -f 06000-simavi-hbase.yml
+
+    # log-uri [hbase]:
+        kubectl logs --follow sphinx-hbase-0
+
+[spark]
+    # delete [spark]
+        kubectl delete -f 07000-simavi-spark.yml
+
+    # apply [spark]:
+        kubectl apply -f 07000-simavi-spark.yml
+
+[ad]
+    # delete:
+        kubectl delete -f 09000-simavi-ad.yml
+        kubectl delete deployment ad-deployment
+
+    # apply:
+        kubectl apply -f 09000-simavi-ad.yml
+
+    # log-uri:
+        kubectl logs --follow ad-deployment-5b8944bb7b-vkzz2
+
+    # conectare pod:
+        kubectl exec -it ad-deployment-5b8944bb7b-vkzz2     -- /bin/bash
+        exit;
+
+----------------------------------------------------
+
+# VPN-VMware
+ dupa conetatare VPN:
+    https://172.16.10.80
+        username siveco
+
+# generat name: OAUTH_ACCESS_TOKEN [pt yml]
+    wget -O dtm-token.txt "http://sphinx-toolkit.intracom-telecom.com/SMPlatform/manager/rst/KafkaAuthentication?username=kafkauser&password=***"
+-----------------------------------------------
+
+1. docker-compose -f docker-compose-infrastructure_v2.yml up -d
+
+ENV:
+    // nu mai e nevoie
+    OAUTH_CLIENT_SECRET
+        lgrubzy5m7pvphernshie9b6vem5mll838zjc40vzr7z840m1dtxen9eb5tydq7d8vx50mqn47k98s6xfuarrf8glexver60xwtr856v064h0u41m8vzmprnhwr7esn6
+        7wy46t4wb6mk3s0x0i2e8ge35tn7vzobx360xg6es6z7n8drqrrui6ml8qjigvhyjel5zfx0qi3czp0ztpflwac16indfia950geztz4h7t69bnq5w7y600pug48y0ez
+    // nu mai e nevoie
+    OAUTH_CLIENT_ID
+        SIEM
+    // nu mai e nevoie
+    OAUTH_TOKEN_ENDPOINT_URI
+        http://sphinx-kubernetes.intracom-telecom.com/SMPlatform/manager/rst/getKafkaToken
+
+    echo %OAUTH_CLIENT_SECRET%
+    echo %OAUTH_CLIENT_ID%
+    echo %OAUTH_TOKEN_ENDPOINT_URI%
+
+94.70.166.143.nip.io
+
+# testare tshark / suricata
+  intrat in pod:
+    kubectl exec -it  dtm-deployment-85c7d48464-74l2x -- /bin/bash
+    tshark -D
+
+        Running as user "root" and group "root". This could be dangerous.
+        1. eth0
+        2. lo (Loopback)
+        3. any
+        4. bluetooth-monitor
+        5. nflog
+        6. nfqueue
+        7. tunl0
+        8. ciscodump (Cisco remote capture)
+        9. dpauxmon (DisplayPort AUX channel monitor capture)
+        10. randpkt (Random packet generator)
+        11. sdjournal (systemd Journal Export)
+        12. sshdump (SSH remote capture)
+        13. udpdump (UDP Listener remote capture)
+
+    tshark -i <interface>
+        ipconfig
+        ifconfig
+    tshark -i ciscodump
+
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i <interface>
+    Exclude ip-uri
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i <interface> -v, not host (10.10.2.60 or 10.10.2.61 or 146.124.106.170 or 10.10.2.62)
+
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i eth0 # [ok]
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i lo # [nok] Failure when trying to set feature via ioctl for 'lo': Operation not supported (95)
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i any # [nok] Unable to find type for iface "any": No such device
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i bluetooth-monitor # [nok] Unable to find type for iface "bluetooth-monitor": No such device
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i nflog  # [nok] Unable to find type for iface "nflog": No such device
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i nfqueue #  [nok]Unable to find type for iface "nfqueue": No such device
+
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i tunl0 # [partial-ok] Interface 'tunl0' is down
+
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i ciscodump # [nok]  Unable to find type for iface "ciscodump": No such device
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i dpauxmon # [nok]  Unable to find type for iface "dpauxmon": No such device
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i randpkt # [nok] Unable to find iface randpkt: No such device
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i sdjournal # [nok] Unable to find type for iface "sdjournal": No such device
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i sshdump # [nok] Unable to find type for iface "sshdump": No such device
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i udpdump Unable to find type for iface "udpdump": No such device
+
+    # from application pod:
+    wget -O suricata.txt http://localhost:8087/sphinx/dtm/helper/ni/suricata
+    wget -O suricata.txt http://localhost:8087/sphinx/dtm/helper/ni/tshark
+    wget -O suricata.txt http://localhost:8087/sphinx/dtm/helper/ni/java
+
+    wget -O swagger.txt http://localhost:8087/sphinx/dtm/swagger-ui.html
+
+# testare AD:
+    intrat in pod:
+        kubectl exec -it ad-deployment-5b8944bb7b-zrxtq    -- /bin/bash
+        wget -O swagger.txt http://localhost:8088/sphinx/ad/swagger-ui.html
+        wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AbusedSMTPServer
+        wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_CC_BotNets
+
+        kubectl logs --follow ad-deployment-5b8944bb7b-zrxtq
+        (kubectl exec ad-deployment-5b8944bb7b-zrxtq    -- cat /var/log/ad.log) > /home/sphinx/ad/ad.log
+
+# Algoritmi testati:
+1. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AbusedSMTPServer [ok] [server] [32815ms]
+2. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AlienAccessingManyHosts [ok] [server] [28080ms]
+3. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AtypicalAlienTCPPortUsed [0 alert] [server] [6974ms]
+4. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AtypicalAmountOfDataTransfered [ok] [server] [32357ms]
+5. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AtypicalNumberOfPairsInThePeriod [ok] [server] [34738ms]
+6. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_AtypicalTCPPortUsed [ok] [server] [20948ms]
+7. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_CC_BotNets [ok] [server] [61447ms]
+8. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_DnsTunnel [ok] [server] [25198ms]
+9. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_HorizontalPortScan [ok] [server] [32167ms]
+10. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_ICMPTunnel [ok] [server] [23001ms]
+11. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_MediaStreamingClient [ok] [server] [61088ms]
+12. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_P2PComunication [ok] [server] [23707ms]
+13. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_P2PComunication_v2 [ok] [server] [20625ms]
+14. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_SMTP_Talkers [ok] [server] [25778ms]
+15. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_UDPAmplifier [ok] [server] [22902ms]
+16. wget -O simulation.txt http://localhost:8088/sphinx/ad/simulation/execute/test_VerticalPortScan [ok] [server] [31649ms]
+
+
+------------------------------------------------------------------------------------------------------------
+
+Creare fisier jks:
+
+1.Este nevoie de fisierul for_clients_prod.crt
+
+2. keytool -import -alias for_clients -file for_clients_prod.crt -keypass *** -keystore sphinx_hesse.jks -storepass ***
+
+3. listare fisier jks : keytool -list -v keystore sphinx.jks -storepass ***

@@ -1,0 +1,170 @@
+# Pentru autentificarea la ICOM:
+
+WinSCP:
+    hostname:10.233.100.55
+    port:3322
+
+sau:
+
+Putty:
+	IP				PORT
+	10.233.100.55	3322
+
+login as:simavi
+
+----------------------------------------
+
+1. kubectl delete deployment dtm-deployment
+2. cd yml
+3. kubectl apply -f 08000-simavi-dtm.yml
+4. cd ..
+5. kubectl get pods
+6. kubectl logs --follow dtm-deployment-8746556d6-sdhpz
+
+sau:
+1. docker ps <=> kubectl get pods [dureaza o viata]
+2. cd yml
+3. ls sau ls -la [mariuka style]
+4. docker rm/stop <=> kubectl delete -f 08000-simavi-dtm.yml
+5. kubectl apply -f 08000-simavi-dtm.yml
+    deployment.apps/dtm-deployment created
+    service/dtm-service created
+6. cd ..
+7. kubectl get pods
+    [astapta pana cand e running; daca nu e running dai comanda:
+        kubectl describe pod [nume pod] / dtm-deployment-69bbcf7867-cpqpz
+        kubectl describe pod dtm-deployment-69bbcf7867-cpqpz
+    ]
+
+8.
+    kubectl logs --follow dtm-deployment-69bbcf7867-cpqpz
+        sau
+    https://sphinx-kubernetes.intracom-telecom.com/sphinx/dtm/helper/log/show
+
+9. intrat in pod:
+    kubectl exec -it  dtm-deployment-69bbcf7867-cpqpz -- /bin/bash
+    tshark -D
+    tshark -i <interface>
+        ipconfig
+        ifconfig
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i <interface>
+    suricata -l /var/log/suricata -c /etc/suricata/suricata.yaml -i 192.168.85.130
+----------------------------------------
+------------- UTIL ---------------------
+----------------------------------------
+
+# Daca nu merge sa te autentifici si ai vreo eroare, incearca sa pui comanda asta in cmd-ul din windows:
+netsh interface portproxy add v4tov4 listenport=3322 listenaddress=0.0.0.0 connectport=22 connectaddress=146.124.106.170
+Si dupa incearca din nou
+
+----------------------------------
+
+# Pentru mutarea unui fisier din local pe ICOM:
+> scp -P 3322 -r sphinx.sql simavi@10.233.100.55:/home/sphinxkm/simavi/
+
+scp -P 3322 -r c:/tools/nfstream/features.py simavi@110.233.100.183:/nfstream/nfstream
+-------------------------------------------------------------------------------------------------------------------------
+
+# Pentru a putea vedea ce pod-uri sunt deschise:
+> kubectl get pods
+ex:
+	dtm-deployment-pod-1023102301  1/1 RUNNING 5.3days
+	kubectl exec -it simavi-postgres-deployment-875dbd964-kb7v7  -- psql -a -f sphinx.sql
+
+--------------------------------------------------------------------------------------------------------------------------
+# Daca la coloana status din Kubectl get pods ai Pending, scrie:
+> kubectl describe pod [numele pod-ului din comanda de mai sus]
+si dai jos de tot sa vezi ce eroare este, in mare parte sunt de memorie
+
+----------------------------------------------------------------------------------------------------------------------
+# Daca vrei sa pornesti sau sa opresti un pod:
+> cd yml
+> ls -la
+si acolo sunt fisierele yml, o sa vezi ca are la capatul fiecaruia numele programului (gen dtm, ad, id, etc.)
+> kubectl apply -f dtm-deployment-57648f5b88-zt9qr[numele de acolo.yml]
+Apoi va trebui sa astepti, poti intre timp sa dai kubectl get pods sa vezi daca s-a incarcat sau nu
+------------------------------------------------------------------------------------------------------------------------
+
+# Daca vrei sa stergi un pod:
+> kubectl delete -f dtm-deployment-57648f5b88-zt9qr[numele de acolo.yml]
+Vezi sa te afli tot in folderul yml la calea /home/sphinxkm/simavi/yml
+Eu mai verific de fel cu
+> pwd
+----------------------------------------------------------------------------------------------------------------------------
+
+# Pentru a accesa interiorul (gen cum e output-ul de la DTM din Intellij):
+> kubectl logs --follow dtm-deployment-8746556d6-wsph2       [numele_pod-ului_din comanda kubectl get pods]
+kubectl exec -it dtm-deployment-7689df7fc6-ggfhq -- /bin/bash
+Daca nu apare nimic, inseamna ca inca se creeaza pod-ul, de verificat statusul lui din kubectl get pods
+----------------------------------------------------------------------------------------------------------------------------------
+
+# Ca sa poti vedea din exterior (din windows) pod-urile, va trebui sa dai urmatoarele comenzi:
+> cd ..
+> pwd
+Trb. sa iti afiseze: /home/sphinxkm/simavi/workshop
+> ls -la
+Cauti fisierele care contin "ingress" si sunt de tip .yml
+De ex., daca vrei pentru DTM, ar trebui sa fie ceva gen dtm-ingress.yml
+React: id-ui-ingress.yml
+AD: ad-ingress.yml
+Grafana: interactive-dashboards-ingress.yml
+> kubectl apply -f [fisier-ul ales.yml]
+--------------------------------------------------------------------------------------------------------------------------------
+
+Apoi astepti putin si verifici pe: https://sphinx-kubernetes.intracom-telecom.com/interactive-dashboards/
+DTM: 	pui la capat /sphinx/dtm/[restul_cailor]
+AD: 	pui la capat /sphinx/ad/[restul_cailor]
+React: 	pui la capat /id-ui/[dtm/ad]?ticket={token}
+Grafana:pui la capat /interactive-dashboards
+
+------------------------------------------------------------------------------------------------------------------------
+# Daca vrei sa copiezi un fisier din ICOM intr-un POD:
+kubectl cp sphinx.jks dtm-deployment-688b956bc5-hsjbn:/sphinx.jks
+psql -a -U sphinx -f sphinx.sql -ruleaza fisier
+
+-----------------------------------------------------------------------------------------------------------------------------------
+# Daca vrei invers:
+kubectl cp [numele_pod-ului]:[calea_din_interiorul podului]/[fisierul_pe_care_il_vrei_sa-l_transferi] .
+--------------------------------------------------------------------------------------------------------------------------------
+# Daca vrei sa intri intr-un pod gen DTM:
+kubectl exec -it dtm-deployment-7d947b6c97-vvbw2 -- /bin/bash -c "[comanda_respectiva]"
+kubectl exec -it dtm-deployment-57648f5b88-zt9qr -- /bin/bash
+kubectl exec -it dtm-deployment-7689df7fc6-ggfhq  -- /bin/bash -c "/usr/share/logstash/bin/logstash -f - porneste logstashul din pod
+----------------------------------------------------------------------------------------------------------------------------------
+#start hbase:
+kubectl exec -it sphinx-hbase-0 -- /bin/bash
+
+-----------------------------------------------------------------------------------------------------------------------------------
+# Daca vrei sa intri int-run pod KSQL:
+kubectl  exec -it [KSQLDB_SERVER_NAME]  -- ksql http://ksqldb-server:8088
+ksql> print 'ad-nfstream' from beginning;
+!!Gresit kubectl exec --stdin --tty ksqldb-cli-deployment-5f4b945cc4-lpn7j-- ksql http://ksqldb-server:8088
+!!Gresit kubectl exec --stdin --tty ksqldb-cli-deployment-7678ccfcff-jmfwk -- ksql http://ksqldb-server:8088 -c "print 'ad-nfstream' from beginning;"
+------------------------------------------------------------------------------------------------------------------------------------------
+# Daca vrei in postgresql:
+postgres=# \dt
+*Sterge toate tabele:
+*DROP SCHEMA sphinx CASCADE;
+*CREATE SCHEMA sphinx;
+
+kubectl exec --stdin --tty simavi-postgres-deployment-67567dcbd5-w6lhh -- psql -h localhost -U sphinx -p 5432 sphinx
+
+Golire tabel
+kubectl exec --stdin --tty simavi-postgres-deployment-875dbd964-kb7v7  -- psql -h localhost -U sphinx -p 5432 sphinx
+DELETE FROM "kafka_JDBC_SOURCE_AVRO"; /DROP
+----------------------------------------------------------------------------------------------------------------------------------------------
+#Editezi fisier:
+vim 01000-simavi-postgres.yml
+pentru a scrie, apesi pe i
+pentru a salva, apesi Esc si scrii ":wq!"
+:q pentru a iesi din fisier
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+#Copiere fisier din pod :
+(kubectl exec [nume pod] -it -- cat [cale fisier din pod+nume fisier]) > [cale unde vrei sa pui fisierul]/[denumirea pe care vrei sa o aibe fisierul copiat
+ex: (kubectl exec dtm-deployment-5fd4884d67-wprgw -it -- cat /var/log/dtm.log) > home/sphinx/dtm1.log
+
+#Copiere fisier din cluster - local :
+scp -P 22 [nume mediu kubernetes]:[cale catre fisier] .
+ex: scp -P 22 sphinx@94.70.166.143:/home/sphinx/dtm1.log .
